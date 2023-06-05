@@ -1,5 +1,6 @@
-import {
-    SubscribePublished
-} from './SubscribePublished'
+import {SubscribePublished} from "./SubscribePublished";
 
-export const IndateStore = SubscribePublished('indate');
+/* eslint-disable   */
+
+export const IndateStore = SubscribePublished("indate");
+/* eslint-enable   */

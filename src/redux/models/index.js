@@ -1,5 +1,5 @@
-import * as reducers from './reducers';
-import {register, registers} from './register';
+import * as reducers from "./reducers";
+import {register, registers} from "./register";
 
 //注册 reducers
 const {reducers: newReducers, actions} = registers(reducers);

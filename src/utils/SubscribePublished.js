@@ -6,7 +6,7 @@
  * @FilePath: /webpack-cli/src/utils/SubscribePublished.js
  * @Description:
  */
-import {CheckDataType} from './CheckDataType';
+import {CheckDataType} from "./CheckDataType";
 //按方式 kye 导出
 
 const SubscribePublished = function (type = null, options = {}) {
@@ -50,7 +50,7 @@ SubscribePublished.prototype = {
   on(
     type, //类型
     callback, //回调函数
-    isSuperposition = true, //队列中函数是否叠加
+    isSuperposition = true //队列中函数是否叠加
   ) {
     if (
       (CheckDataType.isFunction(type) && CheckDataType.isBoolean(callback)) ||

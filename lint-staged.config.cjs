@@ -3,5 +3,5 @@ module.exports = {
         'prettier  --write',
         'eslint  --fix',
     ],
-    'src/**/*.{htm,html,css,sss,less,scss,saas}': ['stylelint --fix'],
+    'src/**/*.{css,sss,less,scss,saas}': ['stylelint --fix'],
 };

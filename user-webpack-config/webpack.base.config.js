@@ -86,7 +86,7 @@ module.exports = {
     },
 
     plugins: [
-        // // he
+        // // html
         new HtmllinterWebpackPlugin({
             config: htmllinterConfig,
             // config: {

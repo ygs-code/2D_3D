@@ -6,7 +6,7 @@
  * @FilePath: /webpack-cli/src/utils/throttlingStabilization.js
  * @Description:
  */
-import lodash from 'lodash';
+import lodash from "lodash";
 // 节流函数
 export const throttle = (() => {
   let startTime = null;
@@ -50,7 +50,7 @@ export const statusThrottle = (() => {
   return (callback) => {
     return new Promise((resolve, reject) => {
       if (!lodash.isObject(objParameter)) {
-        console.error('objParameter参数必须是一个对象');
+        console.error("objParameter参数必须是一个对象");
         reject();
         return;
       }

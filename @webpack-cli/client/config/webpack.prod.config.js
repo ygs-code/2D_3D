@@ -127,11 +127,11 @@ module.exports = {
                 //     minSize: 1000, //大小超过1000个字节
                 //     minChunks: 3, //最少引入了3次
                 // },
-                defaultVendors: {
+                vendor: {
                     test: /[\\/]node_modules[\\/]/,
                     priority: -10,
                     reuseExistingChunk: true,
-                    // minSize: 100, //大小超过1000个字节
+                    minSize: 1000, //大小超过1000个字节
                     minChunks: 1, //最少引入了1次
                 },
                 default: {

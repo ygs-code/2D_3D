@@ -11,12 +11,12 @@ Tag.prototype = {
     var alpha = (this.z + RADIUS) / (2 * RADIUS);
     this.style = {
       color: this.color,
-      left: this.x + CX - 40 * scale + 'px',
-      top: this.y + CY - 20 * scale + 'px',
+      left: this.x + CX - 40 * scale + "px",
+      top: this.y + CY - 20 * scale + "px",
       zIndex: parseInt(scale * 100),
-      filter: 'alpha(opacity = ' + (alpha + 0.5) * 100 + ')',
+      filter: "alpha(opacity = " + (alpha + 0.5) * 100 + ")",
       opacity: alpha + 0.5,
-      fontSize: 15 * scale + 'px',
+      fontSize: 15 * scale + "px",
       // color: "rgb("+parseInt(Math.random()*255)+","+parseInt(Math.random()*255)+","+parseInt(Math.random()*255)+")"
     };
   },
@@ -74,13 +74,13 @@ FloatingBall.prototype = {
         x,
         y,
         z,
-        'rgb(' +
+        "rgb(" +
           parseInt(Math.random() * 255) +
-          ',' +
+          "," +
           parseInt(Math.random() * 255) +
-          ',' +
+          "," +
           parseInt(Math.random() * 255) +
-          ')',
+          ")"
       );
       t.move(this.fallLength, this.RADIUS, this.CX, this.CY);
       this.tags.push(t);
@@ -176,27 +176,27 @@ FloatingBall.prototype = {
     this.lastY = event.clientY;
   },
   addMoveEvent() {
-    if ('addEventListener' in window) {
-      this.ele.addEventListener('mousemove', (event) => {
+    if ("addEventListener" in window) {
+      this.ele.addEventListener("mousemove", (event) => {
         this.onChangeAngle(event);
         if (this.isAnimate) {
           this.animate(); // 添加动画
         }
       });
-      this.ele.addEventListener('mouseout', (event) => {
+      this.ele.addEventListener("mouseout", (event) => {
         // this.onChangeAngle(event)
         if (this.isAnimate) {
           this.animate(); // 添加动画
         }
       });
     } else {
-      this.ele.attachEvent('onmousemove', (event) => {
+      this.ele.attachEvent("onmousemove", (event) => {
         this.onChangeAngle(event);
         if (this.isAnimate) {
           this.animate(); // 添加动画
         }
       });
-      this.ele.attachEvent('onmouseout', (event) => {
+      this.ele.attachEvent("onmouseout", (event) => {
         // this.onChangeAngle(event)
         if (this.isAnimate) {
           this.animate(); // 添加动画
@@ -211,9 +211,9 @@ FloatingBall.prototype = {
     let startY = 0;
     let isDrag = false;
 
-    if ('addEventListener' in window) {
+    if ("addEventListener" in window) {
       // 按下
-      this.ele.addEventListener('mousedown', (event) => {
+      this.ele.addEventListener("mousedown", (event) => {
         //   this.onChangeAngle(event)
         //   this.isAnimate && this.animate() // 添加动画
         startX = event.clientX;
@@ -225,7 +225,7 @@ FloatingBall.prototype = {
         return false;
       });
       // 抬起
-      document.addEventListener('mouseup', (event) => {
+      document.addEventListener("mouseup", (event) => {
         // this.onChangeAngle(event)
         //   this.isAnimate && this.animate() // 添加动画
         isDrag = false;
@@ -237,7 +237,7 @@ FloatingBall.prototype = {
       });
 
       // 移动
-      this.ele.addEventListener('mousemove', (event) => {
+      this.ele.addEventListener("mousemove", (event) => {
         if (!isDrag) {
           return false;
         }
@@ -286,7 +286,7 @@ FloatingBall.prototype = {
         return false;
       });
       // 离开
-      this.ele.addEventListener('mouseout', (event) => {
+      this.ele.addEventListener("mouseout", (event) => {
         // isDrag=false;
         // this.onChangeAngle(event)
         // this.isAnimate && this.animate() // 添加动画
@@ -296,7 +296,7 @@ FloatingBall.prototype = {
         return false;
       });
     } else {
-      this.ele.attachEvent('onmousemove', (event) => {
+      this.ele.attachEvent("onmousemove", (event) => {
         //   this.onChangeAngle(event)
         //   this.isAnimate && this.animate() // 添加动画
         event.preventDefault();
@@ -304,7 +304,7 @@ FloatingBall.prototype = {
         event.cancelBubble = true;
         return false;
       });
-      this.ele.attachEvent('onmouseout', (event) => {
+      this.ele.attachEvent("onmouseout", (event) => {
         // this.onChangeAngle(event)
         //   this.isAnimate && this.animate() // 添加动画
         event.preventDefault();

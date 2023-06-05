@@ -1,8 +1,8 @@
-import { connect } from "react-redux";
+import {connect} from "react-redux";
 import modelsStore from "@/redux/models/modelsStore";
-import Store, { actions } from "@/redux/store";
-import { CheckDataType } from "@/utils";
-const { store: reducersStore } = modelsStore;
+import Store, {actions} from "@/redux/store";
+import {CheckDataType} from "@/utils";
+const {store: reducersStore} = modelsStore;
 // 映射Dispatch
 const getDispatchToProps = (reducersStore, dispatch, modelsNames) => {
   let flag = false;
@@ -19,7 +19,7 @@ const getDispatchToProps = (reducersStore, dispatch, modelsNames) => {
   }
   // 过滤state
   for (let reducersStoreKey of reducersStoreKeys) {
-      // 过滤state
+    // 过滤state
     if (
       !flag ||
       (CheckDataType.isArray(modelsNames) === true &&
@@ -33,7 +33,7 @@ const getDispatchToProps = (reducersStore, dispatch, modelsNames) => {
     dispatchToProps = {
       ...dispatchToProps,
       [reducersStoreKey]: ((storeDispatch, key) => {
-        const { dispatch: reducers } = storeDispatch;
+        const {dispatch: reducers} = storeDispatch;
         const reducersKeys = Object.keys(reducers);
         let newReducers = {};
         for (let reducersKey of reducersKeys) {
@@ -119,7 +119,7 @@ export default (modelsNames) => {
     const mapDispatchToProps = (dispatch) => {
       return {
         dispatch: {
-          reduxDispatch: ({ modelsName = "", type = "", payload = {} }) => {
+          reduxDispatch: ({modelsName = "", type = "", payload = {}}) => {
             //更改他可以传name
             dispatch({
               type: modelsName ? `${modelsName}_${type}` : type,

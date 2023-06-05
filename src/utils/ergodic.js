@@ -1,7 +1,11 @@
-import {CheckDataType} from './CheckDataType';
+import {CheckDataType} from "./CheckDataType";
 // 递归treeData 会给 treeData 添加index 索引
 const recursionTreeData = (parameter, _index = null) => {
-  let {treeData = [], childrenCallback = () => {}, itemCallback = () => {}} = parameter;
+  let {
+    treeData = [],
+    childrenCallback = () => {},
+    itemCallback = () => {},
+  } = parameter;
   return treeData.map((item, index) => {
     if (item.children && item.children.length >= 1) {
       item = {
@@ -35,10 +39,17 @@ const filterTreeData = (
 ) => {
   return data.filter((item, index) => {
     if (item.children && item.children.length >= 1) {
-      item.children = filterTreeData(item.children, filterCallback, _index === null ? `${index}` : `${_index}-${index}`);
+      item.children = filterTreeData(
+        item.children,
+        filterCallback,
+        _index === null ? `${index}` : `${_index}-${index}`
+      );
       return item.children && item.children.length >= 1;
     } else {
-      return filterCallback(item, _index === null ? `${index}` : `${_index}-${index}`);
+      return filterCallback(
+        item,
+        _index === null ? `${index}` : `${_index}-${index}`
+      );
     }
   });
 };
@@ -50,7 +61,7 @@ const deepCopy = (
   target = target || {};
   for (let i in source) {
     if (source[i] && source.hasOwnProperty(i)) {
-      if (typeof source[i] === 'object') {
+      if (typeof source[i] === "object") {
         target[i] = source[i] && source[i].constructor === Array ? [] : {};
         deepCopy(source[i], target[i]);
       } else {
@@ -89,8 +100,14 @@ const diffData = (oldData, newData) => {
     (CheckDataType.isObject(oldData) && CheckDataType.isObject(newData)) ||
     (CheckDataType.isArray(oldData) && CheckDataType.isArray(newData))
   ) {
-    const oldDataKeys = CheckDataType.isObject(oldData) && CheckDataType.isObject(newData) ? Object.keys(oldData) : oldData;
-    const newDataKeys = CheckDataType.isObject(oldData) && CheckDataType.isObject(newData) ? Object.keys(newData) : newData;
+    const oldDataKeys =
+      CheckDataType.isObject(oldData) && CheckDataType.isObject(newData)
+        ? Object.keys(oldData)
+        : oldData;
+    const newDataKeys =
+      CheckDataType.isObject(oldData) && CheckDataType.isObject(newData)
+        ? Object.keys(newData)
+        : newData;
     if (oldDataKeys.length !== oldDataKeys.length) {
       return false;
     }
@@ -99,8 +116,10 @@ const diffData = (oldData, newData) => {
         return false;
       }
       if (
-        (CheckDataType.isObject(elem) && CheckDataType.isObject(newDataKeys[index])) ||
-        (CheckDataType.isArray(elem) && CheckDataType.isArray(newDataKeys[index]))
+        (CheckDataType.isObject(elem) &&
+          CheckDataType.isObject(newDataKeys[index])) ||
+        (CheckDataType.isArray(elem) &&
+          CheckDataType.isArray(newDataKeys[index]))
       ) {
         flag = diffData(elem, newDataKeys[index]);
       }

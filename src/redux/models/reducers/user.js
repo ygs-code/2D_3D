@@ -1,8 +1,8 @@
 /*
  * @Author: your name
  * @Date: 2020-12-24 16:21:28
- * @LastEditTime: 2022-04-24 12:03:26 
- * @LastEditors: Yao guan shou 
+ * @LastEditTime: 2022-04-24 12:03:26
+ * @LastEditors: Yao guan shou
  * @Description: In User Settings Edit
  * @FilePath: /webpackClient/src/redux/models/reducers/user.js
  */
@@ -49,9 +49,8 @@ export default {
   },
   effects: (dispatch) => {
     return {
-      async getUserInfo(state, {payload: param = {}}) { 
+      async getUserInfo(state, {payload: param = {}}) {
         // const { data } = await getUserInfo();
-
         // dispatch({
         //   modelsName: "user",
         //   type: "setUserInfo",
@@ -59,7 +58,6 @@ export default {
         //     ...data,
         //   },
         // });
-
         // return data;
       },
       // // 登陆

@@ -8,7 +8,6 @@
  */
 import {call, put, takeEvery, takeLatest} from "redux-saga/effects";
 const ajax = async (id) => {
- 
   return id;
 };
 
