@@ -164,6 +164,7 @@
     "svg-captcha": "^1.4.0",
     "terser-webpack-plugin": "^5.3.1",
     "thread-loader": "^3.0.4",
+    "three": "^0.153.0",
     "ts-loader": "^8.0.12",
     "ts-node": "^9.1.1",
     "tsconfig-paths": "^3.9.0",
