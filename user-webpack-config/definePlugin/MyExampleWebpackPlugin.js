@@ -78,7 +78,7 @@ class MyExampleWebpackPlugin {
     // });
     // // // 编译中期
     // this.hook(compiler, "invalid", () => {
-    //    console.log("invalid==========");
+ 
     // });
 
     //   compiler.hooks.compile.tap("MyPlugin", (params) => {

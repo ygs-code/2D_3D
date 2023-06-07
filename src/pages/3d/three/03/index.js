@@ -58,9 +58,10 @@ scene.add(axesHelper);
 let x = 0;
 function render() {
   x += 0.01;
+  // 设置相机位置 x y z
   cube.position.set(x, 0, 0);
 
-  // 或者直接设置
+  // 或者直接设置 设置相机位置
   // cube.position.x += 0.01;
   // cube.position.y += 0.01;
   if (cube.position.x > 5) {
