@@ -20,7 +20,7 @@ module.exports = {
     browser: true,
     es2021: true,
   },
-  plugins: ['react', 'jsx-a11y', 'import', '@babel'],
+  plugins: [  'jsx-a11y', 'import', '@babel'],
   parser: '@babel/eslint-parser',
   parserOptions: {
     requireConfigFile: false,
