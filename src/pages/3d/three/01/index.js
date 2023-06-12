@@ -15,6 +15,8 @@ const camera = new THREE.PerspectiveCamera(
   1000 //  远截面
 );
 
+// camera.lookAt(0, 0.1, 0);  //y轴上位置10
+
 // 设置相机位置
 camera.position.set(
   0, // x
@@ -29,7 +31,11 @@ scene.add(camera);
 const cubeGeometry = new THREE.BoxGeometry(1, 1, 1);
 
 // 材质
-const cubeMaterial = new THREE.MeshBasicMaterial({color: 0xffff00});
+const cubeMaterial = new THREE.MeshBasicMaterial({
+  color: 0xffff00,
+  transparent: true, //开启透明
+  opacity: 0.5, //设置透明度
+});
 // 根据几何体和材质创建物体
 const cube = new THREE.Mesh(cubeGeometry, cubeMaterial);
 // 将几何体添加到场景中
