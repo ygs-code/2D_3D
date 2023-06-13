@@ -79,6 +79,7 @@
     "crypto-browserify": "^3.12.0",
     "css-loader": "^6.7.1",
     "css-minimizer-webpack-plugin": "^4.0.0",
+    "dat.gui": "^0.7.9",
     "directory-named-webpack-plugin": "^4.0.1",
     "esbuild": "^0.14.43",
     "esbuild-loader": "^2.19.0",

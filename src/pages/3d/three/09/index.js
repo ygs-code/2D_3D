@@ -168,6 +168,9 @@ scene.add(axesHelper);
 // 设置时钟
 const clock = new THREE.Clock();
 
+console.log(cubeGeometry);
+console.log(cube);
+
 window.addEventListener("dblclick", () => {
   const fullScreenElement = document.fullscreenElement;
   if (!fullScreenElement) {
