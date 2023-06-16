@@ -18,7 +18,6 @@ export default {
   },
   reducers: {
     setBreadcrumb(state, {payload}) {
-      console.log("payload======", payload);
       return {
         ...state,
         breadcrumb: [

@@ -99,6 +99,7 @@
     "file-loader": "^6.2.0",
     "friendly-errors-webpack-plugin": "^1.7.0",
     "get-port": "^6.1.2",
+    "gl-matrix": "^3.4.3",
     "glob": "^8.0.3",
     "gsap": "^3.12.1",
     "happypack": "^5.0.1",

@@ -61,7 +61,8 @@ const {
   plugins,
 }=getEntryPlugins('pages', 'index.html', 'index.js')
 
- 
+// console.log('entry==',entry)
+// console.log('plugins==',plugins)
 
 const cacheLoader = (happypackId) => {
     return isEnvDevelopment

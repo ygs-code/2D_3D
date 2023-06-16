@@ -8,7 +8,7 @@ const getDispatchToProps = (reducersStore, dispatch, modelsNames) => {
   let flag = false;
   const reducersStoreKeys = Object.keys(reducersStore);
   let dispatchToProps = {};
-  console.log("modelsNames===", modelsNames);
+
   // 过滤state
   if (
     CheckDataType.isUndefined(modelsNames) === true ||
