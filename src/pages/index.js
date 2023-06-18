@@ -1,2 +1,2 @@
 import "./index.less";
-import "./3d/three/09/index.js";
+import "./3d/webgl/06/index.js";
