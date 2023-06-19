@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+    <html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Document</title>
+        <style>
+            .box{
+                width: 50px;
+                height: 50px;
+                background-color: pink;
+                position: absolute;
+            }
+            .sp span{
+                width: 5px;
+                height: 5px;
+                background-color: pink;
+                position: absolute;
+            }
+        </style>
+        <script>
+            window.onload = function(){
+                var oBox = document.querySelector(".box");
+                var oSpan = document.querySelector("span");
+                var r = 100;  //设置半径
+                var x = 100 ;  //x轴开始位置
+                var y = 100; // y轴开始位置
+                 var angle = 0;   //角度
+                setInterval(function(){
+                    angle ++;
+                    var radian = angle * Math.PI /180;  //弧度
+                    console.log('radian==',radian)
+                    var a = Math.sin(radian) * r;   //圆上点的横纵坐标的值 
+                    var b = Math.cos(radian) * r;
+                    oBox.style.left = x + a + "px";   //运动轨迹
+                    oBox.style.top = y-b+"px";  
+                    var span = document.createElement("span");  //给运动轨迹添加底色
+                    span.style.left = oBox.offsetLeft + "px";
+                    span.style.top = oBox.offsetTop + "px";
+                    oSpan.appendChild(span);
+                },30)
+            }
+        </script>
+    </head>
+    <body>
+        <div class="box"></div>
+        <span class="sp"></span>
+    </body>
+    </html>
