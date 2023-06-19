@@ -86,7 +86,7 @@ function initShaders(gl, vshader, fshader) {
   // 挂着对象属性
   gl.program = program;
 
-  return true;
+  return program;
 }
 
 export default initShaders;
