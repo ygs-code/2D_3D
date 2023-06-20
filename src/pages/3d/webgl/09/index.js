@@ -5,8 +5,8 @@ import "./index.less";
 window.onload = function () {
   const canvas = document.createElement("canvas");
   document.body.appendChild(canvas);
-  canvas.width = 500;
-  canvas.height = 500;
+  canvas.width = 1000;
+  canvas.height = 1000;
 
   if (!canvas.getContext) return;
   let gl = canvas.getContext("webgl");
@@ -55,13 +55,6 @@ window.onload = function () {
     return false;
   }
 
-  let PointSize = 10.0;
-  let Position = [0.0, 0.0, 0.0, 1.0];
-  // 将顶点位置输入给 attribute变量
-  gl.vertexAttrib1f(a_PointSize, PointSize);
-  // // 数组传递
-  gl.vertexAttrib3fv(a_Position, new Float32Array(Position));
-
   // 第一步清空这个画布
   gl.clearColor(0.5, 0.5, 0.5, 1.0); // rgba()
   // 真正清空颜色 并填充为黑色
@@ -72,10 +65,95 @@ window.onload = function () {
     gl.COLOR_BUFFER_BIT
   );
 
-  // 画一个点
-  gl.drawArrays(
-    gl.POINTS, // 画点参数
-    0,
-    1
-  );
+  let PointSize = 10.0;
+  let Position = [-5.0, 5.0, 0.0, 10.0];
+  let linType = "top";
+
+  let i = 0;
+
+  // // 画一个斜线
+  // while (i <= 100) {
+  //     // 不断的控制偏移量
+  //     Position[0] += 0.1;
+  //     Position[1] += 0.1;
+  //     // 将顶点位置输入给 attribute变量
+  //     gl.vertexAttrib1f(a_PointSize, PointSize);
+  //     // // 数组传递
+  //     gl.vertexAttrib4fv(a_Position, new Float32Array(Position));
+  //     // 画一个点
+  //     gl.drawArrays(
+  //         gl.POINTS, // 画点参数
+  //         0,
+  //         1
+  //     );
+  //     console.log('Position==', Position);
+  //     i++;
+  // }
+
+  // // 画一个正方形
+  // while (i <= 1000) {
+  //     if (linType === 'top' && Position[0] < 5) {
+  //         Position[0] = (Position[0] * 10 + 0.1 * 10) / 10;
+  //     } else if (linType === 'top' && Position[0] === 5) {
+  //         linType = 'right';
+  //     } else if (linType === 'right' && Position[1] > -5) {
+  //         Position[1] = (Position[1] * 10 - 0.1 * 10) / 10;
+  //     } else if (linType === 'right' && Position[1] === -5) {
+  //         linType = 'bottom';
+  //     } else if (linType === 'bottom' && Position[0] > -5) {
+  //         Position[0] = (Position[0] * 10 - 0.1 * 10) / 10;
+  //     } else if (linType === 'bottom' && Position[0] === -5) {
+  //         linType = 'left';
+  //     } else if (linType === 'left' && Position[1] < 5) {
+  //         Position[1] = (Position[1] * 10 + 0.1 * 10) / 10;
+  //     }
+  //     // console.log('Position==', Position);
+  //     // console.log('linType==', linType);
+  //     // 将顶点位置输入给 attribute变量
+  //     gl.vertexAttrib1f(a_PointSize, PointSize);
+  //     // // 数组传递
+  //     gl.vertexAttrib4fv(a_Position, new Float32Array(Position));
+  //     // 画一个点
+  //     gl.drawArrays(
+  //         gl.POINTS, // 画点参数
+  //         0,
+  //         1
+  //     );
+
+  //     i++;
+  // }
+
+  //  画一个圆
+  let angle = 0;
+  let r = 0.1;
+  Position = [-5.0, 1.0, 0.0, 10.0];
+  let x = -5.0;
+  while (i <= 10000) {
+    angle += 1;
+
+    // 画多个圆
+    if (angle >= 360) {
+      angle = 0;
+      r += 0.02;
+      x -= 1.0;
+      Position = [x, 1.0, 0.0, 10.0];
+    }
+
+    Position[0] = Position[0] + Math.sin((angle * 2 * Math.PI) / 360) * r;
+    Position[1] = Position[1] + Math.cos((angle * 2 * Math.PI) / 360) * r;
+
+    console.log("Position==", Position);
+    // 将顶点位置输入给 attribute变量
+    gl.vertexAttrib1f(a_PointSize, PointSize);
+    // // 数组传递
+    gl.vertexAttrib4fv(a_Position, new Float32Array(Position));
+    // 画一个点
+    gl.drawArrays(
+      gl.POINTS, // 画点参数
+      0,
+      1
+    );
+
+    i++;
+  }
 };

@@ -29,7 +29,6 @@
                 setInterval(function(){
                     angle ++;
                     var radian = angle * Math.PI /180;  //弧度
-                    console.log('radian==',radian)
                     var a = Math.sin(radian) * r;   //圆上点的横纵坐标的值 
                     var b = Math.cos(radian) * r;
                     oBox.style.left = x + a + "px";   //运动轨迹
