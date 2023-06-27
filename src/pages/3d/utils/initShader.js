@@ -3,8 +3,9 @@ function loadShader(gl, type, source) {
   // 创建着色器对象
   var shader = gl.createShader(type);
   if (shader === null) {
-    console.log("unable to create shader");
-    return null;
+    console.error("unable to create shader");
+    throw "unable to create shader";
+    // return null;
   }
 
   // Set the shader program
@@ -22,10 +23,10 @@ function loadShader(gl, type, source) {
     // 检查如果有报错
     var error = gl.getShaderInfoLog(shader);
     // 输出报错日志
-    console.log("Failed to compile shader: " + error);
+    console.error("Failed to compile shader: " + error);
     // 删除shader 防止内存溢出
     gl.deleteShader(shader);
-    return null;
+    throw "Failed to compile shader: " + error;
   }
 
   return shader;
@@ -63,23 +64,26 @@ function createProgram(gl, vshader, fshader) {
   if (!linked) {
     // 如果有编译错误
     var error = gl.getProgramInfoLog(program);
-    console.log("Failed to link program: " + error);
+    console.error("Failed to link program: " + error);
+
     // 删除program
     gl.deleteProgram(program);
     // 删除 fragmentShader
     gl.deleteShader(fragmentShader);
     // 删除 vertexShader
     gl.deleteShader(vertexShader);
-    return null;
+    throw "Failed to link program: " + error;
+    // return null;
   }
   return program;
 }
 function initShaders(gl, vshader, fshader) {
+  // gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
   // 创建Program
   var program = createProgram(gl, vshader, fshader);
   if (!program) {
-    console.log("Failed to create program");
-    return false;
+    console.error("Failed to create program");
+    throw "Failed to create program";
   }
   // 使用程序对象
   gl.useProgram(program);

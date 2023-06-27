@@ -22,3 +22,10 @@ https://www.shadertoy.com/browse
 
 
 https://learnopengl-cn.readthedocs.io/zh/latest/05%20Advanced%20Lighting/07%20Bloom/
+
+
+https://blog.csdn.net/AHcola233/article/details/117825091
+
+https://learnwebgl.brown37.net/#
+
+https://learnopengl-cn.github.io/
