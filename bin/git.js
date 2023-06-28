@@ -23,11 +23,13 @@ class Git {
     this.init()
   }
   async init() {
-    let { stdout: remote } = await this.PromiseExec('git remote -v')
-    this.remote = remote.split('\n')[1]
-    let { stdout: branch } = await this.PromiseExec('git branch')
-    this.branch = branch.toString().match(/(?<=\*)\s*\w+/)[0]
-    await this.huskyInstall()
+    let { stdout: remote } = await this.PromiseExec("git remote -v");
+    this.remote = remote.split("\n")[1];
+    let { stdout: branch } = await this.PromiseExec("git branch");
+    this.branch = branch.toString().match(/(?<=\*)\s*\w+/);
+    console.log('this.branch===',this.branch)
+    this.branch = this.branch ? this.branch[0] : "";
+    await this.huskyInstall();
     await this.submit(() => {
       this.add(() => {
         this.committed(() => {
