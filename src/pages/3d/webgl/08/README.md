@@ -12,6 +12,14 @@
 
 
 
+####  attribute uniform varying 的区别与联系
+
+1. attribute : 只能在vertex shader中使用，用于逐定点操作，接受外部不停地传入的值。
+2. uniform : 在vertex/fragment shader都可以使用，用于接受外部的限定值，在逐顶点绘制的过程，不能改变。
+3. varying : 用于vertex和fragment之间的沟通。
+
+
+
 ### 4.attribute变量
 
 attribute就是将js数据传递给vertex shader。

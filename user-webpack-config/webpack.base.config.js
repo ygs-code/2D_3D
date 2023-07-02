@@ -50,6 +50,24 @@ module.exports = {
     module: {
         // loader
         rules: [
+
+            {
+                test: /\.json?$/,
+                enforce: 'pre',
+                // 排除文件,因为这些包已经编译过，无需再次编译
+                exclude: /(node_modules|bower_components)/,
+                use: {
+                    loader: path.join(
+                        __dirname,
+                        './defineLoader/json-loader/index.js'
+                    ),
+                    options: {},
+                },
+            },
+
+  
+
+
             //配置 https://github.com/robbiedigital/htmllint-loader
             // {
             //     test: /\.(htm|html|xhtml|hbs|handlebars|php|ejs)$/,

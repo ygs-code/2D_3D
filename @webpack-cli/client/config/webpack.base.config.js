@@ -405,12 +405,7 @@ module.exports = {
 
     module: {
         rules: [
-            // json
-            {
-                test: /\.json$/,
-                use: 'json-loader',
-            },
-
+         
             //处理图片
             //！默认处理不了html中的图片 <img src="./img/BM.jpg" alt=""> 打包后路径不会改变！
             {
@@ -512,7 +507,7 @@ module.exports = {
             },
 
             {
-                test: /\.(graphql|gql|sql)$/,
+                test: /\.(graphql|gql|sql|vert|frag|glsl)$/,
                 // 排除文件,因为这些包已经编译过，无需再次编译
                 exclude: /(node_modules|bower_components)/,
                 use: [].concat(cacheLoader('rawLoader')),

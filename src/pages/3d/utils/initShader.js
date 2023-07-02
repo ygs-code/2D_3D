@@ -1,4 +1,5 @@
 function loadShader(gl, type, source) {
+  console.log("loadShader");
   // Create shader object
   // 创建着色器对象
   var shader = gl.createShader(type);

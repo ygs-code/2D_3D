@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+
+<head>
+
+<title>旋转小正方形</title>
+
+<script type="text/javascript">
+
+  function draw(id)
+
+  {
+
+     var canvas=document.getElementById(id);
+
+     if (canvas==null)
+
+        return false;
+
+     var context=canvas.getContext('2d');
+
+     context.fillStyle="#EEEEFF";
+
+     context.fillRect(0,0,500,400);
+
+     context.fillStyle="yellow";
+
+     context.strokeStyle="red";
+
+     context.lineWidth=1;
+
+     context.beginPath();
+
+     for (px=-170;px<=170;px+=20)
+
+       for (py=-170;py<=170;py+=20)
+
+       {
+
+          a=Math.abs(px)/170*Math.PI/2;
+
+          for (i=0;i<=4;i++)
+
+          {
+
+             x1=10*Math.cos(i*Math.PI/2);
+
+             y1=10*Math.sin(i*Math.PI/2);
+
+             x2=x1*Math.cos(a)-y1*Math.sin(a);
+
+             y2=x1*Math.sin(a)+y1*Math.cos(a);
+
+             x=px+200+x2;
+
+             y=py+200-y2;
+
+             if (i==0)
+
+                context.moveTo(x,y);
+
+             else
+
+                context.lineTo(x,y);
+
+          }
+
+       }
+
+     context.closePath();
+
+     context.fill();
+
+     context.stroke();
+
+  }
+
+</script>
+
+</head>
+
+<body onload="draw('myCanvas');">
+
+<canvas id="myCanvas" width="500" height="400">您的浏览器不支持canvas！
+
+</canvas>
+
+</body>
+
+</html>

@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+
+<head>
+
+    <title>六瓣花朵旋转一周</title>
+
+    <script type="text/javascript">
+
+        function draw (id) {
+
+            var canvas = document.getElementById(id);
+
+            if (canvas == null)
+
+                return false;
+
+            var context = canvas.getContext('2d');
+
+            context.fillStyle = "#EEEEFF";
+
+            context.fillRect(0, 0, 320, 320);
+
+            context.fillStyle = "red";
+
+            context.strokeStyle = "blue";
+
+            context.lineWidth = 1;
+
+            var dig = Math.PI / 64;
+
+            var x = new Array(129);
+
+            var y = new Array(129);
+
+            for (var i = 0; i <= 128; i++)      // 生成六瓣花朵图案的基础数据
+
+            {
+
+                d = 50 * (1 + Math.sin(18 * i * dig) / 5);
+
+                t = d * (0.5 + Math.sin(6 * i * dig) / 2);
+
+                x[i] = (60 + t * Math.cos(i * dig));
+
+                y[i] = (60 + t * Math.sin(i * dig));
+
+            }
+
+            context.beginPath();
+
+            for (n = 0; n <= 5; n++)
+
+                for (i = 0; i <= 128; i++) {
+
+                    x1 = x[i] * Math.cos(n * Math.PI / 3) - y[i] * Math.sin(n * Math.PI / 3) + 160;
+
+                    y1 = x[i] * Math.sin(n * Math.PI / 3) + y[i] * Math.cos(n * Math.PI / 3) + 160;
+
+                    if (i == 0) {
+
+                        context.moveTo(x1, y1);
+
+                        bx = x1; by = y1;
+
+                    }
+
+                    else
+
+                        context.lineTo(x1, y1);
+
+                }
+
+            context.lineTo(bx, by);
+
+            context.closePath();
+
+            context.stroke();
+
+            context.fill();
+
+        }
+
+    </script>
+
+</head>
+
+<body onload="draw('myCanvas');">
+
+    <canvas id="myCanvas" width="320" height="320">您的浏览器不支持canvas！
+
+    </canvas>
+
+</body>
+
+</html>

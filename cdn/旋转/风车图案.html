@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+
+<head>
+
+<title>风车的绘制</title>
+
+<script type="text/javascript">
+
+  function draw(id)
+
+  {
+
+     var canvas=document.getElementById(id);
+
+     if (canvas==null)
+
+        return false;
+
+     var context=canvas.getContext('2d');
+
+     context.fillStyle="#EEEEFF";
+
+     context.fillRect(0,0,300,300);
+
+     context.translate(150,150);
+
+     context.save();
+
+     context.fillStyle = 'green';
+
+     for (var j=0;j<4;j++)
+
+     {
+
+          context.rotate(Math.PI*2/(4));
+
+          context.beginPath();
+
+          context.moveTo(-20,-80);
+
+          context.lineTo(0,-80);
+
+          context.lineTo(0,0);
+
+          context.lineTo(-30,0);
+
+          context.closePath();
+
+          context.fill();
+
+      }
+
+      context.restore();
+
+   }
+
+</script>
+
+</head>
+
+<body onload="draw('myCanvas');">
+
+<canvas id="myCanvas" width="300" height="300">您的浏览器不支持canvas！
+
+</canvas>
+
+</body>
+
+</html>

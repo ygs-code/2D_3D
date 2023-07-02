@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+
+<head>
+
+<title>三角形旋转</title>
+
+<script type="text/javascript">
+
+  function draw(id)
+
+  {
+
+     var canvas=document.getElementById(id);
+
+     if (canvas==null)
+
+        return false;
+
+     var context=canvas.getContext('2d');
+
+     context.fillStyle="#EEEEDD";
+
+     context.fillRect(0,0,300,300);
+
+     context.strokeStyle="red";
+
+     context.lineWidth=1;
+
+     context.fillStyle="yellow";
+
+     context.beginPath();
+
+     px1=150;  py1=150;
+
+     px2=250;  py2=150;
+
+     px3=200;  py3=120;
+
+     context.moveTo(px1,py1);
+
+     context.lineTo(px2,py2);
+
+     context.lineTo(px3,py3);
+
+     context.lineTo(px1,py1);
+
+     x0=150;  y0=150;        // 旋转中心
+
+a=Math.PI/4;            // 旋转角度
+
+     for (i=1;i<=7;i++){
+
+        tx=px1;  px1=x0+(px1-x0)*Math.cos(a)+(py1-y0)*Math.sin(a); 
+
+        py1=y0-(tx-x0)*Math.sin(a)+(py1-y0)*Math.cos(a);
+
+        tx=px2;  px2=x0+(px2-x0)*Math.cos(a)+(py2-y0)*Math.sin(a); 
+
+        py2=y0-(tx-x0)*Math.sin(a)+(py2-y0)*Math.cos(a);
+
+        tx=px3;  px3=x0+(px3-x0)*Math.cos(a)+(py3-y0)*Math.sin(a); 
+
+        py3=y0-(tx-x0)*Math.sin(a)+(py3-y0)*Math.cos(a);
+
+        context.moveTo(px1,py1);
+
+        context.lineTo(px2,py2);
+
+        context.lineTo(px3,py3);
+
+        context.lineTo(px1,py1);
+
+     }
+
+     context.closePath();
+
+     context.stroke();
+
+     context.fill();
+
+  }
+
+</script>
+
+</head>
+
+<body onload="draw('myCanvas');">
+
+<canvas id="myCanvas" width="300" height="300">您的浏览器不支持canvas！
+
+</canvas>
+
+</body>
+
+</html>

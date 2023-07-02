@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+
+<head>
+
+<title>三角形旋转</title>
+
+<script type="text/javascript">
+
+  function draw(id)
+
+  {
+
+     var canvas=document.getElementById(id);
+
+     if (canvas==null)
+
+        return false;
+
+     var context=canvas.getContext('2d');
+
+     context.fillStyle="#EEEEDD";
+
+     context.fillRect(0,0,300,300);
+
+     context.strokeStyle="red";
+
+     context.lineWidth=1;
+
+     context.fillStyle="yellow";
+
+     context.translate(150,150);   // 旋转中心
+
+     context.save();
+
+     for (var j=0;j<8;j++)
+
+     {
+
+          context.rotate(Math.PI*2/8);
+
+          context.beginPath();
+
+          context.moveTo(0,0);
+
+          context.lineTo(100,0);
+
+          context.lineTo(50,-30);
+
+          context.lineTo(0,0);
+
+          context.closePath();
+
+          context.stroke();
+
+          context.fill();
+
+      }
+
+      context.restore();
+
+  }
+
+</script>
+
+</head>
+
+<body onload="draw('myCanvas');">
+
+<canvas id="myCanvas" width="300" height="300">您的浏览器不支持canvas！
+
+</canvas>
+
+</body>
+
+</html>

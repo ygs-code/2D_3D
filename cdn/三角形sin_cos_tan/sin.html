@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Document</title>
+    </head>
+    <style>
+        canvas {
+            background: black;
+        }
+    </style>
+    <body>
+        <canvas id="canvas" width="1500" height="1500"></canvas>
+        <script>
+            /*
+            Math.sin()
+                它的参数值并不是角度数，而是弧度，那么角度就需要换算为弧度
+                半圆的弧长是Math.PI，度数是180度，算出每度的弧长。程序处理浮点数时都是近似值，如果要很精确需要配合其他方法
+                角度数×Math.PI/180，30度角的弧度就是30*Math.PI/180
+                一个半圆的弧度为Math.PI，也可以利用比例来计算弧度
+                圆分为4等分，那么每个弧度就是Math.PI/2，分为6等分，那么弧度就是Math.PI/3，这里就避免了角度参与运算
+ 
+                画一个圆形
+                我们需要用到以下公式
+
+                用弧长公式
+                Math.PI 是π
+                n就是角度数 
+                R是半径
+                L=nπR/180
+
+                弧度=角度*Math.PI/180
+
+                弧长 = 弧度*半径
+
+                L代表弧长,R代表半径,n代表圆心角的度数
+
+                同样，我们可以简化扇形面积公式：S=|α| r^2/2（二分之一倍的α角的大小，与半径的平方之积，从中我们可以看出，当|α|=2π，即周角时，公式变成了S=πr^2，圆面积的公式！）。
+
+           */
+
+            var canvas = document.getElementById('canvas');
+
+            //获取上下文
+            var context = canvas.getContext('2d');
+            //设定填充图形的样式
+            context.fillStyle = 'yellow';
+            let deg = 360;
+
+            /*
+            结果是 最大值为1
+                  最小值为-1
+            */
+            for (let $deg = 0; $deg < deg; $deg++) {
+                // 弧度
+                let rad = ($deg * Math.PI) / 180;
+                let value = Math.sin(rad);
+                console.log('rad==', rad);
+                console.log('x==', 10 * $deg);
+                console.log('sin==', value);
+                console.log('asin==', Math.asin(value));
+                //绘制图形
+                context.fillRect(1 * $deg, 700 + 500 * value, 5, 5);
+            }
+        </script>
+    </body>
+</html>
