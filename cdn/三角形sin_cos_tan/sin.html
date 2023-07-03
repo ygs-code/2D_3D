@@ -56,11 +56,14 @@
             for (let $deg = 0; $deg < deg; $deg++) {
                 // 弧度
                 let rad = ($deg * Math.PI) / 180;
+
                 let value = Math.sin(rad);
+
                 console.log('rad==', rad);
-                console.log('x==', 10 * $deg);
-                console.log('sin==', value);
-                console.log('asin==', Math.asin(value));
+                // console.log('x==', 10 * $deg);
+                // console.log('sin==', value);
+                console.log('$deg==', $deg);
+                console.log('asin==', Math.asin(value) * 180 / Math.PI);
                 //绘制图形
                 context.fillRect(1 * $deg, 700 + 500 * value, 5, 5);
             }
