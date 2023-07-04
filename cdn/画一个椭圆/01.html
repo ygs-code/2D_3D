@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title></title>
+    <style>
+        *{
+            margin:0;
+            padding:0;
+        }
+        .ab{
+            width:1px;
+            height:1px;
+            background: #000;
+            position: absolute;
+        }
+        .move{
+            position: absolute;
+            width:4px;
+            height:4px;
+            background: #000;
+        }
+    </style>
+</head>
+<body>
+    <div class="move"></div>
+</body>
+<script>
+    /*
+    之前画过一个圆，找不到的可以看看我的博客文章。代码整体部分大概是相同。
+    就是短轴和长轴这个地方有不同。(JS默认是顺时针）。渲染的。如果要逆时针渲染。
+    可以更换一下正炫和余炫的顺序。椭圆形，肯定有短轴和长轴。短轴是b也就是Y。
+    长轴是a也就是X。获取弧度的方法和正圆是一样的。
+    360度。获取了正弦和余弦。我们乘以半径。就可以了。X的乘以a.Y的乘以b。。
+    。这样我们就获取到了。每度的坐标。在渲染出来。是不是很简单？
+    */
+    (function(){
+        var x=300,y=300,a=200,b=100,du=360,z=0,arr=[],timer;
+        var go=document.querySelector(".move");
+        for (var i = 0; i < du; i++) {
+            var divs=document.createElement("div"),
+                hudu=(Math.PI/180)*i,
+                x1=a*Math.sin(hudu)+x,
+                y1=y-(b*Math.cos(hudu));
+                arr[i]=[];
+                arr[i][0]=x1-2;
+                arr[i][1]=y1-2;
+            divs.className="ab";
+            divs.style.cssText="left:"+x1+"px;top:"+y1+"px;"
+            document.body.appendChild(divs);
+        };
+        clearInterval(timer);
+        timer=setInterval(function(){
+            if(z>=du)z=0;
+            go.style.cssText="left:"+arr[z][0]+"px;top:"+arr[z][1]+"px;";
+            z++;
+        },30)
+    })()
+</script>
+</html>
