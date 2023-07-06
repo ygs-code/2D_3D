@@ -12,7 +12,7 @@
         }
     </style>
     <body>
-        <canvas id="canvas" width="1500" height="1500"></canvas>
+        <canvas id="canvas" width="800" height="800"></canvas>
         <script>
             /*
             Math.sin()
@@ -45,43 +45,44 @@
 
             //获取上下文
             var context = canvas.getContext('2d');
+
+            // 清除画布
+            context.clearRect(0, 0, canvas.width, canvas.height);
+
+            // 绘制一个中心点
+            context.fillStyle = '#ff0000';
+            context.font = '14px Arial';
+            context.textAlign = 'center';
+            context.textBaseLine = 'middle';
+            context.fillText('中心点', 400, 400);
             //设定填充图形的样式
             context.fillStyle = 'yellow';
-            let deg = 360;
+            context.fillRect(400, 400, 5, 5);
 
-            /*
-            结果是 最大值为1
-                  最小值为-1
-            */
-            for (let $deg = 0; $deg < deg; $deg++) {
-                // 弧度
-                let rad = ($deg * Math.PI) / 180;
+            // 半径是离中心点的位置
+            let r = 200;
+            // 角度
+            let degs = [0, 30, 45, 60, 90, 120, 180, 240, 270, 300];
 
-                let value = Math.sin(rad);
+            for (let item of degs) {
+                let deg = item;
+                let radian = (deg * Math.PI) / 180;
+                let x = Math.cos(radian) * r;
+                let y = Math.sin(radian) * r;
+                // 在画一个点
+                context.fillStyle = '#ff0000';
+                context.font = '14px Arial';
+                context.textAlign = 'center';
+                context.textBaseLine = 'middle';
 
-                // console.log('rad==', rad);
-                // // console.log('x==', 10 * $deg);
-                // // console.log('sin==', value);
-                // console.log('$deg==', $deg);
-                // console.log('asin==', (Math.asin(value) * 180) / Math.PI);
-                //绘制图形
-                context.fillRect(1 * $deg, 700 + 500 * value, 5, 5);
-            }
-
-            let degs = [
-                0, 15, 30, 45, 60, 75, 90, 105, 135, 180, 270, 360, 361,
-            ];
-
-            for (let i = 0; i < degs.length; i++) {
-                // 弧度
-                let rad = (degs[i] * Math.PI) / 180;
-
-                let value = Math.sin(rad);
-
-                console.log('degs[$deg]==', degs[i]);
-                console.log('rad==', rad);
-                console.log('value==', value);
+                console.log('x==', y);
+                console.log('y==', x);
+                console.log('deg==', deg);
                 console.log('\n');
+                context.fillText(deg + '度', 400 + x, 400 - y);
+                //设定填充图形的样式
+                context.fillStyle = 'yellow';
+                context.fillRect(400 + x, 400 - y, 5, 5);
             }
         </script>
     </body>

@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Document</title>
+    </head>
+    <style>
+        canvas {
+            background: black;
+        }
+    </style>
+    <body>
+        <canvas id="canvas" width="1500" height="1500"></canvas>
+        <script>
+            /*
+            Math.sin()
+              
+           */
+
+            var canvas = document.getElementById('canvas');
+
+            //获取上下文
+            var context = canvas.getContext('2d');
+            //设定填充图形的样式
+            context.fillStyle = 'yellow';
+            let i = -100;
+            while (i <= 100) {
+                
+
+                let y = Math.acos(i / 100);
+                //绘制图形
+                context.fillRect(i * 10, y*100+100, 5, 5);
+                console.log('i==',i)
+                console.log('y==',y)
+                console.log( y*180/Math.PI)
+                console.log('\n')
+                i += 1;
+            
+            }
+
+            console.log(Math.asin(1/2)*180/Math.PI)
+        </script>
+    </body>
+</html>

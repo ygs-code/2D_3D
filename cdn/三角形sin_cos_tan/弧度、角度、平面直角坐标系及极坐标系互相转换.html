@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Document</title>
+    </head>
+    <body>
+        <canvas id="canvas" width="800" height="800"></canvas>
+        <script>
+            /*
+           三角函数方法           
+             acos 方法
+             asin 方法
+             atan 方法
+             atan2 方法
+             cos 方法
+             sin 方法
+             tan 方法
+
+
+            角度转换为弧度公式：弧度=角度×(π ÷180 )
+            弧度转换为角度公式：角度=弧度×（180÷π）
+            
+            
+            */
+            var canvas = document.getElementById('canvas');
+
+            //获取上下文
+            var context = canvas.getContext('2d');
+
+            // 清除画布
+            context.clearRect(0, 0, canvas.width, canvas.height);
+
+            let x1 = canvas.width / 2; //[x1,y1]为画布中点
+            let y1 = canvas.width / 2;
+            let angle = 45; //角度为45°
+            let r = 100; //距离为100
+            let radian = (angle * Math.PI) / 180; //换算为弧度
+
+            let tx = 100 * Math.cos(radian); //计算出目标点坐标[x2,y2]
+            let ty = 100 * Math.sin(radian);
+
+            // 绘制一个中心点
+            context.fillStyle = '#ff0000';
+            context.font = '14px Arial';
+            context.textAlign = 'center';
+            context.textBaseLine = 'middle';
+            context.fillText('中心点', 400, 400);
+            //设定填充图形的样式
+            context.fillStyle = 'yellow';
+            context.fillRect(x1, y1, 5, 5);
+
+            context.beginPath(); //绘制连接原点到目标点的线段
+            context.moveTo(x1, y1);
+            context.lineTo(x1 + r, y1);
+
+            // context.beginPath()  //绘制连接原点到目标点的线段
+ 
+            context.moveTo(x1, y1);
+            context.lineTo(x1 + tx, y1 - ty);
+            context.fillRect(x1 + tx, y1 - ty, 5, 5);
+            context.stroke();
+
+            let x3 = Math.cos(radian);
+            let y3 = Math.sin(radian);
+            console.log('tx==', tx);
+            console.log('ty==', ty);
+            // x y 坐标 变成角度
+            let deg2 = (Math.atan2(ty, tx) * 180) / Math.PI; //弧度值，结果范围为-180°到180°
+            console.log('deg2==', deg2);
+        </script>
+    </body>
+</html>
