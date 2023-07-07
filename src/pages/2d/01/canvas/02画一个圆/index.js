@@ -17,16 +17,11 @@ window.onload = () => {
 
     hDVrender({canvas, width, height, ctx});
 
-    ctx.fillStyle = "green";
-
-    ctx.fillRect(
-      10, // x
-      10, // y
-      100, // w
-      100 // h
-    );
-
     document.body.appendChild(canvas);
+    let r = 100;
+    ctx.strokeStyle = "green";
+    ctx.arc(150, 150, r, 0, 2 * Math.PI);
+    ctx.stroke();
   };
 
   render(500, 500);

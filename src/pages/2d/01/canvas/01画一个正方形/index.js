@@ -17,16 +17,18 @@ window.onload = () => {
 
     hDVrender({canvas, width, height, ctx});
 
-    ctx.fillStyle = "green";
+    document.body.appendChild(canvas);
+    // 清除指定矩形区域，让清除部分完全透明。
+    ctx.clearRect(0, 0, width, height);
 
+    // 设置颜色
+    ctx.fillStyle = "red";
     ctx.fillRect(
       10, // x
       10, // y
-      100, // w
-      100 // h
+      200, // 宽
+      200 // 高
     );
-
-    document.body.appendChild(canvas);
   };
 
   render(500, 500);

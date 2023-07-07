@@ -1,4 +1,5 @@
-import "./index.less";
+# 画一个正方形
+```
 window.onload = () => {
   const hDVrender = ({canvas, width, height, ctx}) => {
     canvas.width = width;
@@ -17,17 +18,19 @@ window.onload = () => {
 
     hDVrender({canvas, width, height, ctx});
 
-    ctx.fillStyle = "green";
+    document.body.appendChild(canvas);
 
+    // 设置颜色
+    ctx.fillStyle = "red"; 
     ctx.fillRect(
       10, // x
       10, // y
-      100, // w
-      100 // h
+      200, // 宽
+      200 // 高
     );
-
-    document.body.appendChild(canvas);
   };
 
   render(500, 500);
 };
+
+```
