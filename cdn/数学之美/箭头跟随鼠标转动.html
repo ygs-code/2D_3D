@@ -12,7 +12,7 @@
     }
   </style>
   <body>
-    <canvas id="canvas" width="1500" height="1500"></canvas>
+    <canvas id="canvas" width="800" height="800"></canvas>
     <script>
       /*
            
@@ -25,9 +25,10 @@
 
       const renderStatic = (clientY, clientX) => {
         ctx.clearRect(0, 0, canvas.width, canvas.height);
+        ctx.beginPath();
         ctx.lineWidth = 2;
         ctx.strokeStyle = "red";
-        ctx.beginPath();
+ 
         // 起始位置
         ctx.moveTo(0, canvas.height / 2);
         ctx.lineTo(canvas.width, canvas.height / 2);

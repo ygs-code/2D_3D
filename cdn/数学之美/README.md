@@ -84,6 +84,10 @@ sin<img src="./2.png"  style="width:16px" />=对边/斜边		     sin<img src="./
 
 ![img](./images/11.png)
 
+数学函数图像
+
+![img](./images/43.jpeg)
+
 ## 一般来说：
 
 一、[四象限](https://www.zhihu.com/search?q=%E5%9B%9B%E8%B1%A1%E9%99%90&search_source=Entity&hybrid_search_source=Entity&hybrid_search_extra=%7B%22sourceType%22%3A%22answer%22%2C%22sourceId%22%3A1445407366%7D)用arcsin,  arctan 都可以
@@ -312,6 +316,18 @@ let y = Math.sin((30 * Math.PI) / 180) * r;  // 49.99999999999999
  
  ```
 
+sin数学图像
+
+<img src="./images/34.webp" />
+
+0-2π的函数图像，他的值域在[1，-1]
+
+再把扩展到
+
+<img src="./images/35.png" />
+
+
+
 
 
 
@@ -359,6 +375,18 @@ let x = Math.cos((30 * Math.PI) / 180) * r;
 console.log("x=======", x);   86.60254037844388
 ```
 
+数学图像
+
+<img src="./images/36.png" />
+
+0-2π的函数图像，他的值域在[1，-1]
+
+再拓展
+
+<img src="./images/37.webp" />
+
+
+
 
 
 
@@ -395,6 +423,16 @@ Math.tan(x)
     var rad = 45 * Math.PI/180;
      Math.tan(rad);
 ```
+
+数学图像
+
+tanθ，然后画出-π/2，到π/2
+
+<img src="./images/38.png" />
+
+拓展 
+
+<img src="./images/39.webp" />
 
 
 
@@ -438,6 +476,14 @@ Math.asin(x)
   console.log((Math.asin(3/5)));
   console.log((Math.asin(3/5) * 180) / Math.PI);
 ```
+
+
+
+数学函数图像
+
+<img src="./images/40.jpg" />
+
+<img src="./images/41.png" />
 
 
 
@@ -492,6 +538,10 @@ Math.acos(x)
   console.log((Math.acos(3/5)));  // 0.6435011087932844
   console.log((Math.acos(3/5) * 180) / Math.PI);  // 36.86989764584402
 ```
+
+数学图像
+
+<img src="./images/42.jfif" />
 
 
 
@@ -564,7 +614,9 @@ Math.atan(x)
       console.log((Math.atan(3 / 4) * 180) / Math.PI);
 ```
 
+数学图像
 
+<img src="./images/44.png" />
 
 ## [描述](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Math/atan#%E6%8F%8F%E8%BF%B0)
 
@@ -595,7 +647,6 @@ Math.atan(0);  // 0
 
 ```
 Math.atan2(y, x)
-
 ```
 
 ## [参数](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Math/atan2#%E5%8F%82%E6%95%B0)
@@ -612,7 +663,7 @@ Math.atan2(y, x)
 
   那么他的对角 角度 是  36.86989764584402
 
-  ​
+  
 
     <img src="./3.png" />
 
@@ -638,7 +689,31 @@ Math.atan2(y, x)
 
 `atan2` 接受单独的 x 和 y 参数，而 `atan` 接受两个参数的比值。
 
-由于 `atan2` 是 `Math` 的静态方法，所以应该像这样使用：`Math.atan2()`，而不是作为你创建的 `Math` 实例的方法。
+ **计算一组点计算点(x，y)组成的向量的弧度，该弧度是与x轴正方向的弧度（这是与传统arctan的唯一区别）**
+
+atan2(input, other, *, out=None) → Tensor
+input (Tensor) – the first input tensor 是分子，也就是点y的坐标集合
+
+other (Tensor) – the second input tensor 是分母，也就是点x的坐标集合，otrher这里填入什么轴的值，就以什么轴的为正方向的夹角的弧度，在二维时other=x，就是该点与x轴正方向的弧度，在三维时other=z，就是该点与z轴正方向的弧度
+ 在三角函数中，atan2是反正切函数的一个变种，有两个变数，主要是提供给计算机编程语言一个简便的弧度计算方式，其定义为：
+
+
+
+
+
+<img src="./images/45.png" />
+
+此时的atan2函数的图像如下，y为弧度，x为任意值
+
+<img src="./images/46.png" />
+
+此时指定弧度有了唯一的象限，同一个弧度不会再出现有两条相反方向向量的情况了。
+
+ **此时A点的弧度=B的弧度+π，二者的弧度不再相等了，此时弧度相同，因为计算的是与x轴正半轴的弧度，也就是此时确定弧度可以唯一确定一个向量。**
+
+<img src="./images/47.png" />
+
+
 
 ## [示例](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Math/atan2#%E7%A4%BA%E4%BE%8B)
 

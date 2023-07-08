@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <title>三维圆周运动</title>
+        <style>
+            canvas {
+                background: black;
+            }
+        </style>
+    </head>
+
+    <body>
+        <canvas id="canvas" width="1600" height="800"></canvas>
+        <script>
+            window.onload = function () {
+                var r = 300;
+                // var x = 700;
+                // var y = 300;
+                var canvas = document.getElementById('canvas');
+                var ctx = canvas.getContext('2d');
+
+                let degs = [30, 60, 90, 120, 180, 270, 360];
+                let deg = 0;
+                setInterval(function () {
+                    deg++;
+                    if (deg >= 360) {
+                        deg = 0;
+                    }
+                    // for (let deg of degs) {
+                    var y = Math.sin((deg * Math.PI) / 180) * r;
+                    var x = Math.cos((deg * Math.PI) / 180) * r;
+                    console.log('x==', x);
+                    ctx.clearRect(0, 0, canvas.width, canvas.height);
+                    ctx.beginPath();
+                    // ctx.clearRect(0, 0, canvas.widht, canvas.height);
+                    // 在画一个点
+                    ctx.fillStyle = '#ff0000';
+                    ctx.font = '14px Arial';
+                    ctx.textAlign = 'center';
+                    ctx.textBaseLine = 'middle';
+                    ctx.fillText(
+                        deg + '度',
+                        // x 轴
+                        canvas.width / 2 + x,
+                        canvas.height / 2
+                    );
+
+                    //设定填充图形的样式
+                    ctx.fillStyle = 'yellow';
+                    ctx.fillRect(
+                        canvas.width / 2 + x, // x 轴
+                        canvas.height / 2, // y 轴
+                        // 弧长为 1 (y / r) 去掉 半径
+                        /*
+                         有 -1 * r 这里不能有负数 所以要 + r 然后 等于 0 ，在加 30 等于 最小值为 30
+
+
+                        y + r + 30, // 宽  
+                        y + r + 30 // 高 
+
+                        */
+                        y / r *30  + 30, // 宽
+                        y / r *30  + 30 // 高
+                    );
+                    // }
+                }, 30);
+                return false;
+
+                var oDiv = document.getElementById('div1');
+
+                var num = 0;
+
+                setInterval(function () {
+                    num++;
+
+                    //Math.sin( num*Math.PI/180 ) = a/r;
+                    //Math.cos( num*Math.PI/180 ) = b/r;
+
+                    var a = Math.sin((num * Math.PI) / 180) * r;
+                    var b = Math.cos((num * Math.PI) / 180) * r;
+
+                    // console.log(Math.atan2(b, a)*Math.PI/180);
+
+                    oDiv.style.left = x + b + 'px';
+                    //oDiv.style.top = y + a + 'px';
+
+                    // oDiv.style.width = a / 100 * 30 + 50 + 'px';
+                    // oDiv.style.height = a / 100 * 30 + 50 + 'px';
+
+                    /*var oBox = document.createElement('div');
+				oBox.className = 'box';
+				document.body.appendChild( oBox );
+
+				oBox.style.left = oDiv.offsetLeft + 'px';
+				oBox.style.top = oDiv.offsetTop + 'px';*/
+                }, 30);
+            };
+        </script>
+    </body>
+</html>

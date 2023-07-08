@@ -69,17 +69,20 @@
                 let radian = (deg * Math.PI) / 180;
                 let x = Math.cos(radian) * r;
                 let y = Math.sin(radian) * r;
-                // 在画一个点
-                context.fillStyle = '#ff0000';
-                context.font = '14px Arial';
-                context.textAlign = 'center';
-                context.textBaseLine = 'middle';
+
 
                 console.log('x==', y);
                 console.log('y==', x);
                 console.log('deg==', deg);
                 console.log('\n');
+
+                // 在画一个点
+                context.fillStyle = '#ff0000';
+                context.font = '14px Arial';
+                context.textAlign = 'center';
+                context.textBaseLine = 'middle';
                 context.fillText(deg + '度', 400 + x, 400 - y);
+                
                 //设定填充图形的样式
                 context.fillStyle = 'yellow';
                 context.fillRect(400 + x, 400 - y, 5, 5);
