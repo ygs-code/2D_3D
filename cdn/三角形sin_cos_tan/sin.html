@@ -1,20 +1,20 @@
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <meta charset="UTF-8" />
-        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title>Document</title>
-    </head>
-    <style>
-        canvas {
-            background: black;
-        }
-    </style>
-    <body>
-        <canvas id="canvas" width="1500" height="1500"></canvas>
-        <script>
-            /*
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <style>
+    canvas {
+      background: black;
+    }
+  </style>
+  <body>
+    <canvas id="canvas" width="1500" height="1500"></canvas>
+    <script>
+      /*
             Math.sin()
                 它的参数值并不是角度数，而是弧度，那么角度就需要换算为弧度
                 半圆的弧长是Math.PI，度数是180度，算出每度的弧长。程序处理浮点数时都是近似值，如果要很精确需要配合其他方法
@@ -41,48 +41,52 @@
 
            */
 
-            var canvas = document.getElementById('canvas');
+      var canvas = document.getElementById("canvas");
 
-            //获取上下文
-            var context = canvas.getContext('2d');
-            //设定填充图形的样式
-            context.fillStyle = 'yellow';
-            let deg = 360;
+      //获取上下文
+      var context = canvas.getContext("2d");
+      //设定填充图形的样式
+      context.fillStyle = "yellow";
+      let deg = 360;
 
-            /*
+      /*
             结果是 最大值为1
                   最小值为-1
             */
-            for (let $deg = 0; $deg < deg; $deg++) {
-                // 弧度
-                let rad = ($deg * Math.PI) / 180;
+      for (let $deg = 0; $deg < deg; $deg++) {
+        // 弧度
+        let rad = ($deg * Math.PI) / 180;
 
-                let value = Math.sin(rad);
+        let value = Math.sin(rad);
 
-                // console.log('rad==', rad);
-                // // console.log('x==', 10 * $deg);
-                // // console.log('sin==', value);
-                // console.log('$deg==', $deg);
-                // console.log('asin==', (Math.asin(value) * 180) / Math.PI);
-                //绘制图形
-                context.fillRect(1 * $deg, 700 + 500 * value, 5, 5);
-            }
+        // console.log('rad==', rad);
+        // // console.log('x==', 10 * $deg);
+        // // console.log('sin==', value);
+        // console.log('$deg==', $deg);
+        // console.log('asin==', (Math.asin(value) * 180) / Math.PI);
+        //绘制图形
+        context.fillRect(1 * $deg, 700 + 500 * value, 5, 5);
+      }
 
-            let degs = [
-                0, 15, 30, 45, 60, 75, 90, 105, 135, 180, 270, 360, 361,
-            ];
+      let degs = [0, 15, 30, 45, 60, 75, 90, 105, 135, 180, 270, 360, 361];
 
-            for (let i = 0; i < degs.length; i++) {
-                // 弧度
-                let rad = (degs[i] * Math.PI) / 180;
+      for (let i = 0; i < degs.length; i++) {
+        // 弧度
+        let rad = (degs[i] * Math.PI) / 180;
 
-                let value = Math.sin(rad);
+        let value = Math.sin(rad);
 
-                console.log('degs[$deg]==', degs[i]);
-                console.log('rad==', rad);
-                console.log('value==', value);
-                console.log('\n');
-            }
-        </script>
-    </body>
+        console.log("degs[$deg]==", degs[i]);
+        console.log("rad==", rad);
+        console.log("value==", value);
+        console.log("\n");
+      }
+
+      let r = 100;
+      let y = Math.sin((30 * Math.PI) / 180) * r;
+    //   let x = Math.cos((30 * Math.PI) / 180) * r;
+      console.log("y=======", y);
+    //   console.log("x=======", x);
+    </script>
+  </body>
 </html>

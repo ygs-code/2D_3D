@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <style>
+    canvas {
+      background: black;
+    }
+  </style>
+  <body>
+    <canvas id="canvas" width="1500" height="1500"></canvas>
+    <script>
+      /*
+           
+      1. 画中心点
+
+              
+           */
+      var canvas = document.getElementById("canvas");
+      var ctx = canvas.getContext("2d");
+
+      const renderStatic = (clientY, clientX) => {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        ctx.lineWidth = 2;
+        ctx.strokeStyle = "red";
+        ctx.beginPath();
+        // 起始位置
+        ctx.moveTo(0, canvas.height / 2);
+        ctx.lineTo(canvas.width, canvas.height / 2);
+        ctx.stroke();
+
+        // 起始位置
+        ctx.beginPath();
+        ctx.strokeStyle = "green";
+        ctx.moveTo(canvas.width / 2, 0);
+        ctx.lineTo(canvas.width / 2, canvas.height);
+        ctx.stroke();
+
+        ctx.font = "48px serif";
+        ctx.fillStyle = "blue";
+        ctx.fillText("0", canvas.width / 2 - 11, canvas.height / 2 + 18);
+
+        ctx.beginPath();
+        ctx.arc(canvas.width / 2, canvas.height / 2, 5, 0, 2 * Math.PI);
+        ctx.fill();
+
+        ctx.beginPath();
+        ctx.arc(canvas.width / 2, canvas.height / 2, 200, 0, 2 * Math.PI);
+        ctx.stroke();
+      };
+
+      const renderDynamic = (clientX, clientY) => {
+        // 动态
+        let x = clientX - canvas.width / 2;
+        let y = clientY - canvas.height / 2;
+        // console.log("clientX==", clientX);
+        // console.log("clientY==", clientY);
+
+        // 起始位置
+        ctx.beginPath();
+        ctx.strokeStyle = "yellow";
+        ctx.moveTo(canvas.width / 2, canvas.height / 2);
+        ctx.lineTo(clientX, clientY);
+        ctx.stroke();
+        let bevelled = Math.sqrt(Math.pow(x, 2) + Math.pow(y, 2));
+        let asinDeg = (Math.asin(y / bevelled) * 180) / Math.PI;
+        let acosDeg = (Math.acos(x / bevelled) * 180) / Math.PI;
+
+        let atanDeg = (Math.atan(y / x) * 180) / Math.PI;
+        let atan2Deg = (Math.atan2(y, x) * 180) / Math.PI;
+
+        // console.log([ atanDeg, atan2Deg, asinDeg, acosDeg]);
+
+        let deg = atan2Deg; //  Math.max( asinDeg, acosDeg);
+
+        // 0-180  acos2Deg
+
+        // - 90 - 0
+        let r = bevelled < 200 ? bevelled : 200;
+        let $x = Math.cos((deg * Math.PI) / 180) * r;
+        let $y = Math.sin((deg * Math.PI) / 180) * r;
+
+        ctx.beginPath();
+        ctx.arc(
+          $x + canvas.width / 2,
+          $y + canvas.height / 2,
+          3,
+          0,
+          2 * Math.PI
+        );
+        ctx.stroke();
+
+        console.log("deg====", deg);
+        // console.log("$x ====", $x);
+        // console.log("$y  ====", $y);
+      };
+
+      canvas.onmousemove = (event) => {
+        const { clientY, clientX } = event;
+        renderStatic(clientX, clientY);
+        renderDynamic(clientX, clientY);
+      };
+    </script>
+  </body>
+</html>

@@ -27,7 +27,7 @@ class Git {
     this.remote = remote.split("\n")[1];
     let { stdout: branch } = await this.PromiseExec("git branch");
     this.branch = branch.toString().match(/(?<=\*)\s*\w+/);
-    console.log('this.branch===',this.branch)
+    // console.log('this.branch===',this.branch)
     this.branch = this.branch ? this.branch[0] : "";
     await this.huskyInstall();
     await this.submit(() => {
