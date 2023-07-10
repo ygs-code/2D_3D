@@ -33,6 +33,10 @@
         class Canvas {
           constructor() {
             this.nodes = [];
+            this.mousedownXY = {
+              x: 0,
+              y: 0,
+            };
             this.selectedNode = null;
             this.init();
           }
@@ -153,12 +157,12 @@
                   this.canvas.getBoundingClientRect() || getClientRect();
                 var x = e.clientX - bounding.left;
                 var y = e.clientY - bounding.top;
-                // for (let [index, item] of this.nodes.entries()) {
-                //   // 获取 到 每个节点的 ctx 主要是 isPointInPath 会被覆盖，所以每个方法中 创建一个 canvas 这样 isPointInPath 就不会被覆盖
-                //   const { r, color, ctx } = item;
-                //   console.log("item===", item);
-                //   console.log("isPointInPath==", ctx.isPointInPath(x, y));
-                // }
+                for (let [index, item] of this.nodes.entries()) {
+                  // 获取 到 每个节点的 ctx 主要是 isPointInPath 会被覆盖，所以每个方法中 创建一个 canvas 这样 isPointInPath 就不会被覆盖
+                  const { r, color, ctx } = item;
+                  console.log("item===", item);
+                  console.log("isPointInPath==", ctx.isPointInPath(x, y));
+                }
 
                 const selectedNode = this.nodes.find((item) => {
                   const { r, color, ctx } = item;
@@ -167,7 +171,15 @@
                 if (selectedNode) {
                   this.selectedNode = selectedNode;
 
-                  this.updateNode(x, y);
+                  this.mousedownXY = {
+                    x: selectedNode.x - x,
+                    y: selectedNode.y - y,
+                  };
+
+                  this.updateNode(
+                    x + this.mousedownXY.x,
+                    y + this.mousedownXY.y
+                  );
                 }
               },
               false
@@ -181,7 +193,10 @@
                 var x = e.clientX - bounding.left;
                 var y = e.clientY - bounding.top;
                 if (this.selectedNode) {
-                  this.updateNode(x, y);
+                  this.updateNode(
+                    x + this.mousedownXY.x,
+                    y + this.mousedownXY.y
+                  );
                 }
               },
               false
