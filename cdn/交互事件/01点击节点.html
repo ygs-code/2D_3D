@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <style>
+    * {
+      padding: 0;
+      margin: 0;
+    }
+    body {
+      overflow: hidden;
+      height: 100vh;
+      width: 100vw;
+    }
+    canvas {
+      background: black;
+    }
+  </style>
+  <body>
+    <script>
+      /*
+
+
+
+
+              */
+
+      window.onload = function () {
+        var canvas = document.createElement("canvas");
+        canvas.height = document.body.clientHeight;
+        canvas.width = document.body.clientWidth;
+        document.body.appendChild(canvas);
+        var ctx = canvas.getContext("2d");
+
+        // 一旦适用 ctx.beginPath 路径 重新绘制，然后  ctx.isPointInPath 判断就会失效
+        ctx.beginPath();
+        ctx.arc(100, 100, 50, 0, Math.PI * 2);
+        ctx.fillStyle = "red";
+        ctx.fill();
+
+        ctx.beginPath();
+        ctx.arc(200, 200, 50, 0, Math.PI * 2);
+        ctx.fillStyle = "blue";
+        ctx.fill();
+
+        canvas.addEventListener("click", detect, false);
+
+        function detect(e) {
+          /*getBoundingClientRect获取元素位置。用于获得页面中某个元素的左，上，右和下分别相对浏览器视窗的位置。
+      	getBoundingClientRect是DOM元素到浏览器可视范围的距离（不包含文档卷起的部分）。
+      	该函数返回一个Object对象，该对象有6个属性：top,lef,right,bottom,width,height；
+      	这里的top、left和css中的理解很相似，
+      	width、height是元素自身的宽高，
+      	但是right是指元素右边界距窗口最左边的距离，
+      	bottom是指元素下边界距窗口最上面的距离。
+      */
+          var bounding = canvas.getBoundingClientRect() || getClientRect();
+          var x = e.clientX - bounding.left;
+          var y = e.clientY - bounding.top;
+          console.log("isPointInPath==", ctx.isPointInPath(x, y));
+          
+        }
+      };
+    </script>
+  </body>
+</html>
