@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <style>
+    * {
+      padding: 0;
+      margin: 0;
+    }
+    body {
+      overflow: hidden;
+      height: 100vh;
+      width: 100vw;
+    }
+    canvas {
+      background: black;
+    }
+  </style>
+  <body>
+    <script>
+      /*
+
+
+
+
+              */
+
+      window.onload = function () {
+        class Canvas {
+          constructor() {
+            this.nodes = [];
+            this.mousedownXY = {
+              x: 0,
+              y: 0,
+            };
+            this.selectedNode = null;
+            this.init();
+          }
+          guid() {
+            return "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(
+              /[xy]/g,
+              function (c) {
+                var r = (Math.random() * 16) | 0,
+                  v = c == "x" ? r : (r & 0x3) | 0x8;
+                return v.toString(16);
+              }
+            );
+          }
+
+          init() {
+            const { canvas, ctx } = this.createCanvas();
+            this.canvas = canvas;
+            this.ctx = ctx;
+            document.body.appendChild(canvas);
+
+            this.addNode();
+            this.render();
+            this.events();
+          }
+          createCanvas() {
+            var canvas = document.createElement("canvas");
+            canvas.height = document.body.clientHeight;
+            canvas.width = document.body.clientWidth;
+            var ctx = canvas.getContext("2d");
+            return {
+              canvas,
+              ctx,
+            };
+          }
+
+          addNode() {
+            /*
+               一旦适用 ctx.beginPath 路径 重新绘制，然后  ctx.isPointInPath 判断就会失效
+               所以我们来修改下，把 每个节点中 单独创建一个canvas，然后 存在一个数组中，然后通过查找来适配
+              */
+            this.nodes.push(
+              this.cteateNode({
+                x: 100, // x
+                y: 100,
+                r: 50,
+                color: "red",
+                // 创建一个新的canvas 只是 这个 canvas 没有插入到 body中
+                ...this.createCanvas(),
+              }),
+              this.cteateNode({
+                x: 400,
+                y: 100,
+                r: 50,
+                color: "blue",
+                ...this.createCanvas(),
+              })
+            );
+          }
+          cteateNode({ x, y, r, color, canvas, ctx, uuid = this.guid() }) {
+            // 这里我们不需要插入到body中，只需要拿到isPointInPath api而已
+            //  画 节点
+            ctx.beginPath();
+            ctx.arc(x, y, r, 0, Math.PI * 2);
+            ctx.fillStyle = color;
+            ctx.fill();
+            return {
+              canvas,
+              ctx,
+              x,
+              y,
+              r,
+              color,
+              uuid,
+            };
+          }
+          updateNode(x, y) {
+            this.selectedNode = {
+              ...this.selectedNode,
+              x,
+              y,
+            };
+            let index = this.nodes.findIndex((item) => {
+              return item.uuid == this.selectedNode.uuid;
+            });
+            this.cteateNode(this.selectedNode);
+
+            // 更换位置
+            for (let i = index; i < this.nodes.length - 1; i++) {
+              this.nodes[i] = this.nodes[i + 1];
+            }
+
+            this.nodes[this.nodes.length - 1] = this.selectedNode;
+
+            this.render();
+
+            return {
+              nodes: this.nodes,
+              selectedNode: this.selectedNode,
+            };
+          }
+          events() {
+            this.canvas.addEventListener(
+              "click",
+              (e) => {
+                var bounding =
+                  this.canvas.getBoundingClientRect() || getClientRect();
+                var x = e.clientX - bounding.left;
+                var y = e.clientY - bounding.top;
+                for (let item of this.nodes) {
+                  // 获取 到 每个节点的 ctx 主要是 isPointInPath 会被覆盖，所以每个方法中 创建一个 canvas 这样 isPointInPath 就不会被覆盖
+                  const { r, color, ctx } = item;
+                  // console.log("item===", item);
+                  // console.log("isPointInPath==", ctx.isPointInPath(x, y));
+                }
+              },
+              false
+            );
+
+            this.canvas.addEventListener(
+              "mousedown",
+              (e) => {
+                var bounding =
+                  this.canvas.getBoundingClientRect() || getClientRect();
+                var x = e.clientX - bounding.left;
+                var y = e.clientY - bounding.top;
+                for (let [index, item] of this.nodes.entries()) {
+                  // 获取 到 每个节点的 ctx 主要是 isPointInPath 会被覆盖，所以每个方法中 创建一个 canvas 这样 isPointInPath 就不会被覆盖
+                  const { r, color, ctx } = item;
+                  console.log("item===", item);
+                  console.log("isPointInPath==", ctx.isPointInPath(x, y));
+                }
+
+                const selectedNode = this.nodes.find((item) => {
+                  const { r, color, ctx } = item;
+                  return ctx.isPointInPath(x, y);
+                });
+                if (selectedNode) {
+                  this.selectedNode = selectedNode;
+
+                  this.mousedownXY = {
+                    x: selectedNode.x - x,
+                    y: selectedNode.y - y,
+                  };
+
+                  this.updateNode(
+                    x + this.mousedownXY.x,
+                    y + this.mousedownXY.y
+                  );
+                }
+              },
+              false
+            );
+
+            this.canvas.addEventListener(
+              "mousemove",
+              (e) => {
+                var bounding =
+                  this.canvas.getBoundingClientRect() || getClientRect();
+                var x = e.clientX - bounding.left;
+                var y = e.clientY - bounding.top;
+                if (this.selectedNode) {
+                  const { nodes, selectedNode } = this.updateNode(
+                    x + this.mousedownXY.x,
+                    y + this.mousedownXY.y
+                  );
+
+
+                  for(let item of nodes){
+                       const {
+                         x,y,r,uuid,
+                       }=item
+                    if(uuid==selectedNode.uuid){
+
+                    }
+
+                  }
+                }
+              },
+              false
+            );
+
+            this.canvas.addEventListener(
+              "mouseup",
+              (e) => {
+                var bounding =
+                  this.canvas.getBoundingClientRect() || getClientRect();
+                var x = e.clientX - bounding.left;
+                var y = e.clientY - bounding.top;
+                if (this.selectedNode) {
+                }
+
+                this.selectedNode = null;
+              },
+              false
+            );
+          }
+          render(nodes = this.nodes) {
+            // 清除画布
+            this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+            for (let item of nodes) {
+              const { x, y, r, color } = item;
+              // 渲染节点
+              this.cteateNode({
+                x,
+                y,
+                r,
+                color,
+                canvas: this.canvas,
+                ctx: this.ctx,
+              });
+            }
+            console.log(this.nodes);
+          }
+        }
+
+        new Canvas();
+      };
+    </script>
+  </body>
+</html>
