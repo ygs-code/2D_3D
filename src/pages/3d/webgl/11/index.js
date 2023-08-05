@@ -65,6 +65,8 @@ window.onload = function () {
   gl.clearColor(0.0, 0.0, 0.0, 1.0);
   gl.clear(gl.COLOR_BUFFER_BIT);
 
+  /* eslint-disable   */
+
   // 写三角形顶点位置
   const vertices = new Float32Array([
     //x    y    r    g    b
@@ -84,6 +86,8 @@ window.onload = function () {
     0.0,
     1.0, //
   ]);
+  /* eslint-disable   */
+
   const FSIZE = vertices.BYTES_PER_ELEMENT;
 
   //1. 创建 buffer

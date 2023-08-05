@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <style>
+    canvas {
+      background: black;
+    }
+  </style>
+  <body>
+    <canvas id="canvas" width="800" height="800"></canvas>
+    <script>
+      var canvas = document.getElementById("canvas");
+      let x = canvas.width / 2;
+      let y = canvas.height / 2;
+
+      //获取上下文
+      var ctx = canvas.getContext("2d");
+
+      /**
+       * 向量旋转
+       * @param {{x:Number,y:Number}} vector
+       * @param {number} angle 旋转的角度 弧度制
+       * @param {*} origin  旋转点 默认是 （0,0）,可传入 绕着的某点
+       */
+      function vectorRotate(vector, angle, origin = { x: 0, y: 0 }) {
+        let cosA = Math.cos((angle * Math.PI) / 180);
+        let sinA = Math.sin((angle * Math.PI) / 180);
+        var x1 = (vector.x - origin.x) * cosA - (vector.y - origin.y) * sinA;
+        var y1 = (vector.x - origin.x) * sinA + (vector.y - origin.y) * cosA;
+        return {
+          x: origin.x + x1,
+          y: origin.y + y1,
+        };
+      }
+
+      const render = (angle) => {
+        // 清除画布
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        ctx.strokeStyle = "orange";
+        ctx.beginPath();
+        ctx.moveTo(x, y);
+        ctx.lineTo(x + 100, y);
+        ctx.lineTo(x + 100, y - 100);
+        ctx.lineTo(x, y);
+        ctx.fill();
+        ctx.stroke();
+
+        // 旋转
+
+        ctx.strokeStyle = "red";
+        ctx.beginPath();
+        ctx.moveTo(
+          vectorRotate(
+            {
+              x,
+              y,
+            },
+            angle,
+            {
+              x: x + 50,
+              y: y - 50,
+            }
+          ).x,
+          vectorRotate(
+            {
+              x,
+              y,
+            },
+            angle,
+            {
+              x: x + 50,
+              y: y - 50,
+            }
+          ).y
+        );
+        ctx.lineTo(
+          vectorRotate(
+            {
+              x: x + 100,
+              y,
+            },
+            angle,
+            {
+              x: x + 50,
+              y: y - 50,
+            }
+          ).x,
+          vectorRotate(
+            {
+              x: x + 100,
+              y,
+            },
+            angle,
+            {
+              x: x + 50,
+              y: y - 50,
+            }
+          ).y
+        );
+
+        ctx.lineTo(
+          vectorRotate(
+            {
+              x: x + 100,
+              y: y - 100,
+            },
+            angle,
+            {
+              x: x + 50,
+              y: y - 50,
+            }
+          ).x,
+          vectorRotate(
+            {
+              x: x + 100,
+              y: y - 100,
+            },
+            angle,
+            {
+              x: x + 50,
+              y: y - 50,
+            }
+          ).y
+        );
+
+        ctx.lineTo(
+          vectorRotate(
+            {
+              x,
+              y,
+            },
+            angle,
+            {
+              x: x + 50,
+              y: y - 50,
+            }
+          ).x,
+          vectorRotate(
+            {
+              x,
+              y,
+            },
+            angle,
+            {
+              x: x + 50,
+              y: y - 50,
+            }
+          ).y
+        );
+
+        ctx.fill();
+        ctx.stroke();
+      };
+
+      i = 0;
+      setInterval(() => {
+        requestAnimationFrame(render.bind(null, i));
+        i++;
+      }, 30);
+
+      let vector = {
+        x: 100,
+        y: 0,
+      };
+
+      console.log(vectorRotate(vector, 30));
+    </script>
+  </body>
+</html>
