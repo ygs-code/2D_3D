@@ -44,11 +44,12 @@ function initVertexBuffers(gl) {
 
 window.onload = function () {
   const canvas = document.createElement("canvas");
+  canvas.width = 500;
+  canvas.height = 500;
+
   getWebGLContext(canvas);
 
   document.body.appendChild(canvas);
-  canvas.width = 500;
-  canvas.height = 500;
 
   if (!canvas.getContext) return;
   let gl = canvas.getContext("webgl");
@@ -69,17 +70,48 @@ window.onload = function () {
   setFragColor(gl);
   //初始化顶点
   const n = initVertexBuffers(gl);
-  //获取顶点着色器uniform变量u_Translation的存储地址
-  const u_Translation = gl.getUniformLocation(gl.program, "u_Translation");
 
-  //在 x、y、z轴方向上平移的距离
-  const Tx = 0.5;
-  const Ty = 0.5;
-  const Tz = 0.0;
+  let Tx = 0.0;
+  let direction = "plus";
+  const render = () => {
+    //获取顶点着色器uniform变量u_Translation的存储地址
+    const u_Translation = gl.getUniformLocation(gl.program, "u_Translation");
 
-  //向顶点着色器uniform变量u_Translation传值
-  gl.uniform4f(u_Translation, Tx, Ty, Tz, 0.0);
+    if (Tx >= 0.5) {
+      direction = "minus";
+    }
 
-  //绘制三角形
-  gl.drawArrays(gl.TRIANGLES, 0, n);
+    if (Tx <= -0.5) {
+      direction = "plus";
+    }
+
+    //在 x、y、z轴方向上平移的距离
+    if (direction === "plus") {
+      Tx += 0.01;
+    }
+
+    //在 x、y、z轴方向上平移的距离
+    if (direction === "minus") {
+      Tx -= 0.01;
+    }
+
+    // if (Tx >= 0.5) {
+    //   Tx -= 0.01;
+    // } else {
+    //   Tx += 0.01;
+    // }
+    const Ty = 0.5;
+    const Tz = 0.0;
+
+    //向顶点着色器uniform变量u_Translation传值
+    gl.uniform4f(u_Translation, Tx, Ty, Tz, 0.0);
+
+    //绘制三角形
+    gl.drawArrays(gl.TRIANGLES, 0, n);
+
+    requestAnimationFrame(render);
+    console.log("Tx====", Tx);
+  };
+
+  render();
 };
