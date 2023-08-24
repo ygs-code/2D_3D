@@ -16,6 +16,7 @@ function setFragColor(gl) {
 
 //初始化顶点
 function initVertexBuffers(gl) {
+  // 初始化顶点位置
   const vertices = new Float32Array([0.0, 0.5, -0.5, -0.5, 0.5, -0.5]);
 
   //1.创建缓冲区对象

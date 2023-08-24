@@ -110,18 +110,17 @@ window.onload = function () {
   // type(第3个参数)为gl.FLOAT意味着数据类型为浮点数
   // normalize(第4个参数)为false意味着不对这些数据进行归一化操作
   /*
-     
      告诉显卡从当前绑定的缓冲区（bindBuffer() 指定的缓冲区）中读取顶点数据。
      方法绑定当前缓冲区范围到gl.ARRAY_BUFFER,
      成为当前顶点缓冲区对象的通用顶点属性并指定它的布局 (缓冲区对象中的偏移量)。
-
+     将缓冲区对象分配给a_Position
      */
   gl.vertexAttribPointer(a_Position, 2, gl.FLOAT, false, FSIZE * 5, 0);
   // 连接a_Position变量与分配给他的缓冲区对象
   gl.enableVertexAttribArray(a_Position);
-
+  // 将缓冲区对象分配给a_Color变量
   const a_Color = gl.getAttribLocation(gl.program, "a_Color");
-
+  // 将缓冲区对象分配给a_Color
   gl.vertexAttribPointer(a_Color, 3, gl.FLOAT, false, FSIZE * 5, FSIZE * 2);
   gl.enableVertexAttribArray(a_Color);
 

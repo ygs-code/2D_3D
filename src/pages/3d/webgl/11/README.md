@@ -1,3 +1,22 @@
+# 缓冲区
+
+如果我们需要渲染多个顶点，或者多个点，如果是使用变量，
+
+用 数组 g_points[] 渲染坐标点，需要使用数组遍历，每次遍历就像着色器传入一个点，并调用gl.drawArray() 这个点绘制出来，
+
+```
+for(var i=0; i<arr.length; i++){
+    // 将点的位置传给变量 a_Position
+    gl.vertexAttrib3f(a_Position,g_points[i+1],0.0);
+    //绘制点
+    gl.drawArrays(gl.POINTS,0,1);
+}
+```
+
+显然这种方法，一次性只能绘制一个点，对那些由多个顶点组成的图形，比如三角形， 矩形，和立方体来说，你需要一次性将图形的顶点全部传入顶点着色器，然后才能把图形画出来。
+
+webgl提供了一种很方便的机制，即缓冲区对象，它可以可以一次性的向着色器传入多个顶点的数据，缓冲区是webgl系统中的一块内存区域，我们可以一次性的向缓冲区填充大量的顶点数据，然后将这些数据保存在其中，供顶点着色器使用。
+
 # 绘制一个三角形
 
 ## 使用缓冲区对象
@@ -29,7 +48,5 @@ var vertices = new Float32Array([
 4.将缓冲区对象分配给一个attribute变量 gl.vertexAttribPointer()
 
 5.开启attribute变量 gl.enableVertexAttribArray()
-
-
 
 并且添加颜色
