@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <link rel="icon" href="%PUBLIC_URL%/favicon.ico" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#000000" />
+    <meta name="description" content="Web site created using create-react-app" />
+</head>
+<script src="./fabric.js"></script>
+
+<style>
+    * {
+        padding: 0;
+        margin: 0;
+    }
+
+    canvas {
+        /* background: #ccc;  */
+        padding: 0;
+        margin: 0;
+    }
+</style>
+
+<body>
+    <canvas id="canvas" width="1000" height="1000"></canvas>
+    <script>
+
+        class Canvas {
+            constructor() {
+                this.nodes = []
+                this.circles = []
+                this.init()
+            }
+            guid() {
+                return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
+                    var r = Math.random() * 16 | 0,
+                        v = c == 'x' ? r : (r & 0x3 | 0x8);
+                    return v.toString(16);
+                });
+            }
+            addCircles({
+                top,
+                left,
+                radius, // 半径
+                ...options
+            }) {
+                var circle = new fabric.Circle({
+                    id: this.guid(),
+                    top,
+                    left,
+                    radius, // 半径
+                    fill: 'white',
+                    stroke: "rgb(102, 115, 126)",
+                    defaultCursor: 'pointer',
+                    defaultCursor: 'pointer', //默认光标改成十字
+                    hoverCursor: 'pointer', //悬浮光标改成手型
+                    strokeDashArray: [
+                        5
+                    ],
+                    ...options,
+                });
+                this.canvas.add(circle);
+                // this.circles.push({
+                //     id: this.guid(),
+                //     top,
+                //     left,
+                //     radius, // 半径
+                //     // fill: 'white',
+                //     // stroke: "red",
+                //     // strokeDashArray: [
+                //     //     5
+                //     // ],
+                //     ...options,
+                //     circle,
+
+                // })
+                this.events(circle)
+                return {
+                    id: this.guid(),
+                    top,
+                    left,
+                    radius, // 半径
+                    // fill: 'white',
+                    // stroke: "red",
+                    // strokeDashArray: [
+                    //     5
+                    // ],
+                    ...options,
+                    circle,
+
+                }
+            }
+            getXY({
+                age,
+                x,
+                y
+            }) {
+                // let age = 50
+                let rad = age * Math.PI / 180
+                let r = Math.sqrt(Math.pow(x, 2) + Math.pow(y, 2))
+                // let x = r * Math.cos(rad)
+                // let y = r * Math.sin(rad)
+
+                return {
+                    x: r * Math.cos(rad),
+                    y: r * Math.sin(rad)
+                }
+
+            }
+            init() {
+                this.canvas = new fabric.Canvas('canvas');
+                this.canvas.defaultCursor = 'pointer';//默认光标，即鼠标在画布上的样式（默认值：default）
+                this.canvas.hoverCursor = 'pointer';//鼠标移动到对象上的样式（默认值：move）
+                this.canvas.moveCursor = 'pointer';//对象拖动时的鼠标样式（默认值：move）
+                this.canvas.freeDrawingCursor = 'pointer'; //自由绘制时的鼠标样式（默认值：crosshair）
+                this.canvas.rotationCursor = 'pointer';//旋转时的鼠标样式（默认值：crosshair）
+                let circles = [
+                    {
+                        top: 0,
+                        left: 0,
+                        radius: 100, // 半径
+                    },
+                    {
+                        top: 100 - 90,
+                        left: 100 - 90,
+                        radius: 90, // 半径
+                    },
+                    {
+                        top: 100 - 80,
+                        left: 100 - 80,
+                        radius: 80, // 半径
+                    },
+                    {
+                        top: 100 - 70,
+                        left: 100 - 70,
+                        radius: 70, // 半径
+                    },
+                    {
+                        top: 100 - 60,
+                        left: 100 - 60,
+                        radius: 60, // 半径
+                    },
+                    {
+                        top: 100 - 50,
+                        left: 100 - 50,
+                        radius: 50, // 半径
+                    },
+                    {
+                        top: 100 - 40,
+                        left: 100 - 40,
+                        radius: 40, // 半径
+                    },
+
+                    {
+                        top: 100 - 10,
+                        left: 100 - 10,
+                        radius: 10,
+                        fill: 'transparent',
+                        stroke: 'red',
+                        strokeDashArray: []
+                    },
+                ]
+                for (let item of circles) {
+
+
+                    // this.circles.push({
+                    //     id: this.guid(),
+                    //     top,
+                    //     left,
+                    //     radius, // 半径
+                    //     // fill: 'white',
+                    //     // stroke: "red",
+                    //     // strokeDashArray: [
+                    //     //     5
+                    //     // ],
+                    //     ...options,
+                    //     circle,
+
+                    // })
+
+
+
+                    let circle = this.addCircles({
+                        ...item,
+                        // editable: false, 
+                        selectable: false,
+                        skipTargetFind: true // 禁止选中
+                    }
+                    )
+
+                    this.circles.push(circle)
+                }
+
+                // let age = 50
+                // let rad = age * Math.PI / 180
+                // let r = Math.sqrt(Math.pow(30, 2) + Math.pow(30, 2))
+                // let x = r * Math.cos(rad)
+                // let y = r * Math.sin(rad)
+
+                let age = 50
+                let { x, y } = this.getXY({
+                    age,
+                    x: 28,
+                    y: 28
+                })
+
+                let nodes = [
+                    {
+                        top: 100 + y - 3,
+                        left: 100 + x - 3,
+                        radius: 3,
+                        fill: 'transparent',
+                        stroke: 'rgb(37, 203, 253)',
+                        strokeDashArray: []
+                    },
+                ]
+
+                for (let item of nodes) {
+                    let node = this.addCircles({
+                        ...item,
+                        // editable: true, 
+                        strokeUniform: true,
+                        lockUniScaling: true,
+                        selectionColor: 'rgba(0,255,0,0.3)',
+                        hasBorders: false,
+                        hasControls: false,
+
+                        // selectable: false,
+                        // skipTargetFind: true // 禁止选中
+                    }
+                    )
+                    this.nodes.push(node)
+                }
+
+
+                // setInterval(() => {
+                //     age += 1
+                //     let { x, y } = this.getXY({
+                //         age,
+                //         x: 28,
+                //         y: 28
+                //     })
+
+                //     // console.log(y)
+                //     // console.log(x)
+                //     // console.log(this.nodes[0])
+                //     this.nodes[0].circle.set('top', 100 + y - 3)
+                //     this.nodes[0].circle.set('left', 100 + x - 3)
+                //     this.canvas.requestRenderAll()
+                // }, 10)
+
+
+                // this.nodes[0].set('top', top)
+                // this.nodes[0].set('left', left)
+
+
+
+
+
+
+
+            }
+
+
+            events(rect) {
+                // 按下 选中
+                rect.on('mousedown', (e) => {
+                    // console.log('mousedown 单击', e);
+
+                    if (e.transform && e.transform.target) {
+
+                        const selectTarget = e.transform.target;
+                        console.log('selectTarget===', selectTarget)
+                    }
+                });
+                // 移动
+                rect.on('mousemove', (e) => {
+                    // console.log('mousemove 移动', e);
+
+                    if (e.transform && e.transform.target) {
+
+                        const selectTarget = e.transform.target;
+                        console.log('selectTarget===', selectTarget)
+                    }
+
+                    // canvasContainer.setActiveObject(selectTarget);
+                    // let activeObject = canvasContainer.getActiveObject();
+                    // console.log('获取画布当前选中的对象', activeObject);
+                });
+
+                // 抬起
+                rect.on('mouseup', (e) => {
+                    // console.log('mousemove 移动', e);
+                    if (e.transform && e.transform.target) {
+                        const selectTarget = e.transform.target;
+                        console.log('selectTarget===', selectTarget)
+                    }
+                    // canvasContainer.setActiveObject(selectTarget);
+                    // let activeObject = canvasContainer.getActiveObject();
+                    // console.log('获取画布当前选中的对象', activeObject);
+                });
+
+
+
+
+                // this.canvas.on('selection:created', (e) => {
+
+                //     if (e?.selected && e?.selected.length > 1) {
+                //         canvas.discardActiveObject();
+                //     } else {
+                //         const selectTarget = e?.selected[0];
+                //         canvasContainer.setActiveObject(selectTarget);
+                //     }
+                // });
+
+            }
+        }
+        new Canvas()
+    </script>
+</body>
+
+</html>
