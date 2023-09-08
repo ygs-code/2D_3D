@@ -122,7 +122,7 @@ window.onload = function () {
     let u_translate = gl.getUniformLocation(gl.program, "u_translate");
     gl.uniform4f(u_translate, x, y, 0.0, 0.0);
 
-    let n = vertices.length / 2;
+    let n = 3;
 
     // 画图
     gl.drawArrays(

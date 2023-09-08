@@ -169,12 +169,12 @@ pointer：当前指针指向的vertex内部的偏离字节数，可以唯一的�
   gl.drawArrays(
     gl.LINE_LOOP, // 正方形是由两个三角形组成
     0, // 从哪个点开始
-    n
+    n // 顶点个数
   );
   // 画点
   gl.drawArrays(
     gl.TRIANGLE_FAN, // 画什么图形
     0, // 从哪个点开始
-    n
+    n // 顶点个数
   );
 };
