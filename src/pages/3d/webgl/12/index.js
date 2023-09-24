@@ -66,11 +66,19 @@ window.onload = function () {
   gl.clear(gl.COLOR_BUFFER_BIT);
 
   // 写三角形顶点位置
-  const vertices = new Float32Array([
-    //x     y      r     g     b
-    -0, 0.5, 1.0, 0.0, 0.0, 0.5, 0.0, 0.0, 1.0, 0.0, -0.5, 0.0, 0.0, 0.0, 1.0,
-    // 0.5,   0.5,   0.0, 0.0, 1.0,
-  ]);
+  const vertices = new Float32Array(
+    new Function(`
+      return [
+        //x    y     r     g     b
+        -0,   0.5,   1.0,  0.0,  0.0, 
+        0.5,  0.0,   0.0,  1.0,  0.0,
+        -0.5, 0.0,   0.0,  0.0,  1.0,
+        // 0.5,   0.5,   0.0, 0.0, 1.0,
+      ]
+    `)()
+  );
+  console.log("vertices===", vertices);
+  debugger;
   const FSIZE = vertices.BYTES_PER_ELEMENT;
 
   //1. 创建 buffer

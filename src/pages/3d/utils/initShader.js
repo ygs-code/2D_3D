@@ -5,6 +5,7 @@ function loadShader(gl, type, source) {
   var shader = gl.createShader(type);
   if (shader === null) {
     console.error("unable to create shader");
+
     throw "unable to create shader";
     // return null;
   }
@@ -25,6 +26,7 @@ function loadShader(gl, type, source) {
     var error = gl.getShaderInfoLog(shader);
     // 输出报错日志
     console.error("Failed to compile shader: " + error);
+
     // 删除shader 防止内存溢出
     gl.deleteShader(shader);
     throw "Failed to compile shader: " + error;
@@ -32,15 +34,32 @@ function loadShader(gl, type, source) {
 
   return shader;
 }
+
+function createVertexShader(gl, program, vshader) {
+  // 创建vertexShader
+  var vertexShader = loadShader(gl, gl.VERTEX_SHADER, vshader);
+  // 为程序对象分配着色器
+  gl.attachShader(program, vertexShader);
+  return vertexShader;
+}
+
+function createFragmentShader(gl, program, fshader) {
+  // 创建fragmentShader
+  var fragmentShader = loadShader(gl, gl.FRAGMENT_SHADER, fshader);
+  // 为程序对象分配着色器
+  gl.attachShader(program, fragmentShader);
+  return fragmentShader;
+}
+
 function createProgram(gl, vshader, fshader) {
   // Create shader object
   // 创建vertexShader
-  var vertexShader = loadShader(gl, gl.VERTEX_SHADER, vshader);
-  // 创建fragmentShader
-  var fragmentShader = loadShader(gl, gl.FRAGMENT_SHADER, fshader);
-  if (!vertexShader || !fragmentShader) {
-    return null;
-  }
+  // var vertexShader = loadShader(gl, gl.VERTEX_SHADER, vshader);
+  // // 创建fragmentShader
+  // var fragmentShader = loadShader(gl, gl.FRAGMENT_SHADER, fshader);
+  // if (!vertexShader || !fragmentShader) {
+  //   return null;
+  // }
 
   // Create a program object
   // 将两个Shader连接合在一起
@@ -49,11 +68,18 @@ function createProgram(gl, vshader, fshader) {
   if (!program) {
     return null;
   }
+  // 创建vertexShader
+  var vertexShader = createVertexShader(gl, program, vshader);
+  // 创建fragmentShader
+  var fragmentShader = createFragmentShader(gl, program, fshader);
+  if (!vertexShader || !fragmentShader) {
+    return null;
+  }
 
   // Attach the shader objects
   // 为程序对象分配着色器
-  gl.attachShader(program, vertexShader);
-  gl.attachShader(program, fragmentShader);
+  // gl.attachShader(program, vertexShader);
+  // gl.attachShader(program, fragmentShader);
 
   // Link the program object
   // 链接程序对象
@@ -84,6 +110,7 @@ function initShaders(gl, vshader, fshader) {
   var program = createProgram(gl, vshader, fshader);
   if (!program) {
     console.error("Failed to create program");
+
     throw "Failed to create program";
   }
   // 使用程序对象

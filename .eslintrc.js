@@ -44,6 +44,7 @@ module.exports = {
     //   "warn" or 1 - 将规则视为一个警告（不会影响退出码）,只警告，不会退出程序
     //   "error" or 2 - 将规则视为一个错误 (退出码为1)，报错并退出程序
     rules: {
+  
         'no-prototype-builtins': 0,
         'comma-dangle': 0,
         'react/jsx-uses-vars': 1,
@@ -65,5 +66,6 @@ module.exports = {
         '@babel/no-unused-expressions': 'error',
         '@babel/object-curly-spacing': 'error',
         '@babel/semi': 'error',
+        "semi": [2, "always"],//语句强制分号结尾
     },
 };

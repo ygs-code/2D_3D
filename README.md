@@ -51,3 +51,7 @@ https://thebookofshaders.com/
  https://www.yuque.com/books/share/5825eaa7-9d30-45f0-aa6e-db73000f2f47?#（密码：xh59） 《前端提高就业讲义》
 
 《前端全栈课程讲义》：https://www.yuque.com/books/share/aa187c93-6603-453e-9377-9a935b59aeb4?#（密码：lzzk）
+
+李伟 博客 http://yxyy.name/blog/
+
+opengl 教程 http://www.opengl-tutorial.org/cn/beginners-tutorials/tutorial-1-opening-a-window/
