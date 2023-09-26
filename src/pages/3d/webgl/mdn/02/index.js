@@ -5,6 +5,12 @@ import {drawScene} from "./draw-scene.js";
 
 console.log("glMatrix===", glMatrix);
 
+/*
+引入 glMatrix 库
+   https://developer.mozilla.org/zh-CN/docs/Web/API/WebGL_API/Tutorial/Adding_2D_content_to_a_WebGL_context
+   http://www.javascriptcn.com/post/148376
+
+*/
 //
 // start here
 //
@@ -52,15 +58,15 @@ function main(canvas, gl) {
   const programInfo = {
     program: shaderProgram,
     attribLocations: {
-      vertexPosition: gl.getAttribLocation(shaderProgram, "aVertexPosition"),
+      vertexPosition: gl.getAttribLocation(shaderProgram, "aVertexPosition")
     },
     uniformLocations: {
       projectionMatrix: gl.getUniformLocation(
         shaderProgram,
         "uProjectionMatrix"
       ),
-      modelViewMatrix: gl.getUniformLocation(shaderProgram, "uModelViewMatrix"),
-    },
+      modelViewMatrix: gl.getUniformLocation(shaderProgram, "uModelViewMatrix")
+    }
   };
 
   // Here's where we call the routine that builds all the
