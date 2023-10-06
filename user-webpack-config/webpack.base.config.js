@@ -45,6 +45,8 @@ module.exports = {
     // 路径配置
     alias: {
       // '@': path.join(process.cwd(), '/src'),
+     '@': path.join(process.cwd(), '/src'),
+     'static': path.join(process.cwd(), '/static'),
     }
   },
   module: {

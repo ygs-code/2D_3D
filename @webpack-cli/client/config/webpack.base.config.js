@@ -182,7 +182,7 @@ module.exports = {
             // vm: "vm-browserify",
             // crypto: false,
             // stream: "stream-browserify",
-            '@': path.join(process.cwd(), '/src'),
+            // '@': path.join(process.cwd(), '/src'),
         },
         // 2.手动添加polyfills
         fallback: {

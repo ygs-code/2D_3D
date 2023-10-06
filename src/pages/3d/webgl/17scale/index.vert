@@ -6,7 +6,7 @@ uniform float u_Scale;
 void main(){
     
     gl_Position=vec4(a_Position.x*u_Scale,a_Position.y*u_Scale,a_Position.z*u_Scale,1.);
-    gl_PointSize=1.0;
+    gl_PointSize=10.;
 }
 
 // 下面 用对象 赋值也可以

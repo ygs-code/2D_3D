@@ -16,6 +16,7 @@ window.onload = function () {
      attribute vec2 a_Position;
      void main(){
         gl_Position = vec4(a_Position,0.0, 1.0);
+        gl_PointSize = 10.0;
      }
     `;
 
@@ -76,5 +77,6 @@ window.onload = function () {
   gl.enableVertexAttribArray(a_Position);
 
   // 画图
-  gl.drawArrays(gl.TRIANGLES, 0, 3);
+  // gl.drawArrays(gl.TRIANGLES, 0, 3);
+  gl.drawArrays(gl.POINTS, 0, 3);
 };
