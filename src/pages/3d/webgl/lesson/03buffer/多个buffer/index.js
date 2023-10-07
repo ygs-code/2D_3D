@@ -69,7 +69,14 @@ window.onload = function () {
     // gl.bindBuffer(gl.ARRAY_BUFFER, colorsBuffer)
     // gl.bufferData(gl.ARRAY_BUFFER, colors, gl.STATIC_DRAW)
     let a_color = gl.getAttribLocation(gl.program, "a_color");
-    gl.vertexAttribPointer(a_color, 3, gl.FLOAT, false, FSIZE * 6, FSIZE * 3);
+    gl.vertexAttribPointer(
+      a_color, // 变了名称
+      3, // 三个数据为一组颜色 rgb
+      gl.FLOAT,
+      false,
+      FSIZE * 6,
+      FSIZE * 3 // 从索引3开始 因为前面 x y z 坐标 第三个索引才是 颜色值
+    );
     gl.enableVertexAttribArray(a_color);
   }
 
