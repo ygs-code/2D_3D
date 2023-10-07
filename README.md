@@ -12,7 +12,7 @@ https://search.jd.com/Search?keyword=%E5%AE%9E%E6%97%B6%E6%B8%B2%E6%9F%93&enc=ut
 
 webgl 3d api 文档 https://en.wikipedia.org/wiki/List_of_3D_graphics_libraries
 
-webgl 3d api https://webglfundamentals.org/
+webgl 3d api 教程文档 https://webglfundamentals.org/
 
 shadertoy 网站
 https://www.shadertoy.com/browse
@@ -35,18 +35,13 @@ https://www.w3cschool.cn/webgl/glnw1ohq.html
 three.js 开源项目
 https://mp.weixin.qq.com/s/Z1Lpcj4LU_jgpuMKB5444Q
 
-
-
 电子书
 
 https://thebookofshaders.com/
 
-
-
  https://www.yuque.com/books/share/5825eaa7-9d30-45f0-aa6e-db73000f2f47?#（密码：xh59） 《前端提高就业讲义》
 
 《前端全栈课程讲义》：https://www.yuque.com/books/share/aa187c93-6603-453e-9377-9a935b59aeb4?#（密码：lzzk）
-
 
  https://www.yuque.com/books/share/5825eaa7-9d30-45f0-aa6e-db73000f2f47?#（密码：xh59） 《前端提高就业讲义》
 
