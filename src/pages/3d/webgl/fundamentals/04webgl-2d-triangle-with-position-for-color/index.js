@@ -77,9 +77,24 @@ function drawScene({
     stride,
     offset
   );
-  let rotationMatrix = glMatrix.mat4.create();
+  let rotationMatrix = glMatrix.mat3.create();
 
-  console.log("glMatrix=", glMatrix);
+  /*
+    矩阵 A1*A2=  [
+      0,1,0,
+      0.5,0,0,
+      0,0,1
+    ]
+  
+  */
+  let A1 = [1, 0, 0, 0, 1 / 2, 0, 0, 0, 1];
+
+  let A2 = [0, 1, 0, 1, 0, 0, 0, 0, 1];
+
+  let A = glMatrix.mat3.multiply(glMatrix.mat3.create(), A2, A1);
+
+  console.log("A=", JSON.stringify([...A]));
+
   // Compute the matrix
   var matrix = m3.projection(gl.canvas.clientWidth, gl.canvas.clientHeight);
 
