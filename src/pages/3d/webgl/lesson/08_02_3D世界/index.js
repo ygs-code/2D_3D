@@ -2,7 +2,9 @@ import {getWebGLContext, initShaders} from "@/pages/3d/utils/lib/cuon-utils";
 import {Matrix4} from "@/pages/3d/utils/lib/cuon-matrix.js";
 import VSHADER_SOURCE from "./index.vert";
 import FSHADER_SOURCE from "./index.frag";
+
 import "./index.less";
+
 //初始化顶点坐标和顶点颜色
 const initVertexBuffers = (gl) => {
   var verticesColors = new Float32Array([
@@ -81,14 +83,20 @@ window.onload = function () {
   //初始化视图矩阵
   var viewMatrix = new Matrix4();
 
+  // 旋转矩阵模型矩阵
+  var modelMatrix = new Matrix4();
+
   //  Matrix4.setLookAt(eyeX, eyeY, eyeZ, atX, atY, atZ, upX, upY, upZ)
   // 观察者的默认状态是：视点为系统原点(0,0,0)；视线为Z轴负方向，观察点为(0,0,-1)；上方向为Y轴负方向(0,1,0)
   //设置视点、视线和上方向
 
   viewMatrix.setLookAt(0.2, 0.25, 0.25, 0, 0, 0, 0, 1.0, 0);
+  // 旋转矩阵
+  modelMatrix.setRotate(-40, 0, 0, 1); // 旋转矩阵
+  const modelViewMatrix = viewMatrix.multiply(modelMatrix);
 
   //将视图矩阵传给顶点着色器uniform变量u_ViewMatrix
-  gl.uniformMatrix4fv(u_ViewMatrix, false, viewMatrix.elements);
+  gl.uniformMatrix4fv(u_ViewMatrix, false, modelViewMatrix.elements);
 
   //绘制三角形
   gl.drawArrays(gl.TRIANGLES, 0, n);
