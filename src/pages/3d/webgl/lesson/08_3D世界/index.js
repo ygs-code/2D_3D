@@ -2,21 +2,22 @@ import {getWebGLContext, initShaders} from "@/pages/3d/utils/lib/cuon-utils";
 import {Matrix4} from "@/pages/3d/utils/lib/cuon-matrix.js";
 import VSHADER_SOURCE from "./index.vert";
 import FSHADER_SOURCE from "./index.frag";
+import * as glMatrix from "gl-matrix";
 import "./index.less";
 //初始化顶点坐标和顶点颜色
 const initVertexBuffers = (gl) => {
   var verticesColors = new Float32Array([
     //最后面的三角形
-    0.0, 0.5, -0.4, 0.4, 1.0, 0.4, -0.5, -0.5, -0.4, 0.4, 1.0, 0.4, 0.5, -0.5,
-    -0.4, 1.0, 0.4, 0.4,
+    0.0, 0.5, -0.4, 1.0, 0.0, 0.0, -0.5, -0.5, -0.4, 1.0, 0.0, 0.0, 0.5, -0.5,
+    -0.4, 1.0, 0.0, 0.0,
 
-    //中间的三角形
-    0.5, 0.4, -0.2, 1.0, 0.4, 0.4, -0.5, 0.4, -0.2, 1.0, 1.0, 0.4, 0.0, -0.6,
-    -0.2, 1.0, 1.0, 0.4,
+    // //中间的三角形
+    0.5, 0.4, -0.2, 0.0, 1.0, 0.0, -0.5, 0.4, -0.2, 0.0, 1.0, 0.0, 0.0, -0.6,
+    -0.2, 0.0, 1.0, 0.0,
 
-    //最前面的三角形
-    0.0, 0.5, 0.0, 0.4, 0.4, 1.0, -0.5, -0.5, 0.0, 0.4, 0.4, 1.0, 0.5, -0.5,
-    0.0, 1.0, 0.4, 0.4
+    // //最前面的三角形
+    0.0, 0.5, 0.0, 0.0, 0.0, 1.0, -0.5, -0.5, 0.0, 0.0, 0.0, 1.0, 0.5, -0.5,
+    0.0, 0.0, 0.0, 1.0
   ]);
 
   //创建缓冲区对象
@@ -80,15 +81,39 @@ window.onload = function () {
 
   //初始化视图矩阵
   var viewMatrix = new Matrix4();
+  // var viewMatrix =  glMatrix.mat4.create();
 
+  // let eye=[0.0, 0.0, 0];  //   观察者的默认状态是：视点为系统原点(0,0,0) eyeX, eyeY, eyeZ
+  // let center=[0.0, 0.0, -1];  // 视线为Z轴负方向，观察点为(0,0,-1)   atX, atY, atZ
+  // let up=[0.0, 1.0, 0.0]; //  上方向为Y轴负方向(0,1,0) upX, upY, upZ
+  // glMatrix.mat4.lookAt(
+  //   viewMatrix,
+  //   eye,
+  //   center,
+  //   up
+  // );
   //  Matrix4.setLookAt(eyeX, eyeY, eyeZ, atX, atY, atZ, upX, upY, upZ)
-  // 观察者的默认状态是：视点为系统原点(0,0,0)；视线为Z轴负方向，观察点为(0,0,-1)；上方向为Y轴负方向(0,1,0)
-  //设置视点、视线和上方向
+  /*
+   观察者的默认状态是：视点为系统原点(0,0,0) eyeX, eyeY, eyeZ
+  ；视线为Z轴负方向，观察点为(0,0,-1)   atX, atY, atZ
+    设置视点、视线和上方向  上方向为Y轴负方向(0,1,0) upX, upY, upZ
+  */
 
-  viewMatrix.setLookAt(0.2, 0.25, 0.25, 0, 0, 0, 0, 1.0, 0);
+  viewMatrix.setLookAt(
+    0.0,
+    0.0,
+    0, //     eyeX, eyeY, eyeZ
+    0,
+    -1,
+    0, //     atX, atY, atZ
+    0,
+    1.0,
+    0 //     upX, upY, upZ
+  );
 
-  //将视图矩阵传给顶点着色器uniform变量u_ViewMatrix
+  // //将视图矩阵传给顶点着色器uniform变量u_ViewMatrix
   gl.uniformMatrix4fv(u_ViewMatrix, false, viewMatrix.elements);
+  // gl.uniformMatrix4fv(u_ViewMatrix, false, viewMatrix);
 
   //绘制三角形
   gl.drawArrays(gl.TRIANGLES, 0, n);
