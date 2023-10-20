@@ -1,0 +1,1540 @@
+<html><head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>WebGL - Visualize Camera</title>
+    <link type="text/css" href="resources/webgl-tutorials.css" rel="stylesheet">
+    <style type="text/css">.cyxy-trs-target.colored {
+      background-color: rgba(0, 185, 119, 0.05);
+    }
+    
+    .cyxy-target-popup {
+      padding: 1.3rem 12px;
+      position: absolute;
+      display: -webkit-flex;
+      display: inline-flex;
+      flex-direction: row;
+      overflow: scroll;
+      vertical-align: middle;
+      z-index: 199099;
+      top: 1px;
+      left: 1px;
+      background: #fff;
+      opacity: 0.98;
+      /*margin: 0px 5%;*/
+      height: auto;
+      width: auto;
+      border: 1px solid #e6e6e6;
+      box-shadow: 0 0 8px 0 rgba(0, 0, 0, 0.13);
+      border-radius: 5px;
+      /*height: 7rem;*/
+    }
+    
+    @media (max-width: 468px) {
+      .cyxy-target-popup {
+        /*width: 90%;*/
+        /*margin: 0px 5%;*/
+        left: 10%;
+        /*right: 5%;*/
+        /*width: 30rem;*/
+        /*height: 14.58rem;*/
+      }
+    }
+    
+    #cyxy-popup-left-slide {
+      height: 22px;
+      display: inline;
+      vertical-align: middle;
+      margin-right: 14px;
+      cursor: pointer;
+    }
+    
+    #cyxy-popup-right-slide {
+      height: 22px;
+      display: inline;
+      vertical-align: middle;
+      margin-left: 0px;
+      cursor: pointer;
+    }
+    
+    #cyxy-popup-userinfo {
+      display: inline;
+    }
+    
+    .cyxy-target-count {
+      display: inline;
+      vertical-align: middle;
+      font-size: 10px;
+    }
+    
+    #cyxy-popup-avatar {
+      /*margin-right: 30px;*/
+      /*font-size: 14px;*/
+      display: inline;
+      height: 32px;
+      vertical-align: middle;
+      border-radius: 16px;
+    }
+    
+    #cyxy-popup-name-time {
+      display: -webkit-flex;
+      display: inline-flex;
+      flex-direction: column;
+      /*align-items: center;*/
+      /*position: relative;*/
+      vertical-align: middle;
+      text-align: left;
+      margin-left: 6px;
+    }
+    
+    #cyxy-popup-name {
+      /*vertical-align: middle;*/
+      /*display: flex;*/
+      font-size: 14px;
+      color: #333;
+      height: 18px;
+      overflow: hidden;
+      max-width: 84px;
+    }
+    
+    #cyxy-popup-time {
+      /*margin-right: 30px;*/
+      /*font-size: 14px;*/
+      /*display: flex;*/
+      font-size: 12px;
+      margin-top: 4px;
+      color: #999;
+    }
+    
+    .cyxy-footer {
+      display: none;
+      position: fixed;
+      bottom: 0px;
+      padding: 0px 0px;
+      left: 0;
+      right: 0;
+      margin: auto;
+      opacity: 0.9;
+      border: 1px solid #e6e6e6;
+      box-shadow: 0 0 8px 0 rgba(0, 0, 0, 0.13);
+      border-radius: 2px;
+      z-index: 201712;
+      text-align: center;
+    }
+    
+    .cyxy-footer-p {
+      padding: 12px 0px;
+      margin: 0px;
+      font-size: 12px;
+      color: #333;
+      background: #fff;
+      text-align: center;
+      line-height: 1.6;
+      font-weight: 200;
+    }
+    
+    #cyxy-popup-favour {
+      text-align: center;
+      display: inline;
+      margin-right: 20px;
+      margin-left: 46px;
+      cursor: pointer;
+    }
+    
+    #cyxy-popup-favour.commit {
+      /*padding: 2px 6px;*/
+      /*border: 1px solid #00B977;*/
+      /*border-radius: 4px;*/
+    }
+    
+    #cyxy-popup-oppose {
+      text-align: center;
+      display: inline;
+      cursor: pointer;
+    }
+    
+    #cyxy-popup-favour-img {
+      display: inline;
+      height: 20px;
+      /*width: 22px;*/
+      vertical-align: middle;
+    }
+    
+    #cyxy-popup-favour-img.commit {
+      /*height: 22px;*/
+      /*vertical-align: middle;*/
+    }
+    
+    #cyxy-popup-oppose-img {
+      display: inline;
+      height: 18px;
+      vertical-align: middle;
+    }
+    
+    #cyxy-popup-favour-num {
+      font-size: 14px;
+      margin-left: 4px;
+      /*margin-left: 0.47rem;*/
+      color: #999999;
+    }
+    
+    #cyxy-popup-oppose-num {
+      font-size: 14px;
+      margin-left: 4px;
+      /*margin-left: 0.47rem;*/
+      color: #999;
+    }
+    
+    .caption-window.ytp-caption-window-bottom {
+      width: 800px;
+      /* height: 100px; */
+      /* margin-left: -400px; */
+    }
+    
+    @media (max-width: 320px) {
+      #cyxy-popup-favour {
+        margin-right: 0.8rem;
+        margin-left: 1.5rem;
+      }
+    
+      #cyxy-popup-left-slide {
+        margin-right: 0.8rem;
+      }
+    
+      #cyxy-popup-right-slide {
+        margin-left: 1rem;
+      }
+    }
+    
+    .login-hint-a {
+      border-bottom: none;
+      display: block;
+      color: #999;
+      font-size: 10px;
+    }
+    
+    .login-hint-a:visited {
+      color: #999;
+    }
+    
+    .layui-m-layer {
+      color: #333;
+      position: relative;
+      z-index: 2147483647;
+    }
+    
+    .layui-m-layer * {
+      -webkit-box-sizing: content-box;
+      -moz-box-sizing: content-box;
+      box-sizing: content-box;
+    }
+    
+    .layui-m-layermain,
+    .layui-m-layershade {
+      position: fixed;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+    }
+    
+    .layui-m-layershade {
+      background-color: rgba(0, 0, 0, 0.7);
+      pointer-events: auto;
+    }
+    
+    .layui-m-layermain {
+      display: table;
+      font-family: Helvetica, arial, sans-serif;
+      pointer-events: none;
+    }
+    
+    .layui-m-layermain .layui-m-layersection {
+      display: table-cell;
+      vertical-align: middle;
+      text-align: center;
+    }
+    
+    .layui-m-layerchild {
+      position: relative;
+      display: inline-block;
+      text-align: left;
+      background-color: #fff;
+      font-size: 14px;
+      border-radius: 5px;
+      box-shadow: 0 0 8px rgba(0, 0, 0, 0.1);
+      pointer-events: auto;
+      -webkit-overflow-scrolling: touch;
+      -webkit-animation-fill-mode: both;
+      animation-fill-mode: both;
+      -webkit-animation-duration: 0.2s;
+      animation-duration: 0.2s;
+    }
+    
+    @-webkit-keyframes layui-m-anim-scale {
+      0% {
+        opacity: 0;
+        -webkit-transform: scale(0.5);
+        transform: scale(0.5);
+      }
+      100% {
+        opacity: 1;
+        -webkit-transform: scale(1);
+        transform: scale(1);
+      }
+    }
+    
+    @keyframes layui-m-anim-scale {
+      0% {
+        opacity: 0;
+        -webkit-transform: scale(0.5);
+        transform: scale(0.5);
+      }
+      100% {
+        opacity: 1;
+        -webkit-transform: scale(1);
+        transform: scale(1);
+      }
+    }
+    
+    .layui-m-anim-scale {
+      animation-name: layui-m-anim-scale;
+      -webkit-animation-name: layui-m-anim-scale;
+    }
+    
+    @-webkit-keyframes layui-m-anim-up {
+      0% {
+        opacity: 0;
+        -webkit-transform: translateY(800px);
+        transform: translateY(800px);
+      }
+      100% {
+        opacity: 1;
+        -webkit-transform: translateY(0);
+        transform: translateY(0);
+      }
+    }
+    
+    @keyframes layui-m-anim-up {
+      0% {
+        opacity: 0;
+        -webkit-transform: translateY(800px);
+        transform: translateY(800px);
+      }
+      100% {
+        opacity: 1;
+        -webkit-transform: translateY(0);
+        transform: translateY(0);
+      }
+    }
+    
+    .layui-m-anim-up {
+      -webkit-animation-name: layui-m-anim-up;
+      animation-name: layui-m-anim-up;
+    }
+    
+    .layui-m-layer0 .layui-m-layerchild {
+      width: 90%;
+      max-width: 640px;
+    }
+    
+    .layui-m-layer1 .layui-m-layerchild {
+      border: none;
+      border-radius: 0;
+    }
+    
+    .layui-m-layer2 .layui-m-layerchild {
+      width: auto;
+      max-width: 260px;
+      min-width: 40px;
+      border: none;
+      background: 0 0;
+      box-shadow: none;
+      color: #fff;
+    }
+    
+    .layui-m-layerchild h3 {
+      padding: 0 10px;
+      height: 60px;
+      line-height: 60px;
+      font-size: 16px;
+      font-weight: 400;
+      border-radius: 5px 5px 0 0;
+      text-align: center;
+    }
+    
+    .layui-m-layerbtn span,
+    .layui-m-layerchild h3 {
+      margin: 0;
+      padding: 0;
+      text-overflow: ellipsis;
+      overflow: hidden;
+      white-space: nowrap;
+    }
+    
+    .layui-m-layercont {
+      padding: 50px 30px;
+      line-height: 22px;
+      text-align: center;
+    }
+    
+    .layui-m-layer1 .layui-m-layercont {
+      padding: 0;
+      text-align: left;
+    }
+    
+    .layui-m-layer2 .layui-m-layercont {
+      text-align: center;
+      padding: 0;
+      line-height: 0;
+    }
+    
+    .layui-m-layer2 .layui-m-layercont i {
+      width: 25px;
+      height: 25px;
+      margin-left: 8px;
+      display: inline-block;
+      background-color: #fff;
+      border-radius: 100%;
+      -webkit-animation: layui-m-anim-loading 1.4s infinite ease-in-out;
+      animation: layui-m-anim-loading 1.4s infinite ease-in-out;
+      -webkit-animation-fill-mode: both;
+      animation-fill-mode: both;
+    }
+    
+    .layui-m-layerbtn,
+    .layui-m-layerbtn span {
+      position: relative;
+      text-align: center;
+      border-radius: 0 0 5px 5px;
+    }
+    
+    .layui-m-layer2 .layui-m-layercont p {
+      margin-top: 20px;
+    }
+    
+    @-webkit-keyframes layui-m-anim-loading {
+      0%,
+      100%,
+      80% {
+        transform: scale(0);
+        -webkit-transform: scale(0);
+      }
+      40% {
+        transform: scale(1);
+        -webkit-transform: scale(1);
+      }
+    }
+    
+    @keyframes layui-m-anim-loading {
+      0%,
+      100%,
+      80% {
+        transform: scale(0);
+        -webkit-transform: scale(0);
+      }
+      40% {
+        transform: scale(1);
+        -webkit-transform: scale(1);
+      }
+    }
+    
+    .layui-m-layer2 .layui-m-layercont i:first-child {
+      margin-left: 0;
+      -webkit-animation-delay: -0.32s;
+      animation-delay: -0.32s;
+    }
+    
+    .layui-m-layer2 .layui-m-layercont i.layui-m-layerload {
+      -webkit-animation-delay: -0.16s;
+      animation-delay: -0.16s;
+    }
+    
+    .layui-m-layer2 .layui-m-layercont > div {
+      line-height: 22px;
+      padding-top: 7px;
+      margin-bottom: 20px;
+      font-size: 14px;
+    }
+    
+    .layui-m-layerbtn {
+      display: box;
+      display: -moz-box;
+      display: -webkit-box;
+      width: 100%;
+      height: 50px;
+      line-height: 50px;
+      font-size: 0;
+      border-top: 1px solid #d0d0d0;
+      background-color: #f2f2f2;
+    }
+    
+    .layui-m-layerbtn span {
+      display: block;
+      -moz-box-flex: 1;
+      box-flex: 1;
+      -webkit-box-flex: 1;
+      font-size: 14px;
+      cursor: pointer;
+    }
+    
+    .layui-m-layerbtn span[yes] {
+      color: #40affe;
+    }
+    
+    .layui-m-layerbtn span[no] {
+      border-right: 1px solid #d0d0d0;
+      border-radius: 0 0 0 5px;
+    }
+    
+    .layui-m-layerbtn span:active {
+      background-color: #f6f6f6;
+    }
+    
+    .layui-m-layerend {
+      position: absolute;
+      right: 7px;
+      top: 10px;
+      width: 30px;
+      height: 30px;
+      border: 0;
+      font-weight: 400;
+      background: 0 0;
+      cursor: pointer;
+      -webkit-appearance: none;
+      font-size: 30px;
+    }
+    
+    .layui-m-layerend::after,
+    .layui-m-layerend::before {
+      position: absolute;
+      left: 5px;
+      top: 15px;
+      content: "";
+      width: 18px;
+      height: 1px;
+      background-color: #999;
+      transform: rotate(45deg);
+      -webkit-transform: rotate(45deg);
+      border-radius: 3px;
+    }
+    
+    .layui-m-layerend::after {
+      transform: rotate(-45deg);
+      -webkit-transform: rotate(-45deg);
+    }
+    
+    .layui-m-layer .layui-m-layer-footer {
+      position: fixed;
+      width: 95%;
+      max-width: 100%;
+      margin: 0 auto;
+      left: 0;
+      right: 0;
+      bottom: 10px;
+      background: 0 0;
+    }
+    
+    .layui-m-layer-footer .layui-m-layercont {
+      padding: 20px;
+      border-radius: 5px 5px 0 0;
+      background-color: rgba(255, 255, 255, 0.8);
+    }
+    
+    .layui-m-layer-footer .layui-m-layerbtn {
+      display: block;
+      height: auto;
+      background: 0 0;
+      border-top: none;
+    }
+    
+    .layui-m-layer-footer .layui-m-layerbtn span {
+      background-color: rgba(255, 255, 255, 0.8);
+    }
+    
+    .layui-m-layer-footer .layui-m-layerbtn span[no] {
+      color: #fd482c;
+      border-top: 1px solid #c2c2c2;
+      border-radius: 0 0 5px 5px;
+    }
+    
+    .layui-m-layer-footer .layui-m-layerbtn span[yes] {
+      margin-top: 10px;
+      border-radius: 5px;
+    }
+    
+    .layui-m-layer .layui-m-layer-msg {
+      width: auto;
+      max-width: 90%;
+      margin: 0 auto;
+      bottom: -150px;
+      background-color: rgba(0, 0, 0, 0.7);
+      color: #fff;
+    }
+    
+    .layui-m-layer-msg .layui-m-layercont {
+      padding: 10px 20px;
+    }
+    
+    .collection-success {
+      /*opacity: 0.6;*/
+      /*background: #EAEAEA;*/
+      color: #ffffff;
+    }
+    .collection-success:hover {
+      /*opacity: 0.45;*/
+      /*background: #000000;*/
+      color: #ffffff;
+    }
+    .layui-m-layercont .cyxy-trs-target {
+      display: none;
+    }
+    .collection-icon {
+      width: 12px;
+      height: 13px;
+      background: url("data:image/png;base64,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")
+        no-repeat;
+      display: inline-block;
+      background-size: cover;
+      background-position: center;
+    }
+    .collection-success > a {
+      margin-left: 12px;
+      vertical-align: middle;
+    }
+    .cy_free_box {
+      position: relative;
+    }
+    .cy_free_box img {
+      width: 100%;
+      cursor: pointer;
+      -moz-user-select: none; /*火狐*/
+      -webkit-user-select: none; /*webkit浏览器*/
+      -ms-user-select: none; /*IE10*/
+      -khtml-user-select: none; /*早期浏览器*/
+      user-select: none;
+    }
+    .layui-m-layer-cy_free_content {
+      background: inherit !important;
+    }
+    </style><style type="text/css">.cyxy-trs-target.colored {
+      background-color: rgba(0, 185, 119, 0.05);
+    }
+    
+    .cyxy-target-popup {
+      padding: 1.3rem 12px;
+      position: absolute;
+      display: -webkit-flex;
+      display: inline-flex;
+      flex-direction: row;
+      overflow: scroll;
+      vertical-align: middle;
+      z-index: 199099;
+      top: 1px;
+      left: 1px;
+      background: #fff;
+      opacity: 0.98;
+      /*margin: 0px 5%;*/
+      height: auto;
+      width: auto;
+      border: 1px solid #e6e6e6;
+      box-shadow: 0 0 8px 0 rgba(0, 0, 0, 0.13);
+      border-radius: 5px;
+      /*height: 7rem;*/
+    }
+    
+    @media (max-width: 468px) {
+      .cyxy-target-popup {
+        /*width: 90%;*/
+        /*margin: 0px 5%;*/
+        left: 10%;
+        /*right: 5%;*/
+        /*width: 30rem;*/
+        /*height: 14.58rem;*/
+      }
+    }
+    
+    #cyxy-popup-left-slide {
+      height: 22px;
+      display: inline;
+      vertical-align: middle;
+      margin-right: 14px;
+      cursor: pointer;
+    }
+    
+    #cyxy-popup-right-slide {
+      height: 22px;
+      display: inline;
+      vertical-align: middle;
+      margin-left: 0px;
+      cursor: pointer;
+    }
+    
+    #cyxy-popup-userinfo {
+      display: inline;
+    }
+    
+    .cyxy-target-count {
+      display: inline;
+      vertical-align: middle;
+      font-size: 10px;
+    }
+    
+    #cyxy-popup-avatar {
+      /*margin-right: 30px;*/
+      /*font-size: 14px;*/
+      display: inline;
+      height: 32px;
+      vertical-align: middle;
+      border-radius: 16px;
+    }
+    
+    #cyxy-popup-name-time {
+      display: -webkit-flex;
+      display: inline-flex;
+      flex-direction: column;
+      /*align-items: center;*/
+      /*position: relative;*/
+      vertical-align: middle;
+      text-align: left;
+      margin-left: 6px;
+    }
+    
+    #cyxy-popup-name {
+      /*vertical-align: middle;*/
+      /*display: flex;*/
+      font-size: 14px;
+      color: #333;
+      height: 18px;
+      overflow: hidden;
+      max-width: 84px;
+    }
+    
+    #cyxy-popup-time {
+      /*margin-right: 30px;*/
+      /*font-size: 14px;*/
+      /*display: flex;*/
+      font-size: 12px;
+      margin-top: 4px;
+      color: #999;
+    }
+    
+    .cyxy-footer {
+      display: none;
+      position: fixed;
+      bottom: 0px;
+      padding: 0px 0px;
+      left: 0;
+      right: 0;
+      margin: auto;
+      opacity: 0.9;
+      border: 1px solid #e6e6e6;
+      box-shadow: 0 0 8px 0 rgba(0, 0, 0, 0.13);
+      border-radius: 2px;
+      z-index: 201712;
+      text-align: center;
+    }
+    
+    .cyxy-footer-p {
+      padding: 12px 0px;
+      margin: 0px;
+      font-size: 12px;
+      color: #333;
+      background: #fff;
+      text-align: center;
+      line-height: 1.6;
+      font-weight: 200;
+    }
+    
+    #cyxy-popup-favour {
+      text-align: center;
+      display: inline;
+      margin-right: 20px;
+      margin-left: 46px;
+      cursor: pointer;
+    }
+    
+    #cyxy-popup-favour.commit {
+      /*padding: 2px 6px;*/
+      /*border: 1px solid #00B977;*/
+      /*border-radius: 4px;*/
+    }
+    
+    #cyxy-popup-oppose {
+      text-align: center;
+      display: inline;
+      cursor: pointer;
+    }
+    
+    #cyxy-popup-favour-img {
+      display: inline;
+      height: 20px;
+      /*width: 22px;*/
+      vertical-align: middle;
+    }
+    
+    #cyxy-popup-favour-img.commit {
+      /*height: 22px;*/
+      /*vertical-align: middle;*/
+    }
+    
+    #cyxy-popup-oppose-img {
+      display: inline;
+      height: 18px;
+      vertical-align: middle;
+    }
+    
+    #cyxy-popup-favour-num {
+      font-size: 14px;
+      margin-left: 4px;
+      /*margin-left: 0.47rem;*/
+      color: #999999;
+    }
+    
+    #cyxy-popup-oppose-num {
+      font-size: 14px;
+      margin-left: 4px;
+      /*margin-left: 0.47rem;*/
+      color: #999;
+    }
+    
+    .caption-window.ytp-caption-window-bottom {
+      width: 800px;
+      /* height: 100px; */
+      /* margin-left: -400px; */
+    }
+    
+    @media (max-width: 320px) {
+      #cyxy-popup-favour {
+        margin-right: 0.8rem;
+        margin-left: 1.5rem;
+      }
+    
+      #cyxy-popup-left-slide {
+        margin-right: 0.8rem;
+      }
+    
+      #cyxy-popup-right-slide {
+        margin-left: 1rem;
+      }
+    }
+    
+    .login-hint-a {
+      border-bottom: none;
+      display: block;
+      color: #999;
+      font-size: 10px;
+    }
+    
+    .login-hint-a:visited {
+      color: #999;
+    }
+    
+    .layui-m-layer {
+      color: #333;
+      position: relative;
+      z-index: 2147483647;
+    }
+    
+    .layui-m-layer * {
+      -webkit-box-sizing: content-box;
+      -moz-box-sizing: content-box;
+      box-sizing: content-box;
+    }
+    
+    .layui-m-layermain,
+    .layui-m-layershade {
+      position: fixed;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+    }
+    
+    .layui-m-layershade {
+      background-color: rgba(0, 0, 0, 0.7);
+      pointer-events: auto;
+    }
+    
+    .layui-m-layermain {
+      display: table;
+      font-family: Helvetica, arial, sans-serif;
+      pointer-events: none;
+    }
+    
+    .layui-m-layermain .layui-m-layersection {
+      display: table-cell;
+      vertical-align: middle;
+      text-align: center;
+    }
+    
+    .layui-m-layerchild {
+      position: relative;
+      display: inline-block;
+      text-align: left;
+      background-color: #fff;
+      font-size: 14px;
+      border-radius: 5px;
+      box-shadow: 0 0 8px rgba(0, 0, 0, 0.1);
+      pointer-events: auto;
+      -webkit-overflow-scrolling: touch;
+      -webkit-animation-fill-mode: both;
+      animation-fill-mode: both;
+      -webkit-animation-duration: 0.2s;
+      animation-duration: 0.2s;
+    }
+    
+    @-webkit-keyframes layui-m-anim-scale {
+      0% {
+        opacity: 0;
+        -webkit-transform: scale(0.5);
+        transform: scale(0.5);
+      }
+      100% {
+        opacity: 1;
+        -webkit-transform: scale(1);
+        transform: scale(1);
+      }
+    }
+    
+    @keyframes layui-m-anim-scale {
+      0% {
+        opacity: 0;
+        -webkit-transform: scale(0.5);
+        transform: scale(0.5);
+      }
+      100% {
+        opacity: 1;
+        -webkit-transform: scale(1);
+        transform: scale(1);
+      }
+    }
+    
+    .layui-m-anim-scale {
+      animation-name: layui-m-anim-scale;
+      -webkit-animation-name: layui-m-anim-scale;
+    }
+    
+    @-webkit-keyframes layui-m-anim-up {
+      0% {
+        opacity: 0;
+        -webkit-transform: translateY(800px);
+        transform: translateY(800px);
+      }
+      100% {
+        opacity: 1;
+        -webkit-transform: translateY(0);
+        transform: translateY(0);
+      }
+    }
+    
+    @keyframes layui-m-anim-up {
+      0% {
+        opacity: 0;
+        -webkit-transform: translateY(800px);
+        transform: translateY(800px);
+      }
+      100% {
+        opacity: 1;
+        -webkit-transform: translateY(0);
+        transform: translateY(0);
+      }
+    }
+    
+    .layui-m-anim-up {
+      -webkit-animation-name: layui-m-anim-up;
+      animation-name: layui-m-anim-up;
+    }
+    
+    .layui-m-layer0 .layui-m-layerchild {
+      width: 90%;
+      max-width: 640px;
+    }
+    
+    .layui-m-layer1 .layui-m-layerchild {
+      border: none;
+      border-radius: 0;
+    }
+    
+    .layui-m-layer2 .layui-m-layerchild {
+      width: auto;
+      max-width: 260px;
+      min-width: 40px;
+      border: none;
+      background: 0 0;
+      box-shadow: none;
+      color: #fff;
+    }
+    
+    .layui-m-layerchild h3 {
+      padding: 0 10px;
+      height: 60px;
+      line-height: 60px;
+      font-size: 16px;
+      font-weight: 400;
+      border-radius: 5px 5px 0 0;
+      text-align: center;
+    }
+    
+    .layui-m-layerbtn span,
+    .layui-m-layerchild h3 {
+      margin: 0;
+      padding: 0;
+      text-overflow: ellipsis;
+      overflow: hidden;
+      white-space: nowrap;
+    }
+    
+    .layui-m-layercont {
+      padding: 50px 30px;
+      line-height: 22px;
+      text-align: center;
+    }
+    
+    .layui-m-layer1 .layui-m-layercont {
+      padding: 0;
+      text-align: left;
+    }
+    
+    .layui-m-layer2 .layui-m-layercont {
+      text-align: center;
+      padding: 0;
+      line-height: 0;
+    }
+    
+    .layui-m-layer2 .layui-m-layercont i {
+      width: 25px;
+      height: 25px;
+      margin-left: 8px;
+      display: inline-block;
+      background-color: #fff;
+      border-radius: 100%;
+      -webkit-animation: layui-m-anim-loading 1.4s infinite ease-in-out;
+      animation: layui-m-anim-loading 1.4s infinite ease-in-out;
+      -webkit-animation-fill-mode: both;
+      animation-fill-mode: both;
+    }
+    
+    .layui-m-layerbtn,
+    .layui-m-layerbtn span {
+      position: relative;
+      text-align: center;
+      border-radius: 0 0 5px 5px;
+    }
+    
+    .layui-m-layer2 .layui-m-layercont p {
+      margin-top: 20px;
+    }
+    
+    @-webkit-keyframes layui-m-anim-loading {
+      0%,
+      100%,
+      80% {
+        transform: scale(0);
+        -webkit-transform: scale(0);
+      }
+      40% {
+        transform: scale(1);
+        -webkit-transform: scale(1);
+      }
+    }
+    
+    @keyframes layui-m-anim-loading {
+      0%,
+      100%,
+      80% {
+        transform: scale(0);
+        -webkit-transform: scale(0);
+      }
+      40% {
+        transform: scale(1);
+        -webkit-transform: scale(1);
+      }
+    }
+    
+    .layui-m-layer2 .layui-m-layercont i:first-child {
+      margin-left: 0;
+      -webkit-animation-delay: -0.32s;
+      animation-delay: -0.32s;
+    }
+    
+    .layui-m-layer2 .layui-m-layercont i.layui-m-layerload {
+      -webkit-animation-delay: -0.16s;
+      animation-delay: -0.16s;
+    }
+    
+    .layui-m-layer2 .layui-m-layercont > div {
+      line-height: 22px;
+      padding-top: 7px;
+      margin-bottom: 20px;
+      font-size: 14px;
+    }
+    
+    .layui-m-layerbtn {
+      display: box;
+      display: -moz-box;
+      display: -webkit-box;
+      width: 100%;
+      height: 50px;
+      line-height: 50px;
+      font-size: 0;
+      border-top: 1px solid #d0d0d0;
+      background-color: #f2f2f2;
+    }
+    
+    .layui-m-layerbtn span {
+      display: block;
+      -moz-box-flex: 1;
+      box-flex: 1;
+      -webkit-box-flex: 1;
+      font-size: 14px;
+      cursor: pointer;
+    }
+    
+    .layui-m-layerbtn span[yes] {
+      color: #40affe;
+    }
+    
+    .layui-m-layerbtn span[no] {
+      border-right: 1px solid #d0d0d0;
+      border-radius: 0 0 0 5px;
+    }
+    
+    .layui-m-layerbtn span:active {
+      background-color: #f6f6f6;
+    }
+    
+    .layui-m-layerend {
+      position: absolute;
+      right: 7px;
+      top: 10px;
+      width: 30px;
+      height: 30px;
+      border: 0;
+      font-weight: 400;
+      background: 0 0;
+      cursor: pointer;
+      -webkit-appearance: none;
+      font-size: 30px;
+    }
+    
+    .layui-m-layerend::after,
+    .layui-m-layerend::before {
+      position: absolute;
+      left: 5px;
+      top: 15px;
+      content: "";
+      width: 18px;
+      height: 1px;
+      background-color: #999;
+      transform: rotate(45deg);
+      -webkit-transform: rotate(45deg);
+      border-radius: 3px;
+    }
+    
+    .layui-m-layerend::after {
+      transform: rotate(-45deg);
+      -webkit-transform: rotate(-45deg);
+    }
+    
+    .layui-m-layer .layui-m-layer-footer {
+      position: fixed;
+      width: 95%;
+      max-width: 100%;
+      margin: 0 auto;
+      left: 0;
+      right: 0;
+      bottom: 10px;
+      background: 0 0;
+    }
+    
+    .layui-m-layer-footer .layui-m-layercont {
+      padding: 20px;
+      border-radius: 5px 5px 0 0;
+      background-color: rgba(255, 255, 255, 0.8);
+    }
+    
+    .layui-m-layer-footer .layui-m-layerbtn {
+      display: block;
+      height: auto;
+      background: 0 0;
+      border-top: none;
+    }
+    
+    .layui-m-layer-footer .layui-m-layerbtn span {
+      background-color: rgba(255, 255, 255, 0.8);
+    }
+    
+    .layui-m-layer-footer .layui-m-layerbtn span[no] {
+      color: #fd482c;
+      border-top: 1px solid #c2c2c2;
+      border-radius: 0 0 5px 5px;
+    }
+    
+    .layui-m-layer-footer .layui-m-layerbtn span[yes] {
+      margin-top: 10px;
+      border-radius: 5px;
+    }
+    
+    .layui-m-layer .layui-m-layer-msg {
+      width: auto;
+      max-width: 90%;
+      margin: 0 auto;
+      bottom: -150px;
+      background-color: rgba(0, 0, 0, 0.7);
+      color: #fff;
+    }
+    
+    .layui-m-layer-msg .layui-m-layercont {
+      padding: 10px 20px;
+    }
+    
+    .collection-success {
+      /*opacity: 0.6;*/
+      /*background: #EAEAEA;*/
+      color: #ffffff;
+    }
+    .collection-success:hover {
+      /*opacity: 0.45;*/
+      /*background: #000000;*/
+      color: #ffffff;
+    }
+    .layui-m-layercont .cyxy-trs-target {
+      display: none;
+    }
+    .collection-icon {
+      width: 12px;
+      height: 13px;
+      background: url("data:image/png;base64,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")
+        no-repeat;
+      display: inline-block;
+      background-size: cover;
+      background-position: center;
+    }
+    .collection-success > a {
+      margin-left: 12px;
+      vertical-align: middle;
+    }
+    .cy_free_box {
+      position: relative;
+    }
+    .cy_free_box img {
+      width: 100%;
+      cursor: pointer;
+      -moz-user-select: none; /*火狐*/
+      -webkit-user-select: none; /*webkit浏览器*/
+      -ms-user-select: none; /*IE10*/
+      -khtml-user-select: none; /*早期浏览器*/
+      user-select: none;
+    }
+    .layui-m-layer-cy_free_content {
+      background: inherit !important;
+    }
+    </style></head>
+    <body>
+    <div class="description">
+    Visualize Camera
+    </div>
+      <canvas id="canvas" width="398" height="298"></canvas>
+      <div id="uiContainer">
+        <div id="ui">
+        <div>
+          <div class="gman-widget-outer">
+            <div class="gman-widget-label">rotation</div>
+            <div class="gman-widget-value">150.00</div>
+            <input class="gman-widget-slider" type="range" min="0" max="360000" value="150000">
+          </div>
+        </div><div>
+          <div class="gman-widget-outer">
+            <div class="gman-widget-label">cam1FieldOfView</div>
+            <div class="gman-widget-value">60</div>
+            <input class="gman-widget-slider" type="range" min="1" max="170" value="60">
+          </div>
+        </div><div>
+          <div class="gman-widget-outer">
+            <div class="gman-widget-label">cam1PosX</div>
+            <div class="gman-widget-value">0</div>
+            <input class="gman-widget-slider" type="range" min="-200" max="200" value="0">
+          </div>
+        </div><div>
+          <div class="gman-widget-outer">
+            <div class="gman-widget-label">cam1PosY</div>
+            <div class="gman-widget-value">0</div>
+            <input class="gman-widget-slider" type="range" min="-200" max="200" value="0">
+          </div>
+        </div><div>
+          <div class="gman-widget-outer">
+            <div class="gman-widget-label">cam1PosZ</div>
+            <div class="gman-widget-value">-200</div>
+            <input class="gman-widget-slider" type="range" min="-200" max="200" value="-200">
+          </div>
+        </div></div>
+      </div>
+    
+    
+    <script src="resources/webgl-lessons-ui.js"></script>
+    <script src="resources/webgl-utils.js"></script>
+    <script src="resources/m4.js"></script>
+    <script src="resources/primitives.js"></script>
+    <!-- vertex shader -->
+    <script id="vertex-shader-3d" type="x-shader/x-vertex">
+    attribute vec4 a_position;
+    attribute vec4 a_color;
+    
+    uniform mat4 u_matrix;
+    
+    varying vec4 v_color;
+    
+    void main() {
+      // Multiply the position by the matrix.
+      gl_Position = u_matrix * a_position;
+    
+      // Pass the vertex color to the fragment shader.
+      v_color = a_color;
+    }
+    </script>
+    <!-- fragment shader -->
+    <script id="fragment-shader-3d" type="x-shader/x-fragment">
+    precision mediump float;
+    
+    // Passed in from the vertex shader.
+    varying vec4 v_color;
+    
+    void main() {
+      gl_FragColor = v_color;
+    }
+    </script>  
+    <script id="solid-color-vertex-shader" type="x-shader/x-vertex">
+      attribute vec4 a_position;
+      
+      uniform mat4 u_matrix;
+      
+      void main() {
+        // Multiply the position by the matrix.
+        gl_Position = u_matrix * a_position;
+      }
+      </script>
+      <!-- fragment shader -->
+      <script id="solid-color-fragment-shader" type="x-shader/x-fragment">
+      precision mediump float;
+      
+      uniform vec4 u_color;
+      
+      void main() {
+        gl_FragColor = u_color;
+      }
+      </script>  
+      <script>
+    'use strict';
+    
+    function main() {
+      // Get A WebGL context
+      /** @type {HTMLCanvasElement} */
+      const canvas = document.querySelector('#canvas');
+      const gl = canvas.getContext('webgl');
+      if (!gl) {
+        return;
+      }
+    
+      // setup GLSL programs
+      // compiles shaders, links program, looks up locations
+      const vertexColorProgramInfo = webglUtils.createProgramInfo(gl, ['vertex-shader-3d', 'fragment-shader-3d']);
+      const solidColorProgramInfo = webglUtils.createProgramInfo(gl, ['solid-color-vertex-shader', 'solid-color-fragment-shader']);
+    
+      // create buffers and fill with data for a 3D 'F'
+      const fBufferInfo = primitives.create3DFBufferInfo(gl);
+    
+      // create geometry for a camera
+      function createCameraBufferInfo(gl, scale = 1) {
+        // first let's add a cube. It goes from 1 to 3
+        // because cameras look down -Z so we want
+        // the camera to start at Z = 0. We'll put a
+        // a cone in front of this cube opening
+        // toward -Z
+        const positions = [
+          -1, -1,  1,  // cube vertices
+           1, -1,  1,
+          -1,  1,  1,
+           1,  1,  1,
+          -1, -1,  3,
+           1, -1,  3,
+          -1,  1,  3,
+           1,  1,  3,
+           0,  0,  1,  // cone tip
+        ];
+        const indices = [
+          0, 1, 1, 3, 3, 2, 2, 0, // cube indices
+          4, 5, 5, 7, 7, 6, 6, 4,
+          0, 4, 1, 5, 3, 7, 2, 6,
+        ];
+        // add cone segments
+        const numSegments = 6;
+        const coneBaseIndex = positions.length / 3;
+        const coneTipIndex =  coneBaseIndex - 1;
+        for (let i = 0; i < numSegments; ++i) {
+          const u = i / numSegments;
+          const angle = u * Math.PI * 2;
+          const x = Math.cos(angle);
+          const y = Math.sin(angle);
+          positions.push(x, y, 0);
+          // line from tip to edge
+          indices.push(coneTipIndex, coneBaseIndex + i);
+          // line from point on edge to next point on edge
+          indices.push(coneBaseIndex + i, coneBaseIndex + (i + 1) % numSegments);
+        }
+        positions.forEach((v, ndx) => {
+          positions[ndx] *= scale;
+        });
+        return webglUtils.createBufferInfoFromArrays(gl, {
+          position: positions,
+          indices,
+        });
+      }
+    
+      const cameraScale = 20;
+      const cameraBufferInfo = createCameraBufferInfo(gl, cameraScale);
+    
+      function degToRad(d) {
+        return d * Math.PI / 180;
+      }
+    
+      const settings = {
+        rotation: 150,  // in degrees
+        cam1FieldOfView: 60,  // in degrees
+        cam1PosX: 0,
+        cam1PosY: 0,
+        cam1PosZ: -200,
+      };
+      webglLessonsUI.setupUI(document.querySelector('#ui'), settings, [
+        { type: 'slider',   key: 'rotation',     min: 0, max: 360, change: render, precision: 2, step: 0.001, },
+        { type: 'slider',   key: 'cam1FieldOfView',  min: 1, max: 170, change: render, },
+        { type: 'slider',   key: 'cam1PosX',     min: -200, max: 200, change: render, },
+        { type: 'slider',   key: 'cam1PosY',     min: -200, max: 200, change: render, },
+        { type: 'slider',   key: 'cam1PosZ',     min: -200, max: 200, change: render, },
+      ]);
+    
+      function drawScene(projectionMatrix, cameraMatrix, worldMatrix) {
+        // Clear the canvas AND the depth buffer.
+        gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+    
+        // Make a view matrix from the camera matrix.
+        const viewMatrix = m4.inverse(cameraMatrix);
+    
+        let mat = m4.multiply(projectionMatrix, viewMatrix);
+        mat = m4.multiply(mat, worldMatrix);
+    
+        gl.useProgram(vertexColorProgramInfo.program);
+    
+        // ------ Draw the F --------
+    
+        // Setup all the needed attributes.
+        webglUtils.setBuffersAndAttributes(gl, vertexColorProgramInfo, fBufferInfo);
+    
+        // Set the uniforms
+        webglUtils.setUniforms(vertexColorProgramInfo, {
+          u_matrix: mat,
+        });
+    
+        webglUtils.drawBufferInfo(gl, fBufferInfo);
+      }
+    
+      function render() {
+        webglUtils.resizeCanvasToDisplaySize(gl.canvas);
+    
+        gl.enable(gl.CULL_FACE);
+        gl.enable(gl.DEPTH_TEST);
+        gl.enable(gl.SCISSOR_TEST);
+    
+        // we're going to split the view in 2
+        const effectiveWidth = gl.canvas.clientWidth / 2;
+        const aspect = effectiveWidth / gl.canvas.clientHeight;
+        const near = 1;
+        const far = 2000;
+    
+        // Compute a perspective projection matrix
+        const perspectiveProjectionMatrix =
+            m4.perspective(degToRad(settings.cam1FieldOfView), aspect, near, far);
+    
+        // Compute the camera's matrix using look at.
+        const cameraPosition = [
+            settings.cam1PosX,
+            settings.cam1PosY,
+            settings.cam1PosZ,
+        ];
+        const target = [0, 0, 0];
+        const up = [0, 1, 0];
+        const cameraMatrix = m4.lookAt(cameraPosition, target, up);
+    
+        let worldMatrix = m4.yRotation(degToRad(settings.rotation));
+        worldMatrix = m4.xRotate(worldMatrix, degToRad(settings.rotation));
+        // center the 'F' around its origin
+        worldMatrix = m4.translate(worldMatrix, -35, -75, -5);
+    
+        const {width, height} = gl.canvas;
+        const leftWidth = width / 2 | 0;
+    
+        // draw on the left with orthographic camera
+        gl.viewport(0, 0, leftWidth, height);
+        gl.scissor(0, 0, leftWidth, height);
+        gl.clearColor(1, 0.8, 0.8, 1);
+    
+        drawScene(perspectiveProjectionMatrix, cameraMatrix, worldMatrix);
+    
+        // draw on right with perspective camera
+        const rightWidth = width - leftWidth;
+        gl.viewport(leftWidth, 0, rightWidth, height);
+        gl.scissor(leftWidth, 0, rightWidth, height);
+        gl.clearColor(0.8, 0.8, 1, 1);
+    
+        // compute a second projection matrix and a second camera
+        const perspectiveProjectionMatrix2 =
+            m4.perspective(degToRad(60), aspect, near, far);
+    
+        // Compute the camera's matrix using look at.
+        const cameraPosition2 = [-600, 400, -400];
+        const target2 = [0, 0, 0];
+        const cameraMatrix2 = m4.lookAt(cameraPosition2, target2, up);
+    
+        drawScene(perspectiveProjectionMatrix2, cameraMatrix2, worldMatrix);
+    
+        // draw object to represent first camera
+        {
+          // Make a view matrix from the 2nd camera matrix.
+          const viewMatrix = m4.inverse(cameraMatrix2);
+    
+          let mat = m4.multiply(perspectiveProjectionMatrix2, viewMatrix);
+          // use the first's camera's matrix as the matrix to position
+          // the camera's representative in the scene
+          mat = m4.multiply(mat, cameraMatrix);
+    
+          gl.useProgram(solidColorProgramInfo.program);
+    
+          // ------ Draw the Camera Representation --------
+    
+          // Setup all the needed attributes.
+          webglUtils.setBuffersAndAttributes(gl, solidColorProgramInfo, cameraBufferInfo);
+    
+          // Set the uniforms
+          webglUtils.setUniforms(solidColorProgramInfo, {
+            u_matrix: mat,
+            u_color: [0, 0, 0, 1],
+          });
+    
+          webglUtils.drawBufferInfo(gl, cameraBufferInfo, gl.LINES);
+        }
+      }
+      render();
+    }
+    
+    main();
+    </script>
+    
+    
+    
+    
+    <div style="position: static; width: 0px; height: 0px; border: none; padding: 0px; margin: 0px;"><div id="trans-tooltip"><div id="tip-left-top" style="background: url(&quot;chrome-extension://ccfjcepmiaackkccabgeeegeklgifffd/imgs/map/tip-left-top.png&quot;);"></div><div id="tip-top" style="background: url(&quot;chrome-extension://ccfjcepmiaackkccabgeeegeklgifffd/imgs/map/tip-top.png&quot;) repeat-x;"></div><div id="tip-right-top" style="background: url(&quot;chrome-extension://ccfjcepmiaackkccabgeeegeklgifffd/imgs/map/tip-right-top.png&quot;);"></div><div id="tip-right" style="background: url(&quot;chrome-extension://ccfjcepmiaackkccabgeeegeklgifffd/imgs/map/tip-right.png&quot;) repeat-y;"></div><div id="tip-right-bottom" style="background: url(&quot;chrome-extension://ccfjcepmiaackkccabgeeegeklgifffd/imgs/map/tip-right-bottom.png&quot;);"></div><div id="tip-bottom" style="background: url(&quot;chrome-extension://ccfjcepmiaackkccabgeeegeklgifffd/imgs/map/tip-bottom.png&quot;) repeat-x;"></div><div id="tip-left-bottom" style="background: url(&quot;chrome-extension://ccfjcepmiaackkccabgeeegeklgifffd/imgs/map/tip-left-bottom.png&quot;);"></div><div id="tip-left" style="background: url(&quot;chrome-extension://ccfjcepmiaackkccabgeeegeklgifffd/imgs/map/tip-left.png&quot;);"></div><div id="trans-content"></div></div><div id="tip-arrow-bottom" style="background: url(&quot;chrome-extension://ccfjcepmiaackkccabgeeegeklgifffd/imgs/map/tip-arrow-bottom.png&quot;);"></div><div id="tip-arrow-top" style="background: url(&quot;chrome-extension://ccfjcepmiaackkccabgeeegeklgifffd/imgs/map/tip-arrow-top.png&quot;);"></div></div></body><!--
+    for most samples webgl-utils only provides shader compiling/linking and
+    canvas resizing because why clutter the examples with code that's the same in every sample.
+    See https://webglfundamentals.org/webgl/lessons/webgl-boilerplate.html
+    and https://webglfundamentals.org/webgl/lessons/webgl-resizing-the-canvas.html
+    for webgl-utils, m3, m4, and webgl-lessons-ui.
+    --></html>
