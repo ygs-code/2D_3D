@@ -775,7 +775,7 @@
       const script = document.getElementById(source);
       return script ? script.text : source;
     });
-    const program = webglUtils.createProgramFromSources(
+    const program = createProgramFromSources(
       gl,
       shaderSources,
       opt_attribs,
@@ -790,7 +790,7 @@
     return {
       program: program,
       uniformSetters: uniformSetters,
-      attribSetters: attribSetters,
+      attribSetters: attribSetters
     };
   }
 
@@ -907,7 +907,7 @@
     Object.defineProperty(typedArray, "numElements", {
       get: function () {
         return (this.length / this.numComponents) | 0;
-      },
+      }
     });
     return typedArray;
   }
@@ -1033,7 +1033,7 @@
 
     if (Array.isArray(array)) {
       array = {
-        data: array,
+        data: array
       };
     }
 
@@ -1105,7 +1105,7 @@
       const origArray = arrays[bufferName];
       if (origArray.value) {
         attribs[attribName] = {
-          value: origArray.value,
+          value: origArray.value
         };
       } else {
         const array = makeTypedArray(origArray, bufferName);
@@ -1116,7 +1116,7 @@
             array.numComponents ||
             guessNumComponentsFromName(bufferName),
           type: getGLTypeForTypedArray(gl, array),
-          normalize: getNormalizationForTypedArray(array),
+          normalize: getNormalizationForTypedArray(array)
         };
       }
     });
@@ -1313,7 +1313,7 @@
    */
   function createBufferInfoFromArrays(gl, arrays, opt_mapping) {
     const bufferInfo = {
-      attribs: createAttribsFromArrays(gl, arrays, opt_mapping),
+      attribs: createAttribsFromArrays(gl, arrays, opt_mapping)
     };
     let indices = arrays.indices;
     if (indices) {
@@ -1493,7 +1493,7 @@
     resizeCanvasToDisplaySize: resizeCanvasToDisplaySize,
     setAttributes: setAttributes,
     setBuffersAndAttributes: setBuffersAndAttributes,
-    setUniforms: setUniforms,
+    setUniforms: setUniforms
   };
 });
 /* eslint-enable   */
