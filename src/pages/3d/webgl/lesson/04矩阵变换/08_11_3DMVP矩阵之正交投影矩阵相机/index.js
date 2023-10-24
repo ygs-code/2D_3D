@@ -143,6 +143,8 @@ window.onload = function () {
     glMatrix.mat4.orthoNO(projMatrix, -1, 1, -1, 1, -2, 2);
     gl.uniformMatrix4fv(u_ProjMatrix, false, projMatrix);
 
+    // gl.enable(gl.DEPTH_TEST)
+
     // 使用完全不透明的黑色清除所有图像
     // 清空掉颜色
     gl.clearColor(0, 0, 0, 1.0); // RBGA
