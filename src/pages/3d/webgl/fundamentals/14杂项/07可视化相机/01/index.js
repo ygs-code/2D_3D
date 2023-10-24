@@ -11,11 +11,11 @@ import {
 } from "@/pages/3d/utils/webgl-utils";
 import m4 from "@/pages/3d/utils/m4.js";
 import primitives from "@/pages/3d/utils/primitives.js";
+import controller from "@/pages/3d/utils/controller.js";
 import VSHADER_SOURCE from "./index.vert";
 import FSHADER_SOURCE from "./index.frag";
 import VSHADER_SOURCE_3D from "./3d.vert";
 import FSHADER_SOURCE_3D from "./3d.frag";
-
 import "./index.less";
 
 window.onload = function () {
@@ -44,67 +44,35 @@ window.onload = function () {
   gl.clear(gl.COLOR_BUFFER_BIT);
 
   // create geometry for a camera
+  // 创建相机的几何形状
   function createCameraBufferInfo(gl, scale = 1) {
     // first let's add a cube. It goes from 1 to 3
     // because cameras look down -Z so we want
     // the camera to start at Z = 0. We'll put a
     // a cone in front of this cube opening
     // toward -Z
-    const positions = [
-      -1,
-      -1,
-      1, // cube vertices
-      1,
-      -1,
-      1,
-      -1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      -1,
-      -1,
-      3,
-      1,
-      -1,
-      3,
-      -1,
-      1,
-      3,
-      1,
-      1,
-      3,
-      0,
-      0,
-      1 // cone tip
-    ];
-    const indices = [
-      0,
-      1,
-      1,
-      3,
-      3,
-      2,
-      2,
-      0, // cube indices
-      4,
-      5,
-      5,
-      7,
-      7,
-      6,
-      6,
-      4,
-      0,
-      4,
-      1,
-      5,
-      3,
-      7,
-      2,
-      6
-    ];
+
+    const positions = new Function(`
+                     return    [
+                          -1, -1,  1,  // cube vertices
+                           1, -1,  1,
+                          -1,  1,  1,
+                          1,  1,  1,
+                          -1, -1,  3,
+                          1, -1,  3,
+                          -1,  1,  3,
+                          1,  1,  3,
+                          0,  0,  1,  // cone tip
+                      ];`)();
+
+    const indices = new Function(`
+                    return  [
+                      0, 1, 1, 3, 3, 2, 2, 0, // cube indices
+                      4, 5, 5, 7, 7, 6, 6, 4,
+                      0, 4, 1, 5, 3, 7, 2, 6,
+                    ];
+    `)();
+
     // add cone segments
     const numSegments = 6;
     const coneBaseIndex = positions.length / 3;
@@ -133,7 +101,6 @@ window.onload = function () {
 
   // setup GLSL programs
   // compiles shaders, links program, looks up locations
-
   const vertexColorProgramInfo = createProgramInfo(gl, [
     VSHADER_SOURCE_3D,
     FSHADER_SOURCE_3D
@@ -147,18 +114,20 @@ window.onload = function () {
   // console.log('vertexColorProgramInfo=',vertexColorProgramInfo);
   // console.log('solidColorProgramInfo=',solidColorProgramInfo);
 
-  // create buffers and fill with data for a 3D 'F'  创建缓冲区并填充3D 'F'的数据
+  // create buffers and fill with data for a 3D 'F'
+  //  创建缓冲区并填充3D 'F'的数据
   const fBufferInfo = primitives.create3DFBufferInfo(gl);
-
   const cameraScale = 20;
   // 创建相机 buff
   const cameraBufferInfo = createCameraBufferInfo(gl, cameraScale);
   console.log("cameraBufferInfo==", cameraBufferInfo);
 
+  // 角度转弧度
   function degToRad(d) {
     return (d * Math.PI) / 180;
   }
 
+  // 参数设置
   const settings = {
     rotation: 150, // in degrees
     cam1FieldOfView: 60, // in degrees
@@ -167,6 +136,79 @@ window.onload = function () {
     cam1PosZ: -200
   };
 
+  // 控制 参数改变
+  controller({
+    onChange: () => {
+      render();
+      console.log("render========", settings);
+    },
+    parmas: settings,
+    options: [
+      {
+        min: 0,
+        max: 360,
+        step: 0.001,
+        key: "rotation",
+        name: "旋转",
+        // onChange: (value) => {},
+        onFinishChange: (value) => {
+          // 完全修改停下来的时候触发这个事件
+          console.log("onFinishChange value==", value);
+        }
+      },
+      {
+        key: "cam1FieldOfView",
+        min: 1,
+        max: 170,
+        step: 0.01,
+        name: "相机视野",
+        onChange: (value) => {},
+        onFinishChange: (value) => {
+          // 完全修改停下来的时候触发这个事件
+          console.log("onFinishChange value==", value);
+        }
+      },
+      {
+        key: "cam1PosX",
+        min: -200,
+        max: 200,
+        step: 0.01,
+        name: "改变相机X轴",
+        onChange: (value) => {},
+        onFinishChange: (value) => {
+          // 完全修改停下来的时候触发这个事件
+          console.log("onFinishChange value==", value);
+        }
+      },
+
+      {
+        key: "cam1PosY",
+        min: -200,
+        max: 200,
+        step: 0.01,
+        name: "改变相机Y轴",
+        onChange: (value) => {},
+        onFinishChange: (value) => {
+          // 完全修改停下来的时候触发这个事件
+          console.log("onFinishChange value==", value);
+        }
+      },
+      {
+        key: "cam1PosZ",
+        min: -200,
+        max: 200,
+        step: 0.01,
+        name: "改变相机Z轴",
+        onChange: (value) => {},
+        onFinishChange: (value) => {
+          // 完全修改停下来的时候触发这个事件
+          console.log("onFinishChange value==", value);
+        }
+      }
+    ]
+  });
+
+  // 绘画场景
   function drawScene(projectionMatrix, cameraMatrix, worldMatrix) {
     // Clear the canvas AND the depth buffer.
     gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
@@ -195,10 +237,14 @@ window.onload = function () {
   function render() {
     // resizeCanvasToDisplaySize(gl.canvas);
 
+    //打开筛选。默认情况下，背面三角形
+    //将被剔除。
     gl.enable(gl.CULL_FACE);
-    gl.enable(gl.DEPTH_TEST);
-    gl.enable(gl.SCISSOR_TEST);
+    // 1.开启隐藏面消除功能
+    gl.enable(gl.DEPTH_TEST); // gl.DEPTH_TEST、gl.BLEND(混合)、gl.POLYGON_OFFSET_FILL(多边形位移)
+    gl.enable(gl.SCISSOR_TEST); // 启用剪裁测试
 
+    // 我们将把视图一分为二
     // we're going to split the view in 2
     const effectiveWidth = gl.canvas.clientWidth / 2;
     const aspect = effectiveWidth / gl.canvas.clientHeight;
@@ -206,6 +252,7 @@ window.onload = function () {
     const far = 2000;
 
     // Compute a perspective projection matrix
+    // 计算一个透视投影矩阵
     const perspectiveProjectionMatrix = m4.perspective(
       degToRad(settings.cam1FieldOfView),
       aspect,
@@ -214,11 +261,13 @@ window.onload = function () {
     );
 
     // Compute the camera's matrix using look at.
+    // 使用look计算相机的矩阵。
     const cameraPosition = [
       settings.cam1PosX,
       settings.cam1PosY,
       settings.cam1PosZ
     ];
+
     const target = [0, 0, 0];
     const up = [0, 1, 0];
     const cameraMatrix = m4.lookAt(cameraPosition, target, up);

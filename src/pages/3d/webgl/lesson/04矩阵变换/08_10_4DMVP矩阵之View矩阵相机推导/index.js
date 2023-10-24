@@ -3,22 +3,32 @@ import {Matrix4} from "@/pages/3d/utils/lib/cuon-matrix.js";
 import VSHADER_SOURCE from "./index.vert";
 import FSHADER_SOURCE from "./index.frag";
 import * as glMatrix from "gl-matrix";
+import controller from "@/pages/3d/utils/controller.js";
 import "./index.less";
 //初始化顶点坐标和顶点颜色
 const initVertexBuffers = (gl) => {
-  var verticesColors = new Float32Array([
-    //最后面的三角形
-    0.0, 0.5, -0.4, 1.0, 0.0, 0.0, -0.5, -0.5, -0.4, 1.0, 0.0, 0.0, 0.5, -0.5,
-    -0.4, 1.0, 0.0, 0.0,
+  var verticesColors = new Float32Array(
+    new Function(` return    [
+      //  //最后面的三角形
+      //   0.0, 0.5, -0.4,  1.0, 0.0, 0.0,
+      //  -0.5, -0.5, -0.4, 1.0, 0.0, 0.0,
+      //   0.5, -0.5, -0.4, 1.0, 0.0, 0.0,
+  
 
-    // //中间的三角形
-    0.5, 0.4, -0.2, 0.0, 1.0, 0.0, -0.5, 0.4, -0.2, 0.0, 1.0, 0.0, 0.0, -0.6,
-    -0.2, 0.0, 1.0, 0.0,
 
-    // //最前面的三角形
-    0.0, 0.5, 0.0, 0.0, 0.0, 1.0, -0.5, -0.5, 0.0, 0.0, 0.0, 1.0, 0.5, -0.5,
-    0.0, 0.0, 0.0, 1.0
-  ]);
+      // 中间的三角形  绿色
+      0.5,  0.4, -1, 0.0, 1.0, 0.0,
+      -0.5, 0.4, -1, 0.0, 1.0, 0.0,
+      0.0, -0.6, -1, 0.0, 1.0, 0.0,
+
+
+      //最前面的三角形 蓝色
+      0.0,  0.5,   1,  0.0, 0.0, 1.0,
+      -0.5, -0.5,  1,  0.0, 0.0, 1.0,
+      0.5,  -0.5,  1,  0.0, 0.0, 1.0,
+      ]
+    `)()
+  );
 
   //创建缓冲区对象
   var vertexColorBuffer = gl.createBuffer();
@@ -74,10 +84,10 @@ window.onload = function () {
   var n = initVertexBuffers(gl);
   //获取顶点着色器uniform变量u_ViewMatrix的存储地址
   var u_ViewMatrix = gl.getUniformLocation(gl.program, "u_ViewMatrix");
-  if (!u_ViewMatrix) {
-    console.log("获取u_ViewMatrix的存储地址失败！");
-    return;
-  }
+  // if (!u_ViewMatrix) {
+  //   console.log("获取u_ViewMatrix的存储地址失败！");
+  //   return;
+  // }
 
   //初始化视图矩阵
   var viewMatrix = new Matrix4();
@@ -99,23 +109,106 @@ window.onload = function () {
     设置视点、视线和上方向  上方向为Y轴负方向(0,1,0) upX, upY, upZ
   */
 
-  viewMatrix.setLookAt(
-    0.0,
-    0.0,
-    1, //     eyeX, eyeY, eyeZ
+  let eye = [
+    //  eyeX, eyeY, eyeZ
+    0.0, 0.0, 1
+  ];
 
-    0,
-    0,
-    0, //     atX, atY, atZ
+  let at = [
+    // atX, atY, atZ
+    0, 0, 0
+  ];
 
-    0,
-    1.0,
-    0 //     upX, upY, upZ
-  );
+  // 观察者的视角 角度
+  let up = [
+    // upX, upY, upZ
+    0, 1.0, 0.0
+  ];
+  viewMatrix.setLookAt(...eye, ...at, ...up);
 
-  // //将视图矩阵传给顶点着色器uniform变量u_ViewMatrix
+  // // //将视图矩阵传给顶点着色器uniform变量u_ViewMatrix
   gl.uniformMatrix4fv(u_ViewMatrix, false, viewMatrix.elements);
   // gl.uniformMatrix4fv(u_ViewMatrix, false, viewMatrix);
+
+  // 参数设置
+  const settings = {
+    rotation: 150, // in degrees
+    cam1FieldOfView: 60, // in degrees
+    cam1PosX: 0,
+    cam1PosY: 0,
+    cam1PosZ: -200
+  };
+
+  // 控制 参数改变
+  controller({
+    onChange: () => {
+      console.log("render========", settings);
+    },
+    parmas: settings,
+    options: [
+      {
+        min: 0,
+        max: 360,
+        step: 0.001,
+        key: "rotation",
+        name: "旋转",
+        // onChange: (value) => {},
+        onFinishChange: (value) => {
+          // 完全修改停下来的时候触发这个事件
+          console.log("onFinishChange value==", value);
+        }
+      },
+      {
+        key: "cam1FieldOfView",
+        min: 1,
+        max: 170,
+        step: 0.01,
+        name: "相机视野",
+        onChange: (value) => {},
+        onFinishChange: (value) => {
+          // 完全修改停下来的时候触发这个事件
+          console.log("onFinishChange value==", value);
+        }
+      },
+      {
+        key: "cam1PosX",
+        min: -200,
+        max: 200,
+        step: 0.01,
+        name: "改变相机X轴",
+        onChange: (value) => {},
+        onFinishChange: (value) => {
+          // 完全修改停下来的时候触发这个事件
+          console.log("onFinishChange value==", value);
+        }
+      },
+
+      {
+        key: "cam1PosY",
+        min: -200,
+        max: 200,
+        step: 0.01,
+        name: "改变相机Y轴",
+        onChange: (value) => {},
+        onFinishChange: (value) => {
+          // 完全修改停下来的时候触发这个事件
+          console.log("onFinishChange value==", value);
+        }
+      },
+      {
+        key: "cam1PosZ",
+        min: -200,
+        max: 200,
+        step: 0.01,
+        name: "改变相机Z轴",
+        onChange: (value) => {},
+        onFinishChange: (value) => {
+          // 完全修改停下来的时候触发这个事件
+          console.log("onFinishChange value==", value);
+        }
+      }
+    ]
+  });
 
   //绘制三角形
   gl.drawArrays(gl.TRIANGLES, 0, n);
