@@ -178,26 +178,16 @@ function lookAt(out, eye, center, up) {
 
   */
 
-  let mat4_UVN = [
-    // u  v  n
-    x0,
-    y0,
-    z0,
-    0,
-    x1,
-    y1,
-    z1,
-    0,
-    x2,
-    y2,
-    z2,
-    0,
-    -(x0 * eyex + x1 * eyey + x2 * eyez),
-    -(y0 * eyex + y1 * eyey + y2 * eyez),
-    -(z0 * eyex + z1 * eyey + z2 * eyez),
-    1
-  ];
-
+  let mat4_UVN = eval(
+    ` [
+      // u  v  n
+        x0,y0,z0, 0,
+        x1,y1,z1,0,
+        x2,y2,z2,0,
+        -(x0 * eyex + x1 * eyey + x2 * eyez),-(y0 * eyex + y1 * eyey + y2 * eyez), -(z0 * eyex + z1 * eyey + z2 * eyez),1
+      ];    
+    `
+  );
   out[0] = x0;
   out[1] = y0;
   out[2] = z0;
