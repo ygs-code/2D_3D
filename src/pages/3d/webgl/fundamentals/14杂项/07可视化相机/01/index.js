@@ -109,6 +109,19 @@ window.onload = function () {
     VSHADER_SOURCE,
     FSHADER_SOURCE
   ]);
+
+  // const vertexColorProgramInfo1 = initShaders(
+  //   gl,
+  //   VSHADER_SOURCE_3D,
+  //   FSHADER_SOURCE_3D
+  // );
+
+  // const solidColorProgramInfo1 = initShaders(
+  //   gl,
+  //   VSHADER_SOURCE,
+  //   FSHADER_SOURCE
+  // );
+
   // console.log('vertexColorProgramInfo1=',vertexColorProgramInfo1);
   // console.log('solidColorProgramInfo1=',solidColorProgramInfo1);
   // console.log('vertexColorProgramInfo=',vertexColorProgramInfo);
