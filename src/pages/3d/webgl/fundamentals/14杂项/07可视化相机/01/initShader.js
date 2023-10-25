@@ -116,7 +116,7 @@ function initShaders(gl, vshader, fshader) {
   // 使用程序对象
   gl.useProgram(program);
   // 挂着对象属性
-  gl.program = program;
+  // gl.program = program;
 
   return program;
 }
