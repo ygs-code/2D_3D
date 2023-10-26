@@ -73,10 +73,13 @@ window.onload = function () {
                     ];
     `)();
 
-    // add cone segments
+    // add cone segments 添加锥段
     const numSegments = 6;
+
     const coneBaseIndex = positions.length / 3;
+
     const coneTipIndex = coneBaseIndex - 1;
+
     for (let i = 0; i < numSegments; ++i) {
       const u = i / numSegments;
       const angle = u * Math.PI * 2;
@@ -226,9 +229,11 @@ window.onload = function () {
     // Clear the canvas AND the depth buffer.
     gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
 
-    // Make a view matrix from the camera matrix.
+    // Make a view matrix from the camera matrix. 从相机矩阵中创建一个视图矩阵。
+    // 逆矩阵 视图矩阵
     const viewMatrix = m4.inverse(cameraMatrix);
 
+    //
     let mat = m4.multiply(projectionMatrix, viewMatrix);
     mat = m4.multiply(mat, worldMatrix);
 
@@ -283,22 +288,44 @@ window.onload = function () {
 
     const target = [0, 0, 0];
     const up = [0, 1, 0];
+    // 视图矩阵
     const cameraMatrix = m4.lookAt(cameraPosition, target, up);
 
+    // y 轴旋转
     let worldMatrix = m4.yRotation(degToRad(settings.rotation));
+
+    // x轴旋转
     worldMatrix = m4.xRotate(worldMatrix, degToRad(settings.rotation));
-    // center the 'F' around its origin
+    // center the 'F' around its origin   把“F”放在原点周围
+    // 位移
     worldMatrix = m4.translate(worldMatrix, -35, -75, -5);
 
     const {width, height} = gl.canvas;
     const leftWidth = (width / 2) | 0;
 
     // draw on the left with orthographic camera
+    // 用正射相机在左边画
+    /*
+      调用glViewPort函数来决定视见区域，告诉OpenGL应把渲染之后的图形绘制在窗体的哪个部位。当视见区域是整个窗体时，OpenGL将把渲染结果绘制到整个窗口。
+    gl.ViewPort(x:GLInt;y:GLInt;Width:GLSizei;Height:GLSizei);
+    其中，参数X，Y指定了视见区域的左下角在窗口中的位置，一般情况下为（0，0），Width和Height指定了视见区域的宽度和高度。注意OpenGL使用的窗口坐标和WindowsGDI使用的窗口坐标是不一样的。图3.1-1表示了在WindowsGDI中的窗口坐标，而图3.1-2则是OpenGL所定义的窗口坐标。
+
+          gl.scissor    函数定义剪刀框。拆剪
+
+      */
+
     gl.viewport(0, 0, leftWidth, height);
     gl.scissor(0, 0, leftWidth, height);
     gl.clearColor(1, 0.8, 0.8, 1);
 
-    drawScene(perspectiveProjectionMatrix, cameraMatrix, worldMatrix);
+    drawScene(
+      // 透视投影矩阵
+      perspectiveProjectionMatrix,
+      // 相机矩阵
+      cameraMatrix,
+      // y轴旋转矩阵
+      worldMatrix
+    );
 
     // draw on right with perspective camera
     const rightWidth = width - leftWidth;
