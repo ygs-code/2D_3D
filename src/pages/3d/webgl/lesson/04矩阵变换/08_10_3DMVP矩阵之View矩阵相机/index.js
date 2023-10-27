@@ -123,7 +123,12 @@ window.onload = function () {
       [at.x, at.y, at.z],
       [up.x, up.y, up.z]
     );
+
     gl.uniformMatrix4fv(u_ViewMatrix, false, viewMatrix);
+
+    console.log("viewMatrix", viewMatrix);
+
+    // u_ViewMatrix*a_Position
 
     //初始化视图矩阵
     // var viewMatrix = new Matrix4();

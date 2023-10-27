@@ -1,2 +1,2 @@
 import "./index.less";
-import "./3d/webgl/fundamentals/14杂项/07可视化相机/01";
+import "./3d/webgl/lesson/04矩阵变换/08_10_3DMVP矩阵之View矩阵相机";
