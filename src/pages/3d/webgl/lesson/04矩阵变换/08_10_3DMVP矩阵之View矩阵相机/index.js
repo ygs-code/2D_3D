@@ -4,6 +4,7 @@ import VSHADER_SOURCE from "./index.vert";
 import FSHADER_SOURCE from "./index.frag";
 import * as glMatrix from "gl-matrix";
 import controller from "@/pages/3d/utils/controller.js";
+import {createHtmlMatrix} from "@/pages/3d/utils/createHtmlMatrix.js";
 import "./index.less";
 //初始化顶点坐标和顶点颜色
 const initVertexBuffers = (gl) => {
@@ -123,6 +124,9 @@ window.onload = function () {
       [at.x, at.y, at.z],
       [up.x, up.y, up.z]
     );
+
+    createHtmlMatrix(viewMatrix, 4, 4, "mat");
+
     gl.uniformMatrix4fv(u_ViewMatrix, false, viewMatrix);
 
     //初始化视图矩阵

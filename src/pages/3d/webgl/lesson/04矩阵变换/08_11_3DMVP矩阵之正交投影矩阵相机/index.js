@@ -96,7 +96,7 @@ window.onload = function () {
     eye: {
       x: 0,
       y: 0,
-      z: 1
+      z: -1
     },
     // 目标视角
     at: {
@@ -140,7 +140,7 @@ window.onload = function () {
     let projMatrix = glMatrix.mat4.create();
 
     //  Matrix, left, right, bottom, top, near, far
-    glMatrix.mat4.orthoNO(projMatrix, -1, 1, -1, 1, -2, 2);
+    glMatrix.mat4.ortho(projMatrix, -1, 1, -1, 1, -2, 2);
     gl.uniformMatrix4fv(u_ProjMatrix, false, projMatrix);
 
     // gl.enable(gl.DEPTH_TEST)
@@ -155,134 +155,134 @@ window.onload = function () {
     gl.drawArrays(gl.TRIANGLES, 0, n);
   };
 
-  // render(settings);
-  let deg = 0;
-  setInterval(() => {
-    deg += 1;
-    let rad = (deg * Math.PI) / 180;
-    settings.eye.x = Math.sin(rad);
-    settings.eye.z = Math.cos(rad);
-    render(settings);
-  }, 10);
+  render(settings);
+  // let deg = 0;
+  // setInterval(() => {
+  //   deg += 1;
+  //   let rad = (deg * Math.PI) / 180;
+  //   settings.eye.x = Math.sin(rad);
+  //   settings.eye.z = Math.cos(rad);
+  //   render(settings);
+  // }, 10);
 
   // 控制 参数改变
-  // controller({
-  //   onChange: () => {
-  //     render(settings);
-  //     console.log("render========", settings);
-  //   },
-  //   parmas: settings,
-  //   options: [
-  //     {
-  //       min: -1,
-  //       max: 1,
-  //       step: 0.001,
-  //       key: "eye.x",
-  //       name: "eyeX",
-  //       // onChange: (value) => {},
-  //       onFinishChange: (value) => {
-  //         // 完全修改停下来的时候触发这个事件
-  //         console.log("onFinishChange value==", value);
-  //       }
-  //     },
-  //     {
-  //       key: "eye.y",
-  //       min: -1,
-  //       max: 1,
-  //       step: 0.01,
-  //       name: "eyeY",
-  //       onChange: (value) => {},
-  //       onFinishChange: (value) => {
-  //         // 完全修改停下来的时候触发这个事件
-  //         console.log("onFinishChange value==", value);
-  //       }
-  //     },
-  //     {
-  //       key: "eye.z",
-  //       min: -1,
-  //       max: 1,
-  //       step: 0.01,
-  //       name: "eyeZ",
-  //       onChange: (value) => {},
-  //       onFinishChange: (value) => {
-  //         // 完全修改停下来的时候触发这个事件
-  //         console.log("onFinishChange value==", value);
-  //       }
-  //     },
+  controller({
+    onChange: () => {
+      render(settings);
+      console.log("render========", settings);
+    },
+    parmas: settings,
+    options: [
+      {
+        min: -1,
+        max: 1,
+        step: 0.001,
+        key: "eye.x",
+        name: "eyeX",
+        // onChange: (value) => {},
+        onFinishChange: (value) => {
+          // 完全修改停下来的时候触发这个事件
+          console.log("onFinishChange value==", value);
+        }
+      },
+      {
+        key: "eye.y",
+        min: -1,
+        max: 1,
+        step: 0.01,
+        name: "eyeY",
+        onChange: (value) => {},
+        onFinishChange: (value) => {
+          // 完全修改停下来的时候触发这个事件
+          console.log("onFinishChange value==", value);
+        }
+      },
+      {
+        key: "eye.z",
+        min: -1,
+        max: 1,
+        step: 0.01,
+        name: "eyeZ",
+        onChange: (value) => {},
+        onFinishChange: (value) => {
+          // 完全修改停下来的时候触发这个事件
+          console.log("onFinishChange value==", value);
+        }
+      },
 
-  //     {
-  //       min: -1,
-  //       max: 1,
-  //       step: 0.001,
-  //       key: "at.x",
-  //       name: "atX",
-  //       // onChange: (value) => {},
-  //       onFinishChange: (value) => {
-  //         // 完全修改停下来的时候触发这个事件
-  //         console.log("onFinishChange value==", value);
-  //       }
-  //     },
-  //     {
-  //       key: "at.y",
-  //       min: -1,
-  //       max: 1,
-  //       step: 0.01,
-  //       name: "atY",
-  //       onChange: (value) => {},
-  //       onFinishChange: (value) => {
-  //         // 完全修改停下来的时候触发这个事件
-  //         console.log("onFinishChange value==", value);
-  //       }
-  //     },
-  //     {
-  //       key: "at.z",
-  //       min: -1,
-  //       max: 1,
-  //       step: 0.01,
-  //       name: "atZ",
-  //       onChange: (value) => {},
-  //       onFinishChange: (value) => {
-  //         // 完全修改停下来的时候触发这个事件
-  //         console.log("onFinishChange value==", value);
-  //       }
-  //     },
+      {
+        min: -1,
+        max: 1,
+        step: 0.001,
+        key: "at.x",
+        name: "atX",
+        // onChange: (value) => {},
+        onFinishChange: (value) => {
+          // 完全修改停下来的时候触发这个事件
+          console.log("onFinishChange value==", value);
+        }
+      },
+      {
+        key: "at.y",
+        min: -1,
+        max: 1,
+        step: 0.01,
+        name: "atY",
+        onChange: (value) => {},
+        onFinishChange: (value) => {
+          // 完全修改停下来的时候触发这个事件
+          console.log("onFinishChange value==", value);
+        }
+      },
+      {
+        key: "at.z",
+        min: -1,
+        max: 1,
+        step: 0.01,
+        name: "atZ",
+        onChange: (value) => {},
+        onFinishChange: (value) => {
+          // 完全修改停下来的时候触发这个事件
+          console.log("onFinishChange value==", value);
+        }
+      },
 
-  //     {
-  //       min: -1,
-  //       max: 1,
-  //       step: 0.001,
-  //       key: "up.x",
-  //       name: "upX",
-  //       // onChange: (value) => {},
-  //       onFinishChange: (value) => {
-  //         // 完全修改停下来的时候触发这个事件
-  //         console.log("onFinishChange value==", value);
-  //       }
-  //     },
-  //     {
-  //       key: "up.y",
-  //       min: -1,
-  //       max: 1,
-  //       step: 0.01,
-  //       name: "upY",
-  //       onChange: (value) => {},
-  //       onFinishChange: (value) => {
-  //         // 完全修改停下来的时候触发这个事件
-  //         console.log("onFinishChange value==", value);
-  //       }
-  //     },
-  //     {
-  //       key: "up.z",
-  //       min: -1,
-  //       max: 1,
-  //       step: 0.01,
-  //       name: "upZ",
-  //       onChange: (value) => {},
-  //       onFinishChange: (value) => {
-  //         // 完全修改停下来的时候触发这个事件
-  //         console.log("onFinishChange value==", value);
-  //       }
-  //     }
-  //   ]
-  // });
+      {
+        min: -1,
+        max: 1,
+        step: 0.001,
+        key: "up.x",
+        name: "upX",
+        // onChange: (value) => {},
+        onFinishChange: (value) => {
+          // 完全修改停下来的时候触发这个事件
+          console.log("onFinishChange value==", value);
+        }
+      },
+      {
+        key: "up.y",
+        min: -1,
+        max: 1,
+        step: 0.01,
+        name: "upY",
+        onChange: (value) => {},
+        onFinishChange: (value) => {
+          // 完全修改停下来的时候触发这个事件
+          console.log("onFinishChange value==", value);
+        }
+      },
+      {
+        key: "up.z",
+        min: -1,
+        max: 1,
+        step: 0.01,
+        name: "upZ",
+        onChange: (value) => {},
+        onFinishChange: (value) => {
+          // 完全修改停下来的时候触发这个事件
+          console.log("onFinishChange value==", value);
+        }
+      }
+    ]
+  });
 };
