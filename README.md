@@ -50,3 +50,13 @@ https://thebookofshaders.com/
 李伟 博客 http://yxyy.name/blog/
 
 opengl 教程 http://www.opengl-tutorial.org/cn/beginners-tutorials/tutorial-1-opening-a-window/
+
+ opengl 教程  https://learnopengl-cn.readthedocs.io/zh/latest/01%20Getting%20started/08%20Coordinate%20Systems/
+
+
+
+webgl专区： https://codepen.io/search/pens/?limit=all&page=5&q=webgl
+
+（8）在线三维人物角色骨骼自动绑定，上千动作库直接生成人物动画
+
+网站地址： https://www.mixamo.com/

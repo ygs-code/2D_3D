@@ -1223,6 +1223,7 @@
    * @param {Matrix4} [dst] optional matrix to store result
    * @return {Matrix4} dst or a new matrix if none provided
    * @memberOf module:webgl-3d-math
+   *  m矩阵计算逆
    */
   function inverse(m, dst) {
     dst = dst || new MatType(16);
