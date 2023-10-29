@@ -18,14 +18,14 @@ const initVertexBuffers = (gl) => {
 
 
       // 中间的三角形  绿色
-      // 0.5,  0.4, -1, 0.0, 1.0, 0.0,
-      // -0.5, 0.4, -1, 0.0, 1.0, 0.0,
-      // 0.0, -0.6, -1, 0.0, 1.0, 0.0,
+      // 0.0,   0.5,  -0.6, 1.0,  // 0.0, 0.0, 1.0,
+      // -0.5, -0.5,  -0.6, 1.0,  // 0.0, 0.0, 1.0,
+      // 0.5,  -0.5,  -0.6, 1.0,  //0.0, 0.0, 1.0,
 
       //最前面的三角形 蓝色
-      0.0,  0.5,   0.0, 0.0, 0.0, 1.0,
-      -0.5, -0.5,  0.0, 0.0, 0.0, 1.0,
-      0.5,  -0.5,  0.0, 0.0, 0.0, 1.0,
+      0.0,  0.5,   -1.0, 1.0,  // 0.0, 0.0, 1.0,
+      -0.5, -0.5,  -1.0, 1.0,  // 0.0, 0.0, 1.0,
+      0.5,  -0.5,  -1.0, 1.0,  //0.0, 0.0, 1.0,
       ]
     `)()
   );
@@ -46,18 +46,42 @@ const initVertexBuffers = (gl) => {
 
   //获取顶点着色器attribute变量a_Position的存储地址, 分配缓存并开启
   var a_Position = gl.getAttribLocation(gl.program, "a_Position");
-  gl.vertexAttribPointer(a_Position, 3, gl.FLOAT, false, FSIZE * 6, 0);
+  gl.vertexAttribPointer(a_Position, 4, gl.FLOAT, false, FSIZE * 4, 0);
   gl.enableVertexAttribArray(a_Position);
 
+  let colors = new Float32Array([
+    // 0.0, 1.0, 1.0, 1.0,
+    // 0.0, 1.0, 1.0, 1.0,
+    // 0.0, 1.0, 1.0, 1.0,
+
+    0.0, 0.0, 1.0, 1.0, 0.0, 0.0, 1.0, 1.0, 0.0, 0.0, 1.0, 1.0
+  ]);
   //获取顶点着色器attribute变量a_Color(顶点颜色信息)的存储地址, 分配缓存并开启
-  var a_Color = gl.getAttribLocation(gl.program, "a_Color");
-  gl.vertexAttribPointer(a_Color, 3, gl.FLOAT, false, FSIZE * 6, FSIZE * 3);
+  let colorsBuffer = gl.createBuffer();
+  // var a_Color = gl.getAttribLocation(gl.program, "a_Color");
+  // gl.vertexAttribPointer(a_Color, 3, gl.FLOAT, false, FSIZE * 6, FSIZE * 3);
+  // gl.enableVertexAttribArray(a_Color);
+
+  gl.bindBuffer(gl.ARRAY_BUFFER, colorsBuffer);
+  gl.bufferData(gl.ARRAY_BUFFER, colors, gl.STATIC_DRAW);
+  let a_Color = gl.getAttribLocation(gl.program, "a_Color");
+  gl.vertexAttribPointer(
+    a_Color,
+    4,
+    gl.FLOAT,
+    false,
+    colorsBuffer.BYTES_PER_ELEMENT * 3,
+    0
+  );
   gl.enableVertexAttribArray(a_Color);
 
   // 解绑缓冲区对象
   gl.bindBuffer(gl.ARRAY_BUFFER, null);
 
-  return verticesColors.length / 6;
+  return {
+    n: verticesColors.length / 4,
+    verticesColors
+  };
 };
 
 window.onload = function () {
@@ -81,7 +105,7 @@ window.onload = function () {
   }
 
   //初始化顶点坐标和顶点颜色
-  var n = initVertexBuffers(gl);
+  var {n, verticesColors} = initVertexBuffers(gl);
   //获取顶点着色器uniform变量u_ViewMatrix的存储地址
   var u_ViewMatrix = gl.getUniformLocation(gl.program, "u_ViewMatrix");
   if (!u_ViewMatrix) {
@@ -95,7 +119,7 @@ window.onload = function () {
     eye: {
       x: 0,
       y: 0,
-      z: 1 // 眼睛在屏幕的前面 默认是这个
+      z: 0 // 眼睛在屏幕的前面 默认是这个
     },
     // 目标视角
     at: {
@@ -106,7 +130,7 @@ window.onload = function () {
     // 眼睛头部
     up: {
       x: 0,
-      y: 1,
+      y: 1, // 对齐原点
       z: 0
     }
   };
@@ -125,7 +149,42 @@ window.onload = function () {
       [up.x, up.y, up.z]
     );
 
+    /*
+     const A = [
+                  1,2,
+                  3,4
+              ]
+      const B = [
+                  5,6,
+                  7,8
+                ]
+     矩阵 A*B          
+         //  
+       let rotationMatrix =glMatrix.mat2.multiply([],
+        [
+          5,6,   // 矩阵B
+          7,8
+        ],
+        [
+          1,2,   // 矩阵A
+          3,4
+         ]
+        );
+    */
+
+    //
+    let matrix = glMatrix.mat4.multiply(
+      [],
+      [...viewMatrix],
+      [...verticesColors]
+    );
+
+    console.log("viewMatrix==", [...viewMatrix]);
+    console.log("verticesColors==", [...verticesColors]);
+    console.log("matrix==", matrix);
+
     createHtmlMatrix(viewMatrix, 4, 4, "mat");
+    createHtmlMatrix(matrix, 4, 4, "matrix");
 
     gl.uniformMatrix4fv(u_ViewMatrix, false, viewMatrix);
 
