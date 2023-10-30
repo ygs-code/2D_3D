@@ -60,3 +60,6 @@ webgl专区： https://codepen.io/search/pens/?limit=all&page=5&q=webgl
 （8）在线三维人物角色骨骼自动绑定，上千动作库直接生成人物动画
 
 网站地址： https://www.mixamo.com/
+
+
+相机 研究 https://www.jianshu.com/p/7b27447fdd0e?utm_campaign=maleskine&utm_content=note&utm_medium=seo_notes&utm_source=recommendation
