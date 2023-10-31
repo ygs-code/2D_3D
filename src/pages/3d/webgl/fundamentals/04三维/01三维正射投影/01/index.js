@@ -6,8 +6,68 @@ import VSHADER_SOURCE from "./index.vert";
 import controller from "@/pages/3d/utils/controller.js";
 import {fData} from "./data";
 import {createHtmlMatrix} from "@/pages/3d/utils/createHtmlMatrix.js";
+import * as glMatrix from "gl-matrix";
 import "./index.less";
 import "@/pages/index.less";
+
+let A = glMatrix.mat4.transpose(
+  [],
+  [1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 1, 0, 0, 1]
+);
+
+let B = glMatrix.mat4.transpose(
+  [],
+  [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15]
+);
+
+let C = glMatrix.mat4.multiply([], A, B);
+
+// C=glMatrix.mat4.transpose(
+//   [],
+//    C
+// );
+
+console.log("A====", A);
+console.log("B====", B);
+
+createHtmlMatrix(A, 4, 4, "a");
+createHtmlMatrix(B, 4, 4, "b");
+createHtmlMatrix(C, 4, 4, "ab");
+
+let $A = [1, 0, 0, 1, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1];
+
+let $B = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15];
+
+let $C = glMatrix.mat4.multiply([], $B, $A);
+
+$C = glMatrix.mat4.transpose([], $C);
+
+createHtmlMatrix($A, 4, 4, "$a");
+createHtmlMatrix($B, 4, 4, "$b");
+createHtmlMatrix($C, 4, 4, "$ab");
+
+let $$A = [
+  // 1,1,
+  // 0,1
+  1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 1, 0, 0, 1
+];
+
+let $$B = [
+  // 1,2,3,4
+  0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15
+];
+
+let $$C = glMatrix.mat2.multiply([], $$B, $$A);
+
+// $C=glMatrix.mat4.transpose(
+//   [],
+//   $C
+// );
+
+createHtmlMatrix($$A, 2, 2, "$$a");
+createHtmlMatrix($$B, 2, 2, "$$b");
+createHtmlMatrix($$C, 2, 2, "$$ab");
+
 // Returns a random integer from 0 to range - 1.
 function randomInt(range) {
   return Math.floor(Math.random() * range);

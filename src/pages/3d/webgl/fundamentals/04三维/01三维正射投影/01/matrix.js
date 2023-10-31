@@ -101,17 +101,22 @@
   // 矩阵相乘
   function multiply(a, b) {
     // 变成有序的矩阵
-    let A = convertData(a);
-    let B = convertData(b);
+    let $A = convertData(a);
+    let $B = convertData(b);
 
     // 矩阵转置
-    // A = transpose(A);
-    // B = transpose(B);
-    let row = A[0].length;
-    let list = B.length;
-    if (row !== list) {
-      throw "矩阵A的行数不等于矩阵B列数，所以矩阵不能相乘";
-    }
+    let A = transpose($B);
+    let B = transpose($A);
+    console.log("A===", A);
+    console.log("B===", B);
+
+    // return
+    // console.log(B)
+    // let row = A[0].length;
+    // let list = B.length;
+    // if (row !== list) {
+    //   throw "矩阵A的行数不等于矩阵B列数，所以矩阵不能相乘";
+    // }
 
     console.log("A==", A);
     console.log("B==", B);
@@ -127,10 +132,16 @@
         // 循环 行
         sum = 0;
         flag = false;
-        for (let i = 0; i < B.length && B[i][$j] !== undefined; i++) {
+
+        for (
+          let i = 0;
+          i < B.length && A[$i][i] !== undefined && B[i][$j] !== undefined;
+          i++
+        ) {
           flag = true;
-          //     console.log("A-----", A[$i][i]);
-          //     console.log("A-----", B[i][$j]);
+          // console.log("A-----", A[$i][i]);
+          // console.log("B-----", B[i][$j]);
+          // console.log("B-----", B);
           //   console.log('i-----',i)
           // // console.log('j-----',j)
           // // console.log('$i-----',$i)
@@ -138,8 +149,9 @@
           //   console.log("B[i]==", B[i]);
           //   console.log("B[i][$j]==", B[i][$j]);
           //   console.log("$j==", $j);
-
+          console.log(A[$i]);
           sum += A[$i][i] * B[i][$j];
+
           // console.log("B-----", B[$j][$i]);
         }
 
@@ -181,9 +193,9 @@
         // console.log("A[i][j]=", A[i][j]);
         // console.log("B[j][0]=", B[j][0]);
 
-        // if (flag) {
-        $mat.push(sum);
-        // }
+        if (flag) {
+          $mat.push(sum);
+        }
       }
       //   $mat.push(sum);
       console.log("\n");
@@ -205,7 +217,8 @@
             0,1,0,0, 
             0,0,1,0, 
             0,0,0,1, 
-            // 1,0,
+
+            // 1,1,
             // 0,1
             // 4,5,6,7,
             // 8,9,10,11,
@@ -219,24 +232,26 @@
             //  'k0','k1','k2','k3',  'k0','k1','k2','k3',  'k0','k1','k1','k3', 
             ]`),
       row: {
-        n: 4,
-        start: 0,
-        end: 3
+        n: 4
+        // start: 0,
+        // end: 3
       },
       list: {
-        n: 4,
-        start: 0,
-        end: 3
+        n: 4
+        // start: 0,
+        // end: 3
       }
     },
 
     {
       matrix: eval(`[
+            //  1,2,
+            //  3,4
             //  x   y   z     w   
-            0,1,2,3, 
-            4,5,6,7,
-            8,9,10,11,
-            12,13,14,15    
+              0,1,2,3, 
+              4,5,6,7,
+              // 8,9,10,11,
+              // 12,13,14,15    
             //  'a10','a11','a12','a13',  'b10','b11','b12','b13',  'c10','c11','c11','c13', 
             //  'd10','d11','d12','d13',  'e10','e11','e12','e13',  'f10','f11','f11','f13', 
             //  'g10','g11','g12','g13',  'g10','g11','g12','g13',  'g10','g11','g11','g13', 
@@ -246,32 +261,32 @@
             //  'k10','k11','k12','k13',  'k10','k11','k12','k13',  'k10','k11','k11','k13', 
             ]`),
       row: {
-        n: 4,
-        start: 0,
-        end: 3
+        n: 2
+        // start: 0,
+        // end: 0
       },
       list: {
-        n: 4,
-        start: 0,
-        end: 3
+        n: 4
+        // start: 0,
+        // end: 3
       }
     }
   );
 
   console.log("mat4==", mat4);
-  let $mat4 = convertData({
-    matrix: mat4,
-    row: {
-      n: 4
-    },
-    list: {
-      n: 4
-    }
-  });
+  // let $mat4 = convertData({
+  //   matrix: mat4,
+  //   row: {
+  //     n: 4
+  //   },
+  //   list: {
+  //     n: 4
+  //   }
+  // });
 
-  let $$mat4 = transpose($mat4);
-  console.log("$mat4==", $mat4);
-  console.log("$$mat4==", $$mat4);
+  // let $$mat4 = transpose($mat4);
+  // console.log("$mat4==", $mat4);
+  // console.log("$$mat4==", $$mat4);
   return {
     multiply
   };
