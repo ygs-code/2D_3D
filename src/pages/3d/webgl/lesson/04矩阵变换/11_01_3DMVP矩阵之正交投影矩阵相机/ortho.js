@@ -29,14 +29,14 @@ export function ortho(out, left, right, bottom, top, near, far) {
 
   /*
     let $mat4=[
-      [2 / (right - left), 0, 0, 0],
-      [0, 2 / (top - bottom), 0, 0],
-      [0, 0, 2 / (near - far), 0],
+      2 / (right - left), 0, 0, 0,
+      0, 2 / (top - bottom), 0, 0,
+      0, 0, 2 / (near - far), 0,
 
-      [(left + right) / (left - right),
+      (left + right) / (left - right),
       (bottom + top) / (bottom - top),
       (near + far) / (near - far),
-      1],
+      1,
     ]
     
     */
