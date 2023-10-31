@@ -105,8 +105,8 @@
     let B = convertData(b);
 
     // 矩阵转置
-    A = transpose(A);
-    B = transpose(B);
+    // A = transpose(A);
+    // B = transpose(B);
     let row = A[0].length;
     let list = B.length;
     if (row !== list) {
@@ -269,9 +269,9 @@
     }
   });
 
-  //   let $$mat4 = transpose($mat4);
+  let $$mat4 = transpose($mat4);
   console.log("$mat4==", $mat4);
-  //   console.log("$$mat4==", $$mat4);
+  console.log("$$mat4==", $$mat4);
   return {
     multiply
   };
