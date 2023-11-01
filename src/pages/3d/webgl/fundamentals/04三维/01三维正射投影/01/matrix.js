@@ -85,6 +85,9 @@
   }
 
   // 矩阵转置
+  /*
+    转置矩阵的 (A*B)T不等于AT*BT
+  */
   function transpose(mat) {
     let $mat = [];
     for (let i = 0; i < mat.length; i++) {
@@ -107,10 +110,26 @@
     // 矩阵转置
     // let A = transpose($B);
     // let B = transpose($A);
-    // console.log("A===", A);
-    // console.log("B===", B);
-    let row = A[0].length;
-    let list = B.length;
+    console.log("A===", A);
+    console.log("B===", B);
+
+    // return
+    // console.log(B)
+    let list = A[0].length;
+    let row = B.length;
+
+    if (A.length == 1) {
+      // 那么他是列主序
+      // 如果列主序的矩阵列小于线性变换的矩阵，则让他少于的位置添加1
+      if (list < row) {
+        for (let i = 0; i < row - list; i++) {
+          A[0].push(1);
+        }
+        // 更新列
+        list = A[0].length;
+      }
+    }
+
     if (row !== list) {
       throw "矩阵A的行数不等于矩阵B列数，所以矩阵不能相乘";
     }
