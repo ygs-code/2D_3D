@@ -114,6 +114,11 @@
     // console.log(B)
     let row = A[0].length;
     let list = B.length;
+
+    if (A.length == 1) {
+      // 那么他是列主序
+    }
+
     if (row !== list) {
       throw "矩阵A的行数不等于矩阵B列数，所以矩阵不能相乘";
     }
