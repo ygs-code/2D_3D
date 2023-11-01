@@ -107,19 +107,16 @@
     // 矩阵转置
     // let A = transpose($B);
     // let B = transpose($A);
-    console.log("A===", A);
-    console.log("B===", B);
-
-    // return
-    // console.log(B)
+    // console.log("A===", A);
+    // console.log("B===", B);
     let row = A[0].length;
     let list = B.length;
     if (row !== list) {
       throw "矩阵A的行数不等于矩阵B列数，所以矩阵不能相乘";
     }
 
-    console.log("A==", A);
-    console.log("B==", B);
+    // console.log("A==", A);
+    // console.log("B==", B);
     // 矩阵相乘
     let sum = 0;
     let $mat = [];
@@ -149,7 +146,7 @@
           //   console.log("B[i]==", B[i]);
           //   console.log("B[i][$j]==", B[i][$j]);
           //   console.log("$j==", $j);
-          console.log(A[$i]);
+          // console.log(A[$i]);
           sum += A[$i][i] * B[i][$j];
 
           // console.log("B-----", B[$j][$i]);
