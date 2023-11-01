@@ -85,6 +85,9 @@
   }
 
   // 矩阵转置
+  /*
+    转置矩阵的 (A*B)T不等于AT*BT
+  */
   function transpose(mat) {
     let $mat = [];
     for (let i = 0; i < mat.length; i++) {

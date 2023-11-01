@@ -370,7 +370,7 @@ window.onload = function () {
     // 变换这个正交投影 位移
     matrix = m4.translate(matrix, translation.x, translation.y, translation.z);
 
-    // 旋转
+    // 旋转正交矩阵
     matrix = m4.xRotate(matrix, degToRad(angleX));
     matrix = m4.yRotate(matrix, degToRad(angleY));
     matrix = m4.zRotate(matrix, degToRad(angleZ));
@@ -395,28 +395,4 @@ window.onload = function () {
   }
 
   drawScene(parmas);
-
-  // // 更新
-  // function updatePosition(index) {
-  //   return function (event, ui) {
-  //     translation[index] = ui.value;
-  //     drawScene();
-  //   };
-  // }
-
-  // function updateRotation(index) {
-  //   return function (event, ui) {
-  //     var angleInDegrees = ui.value;
-  //     var angleInRadians = (angleInDegrees * Math.PI) / 180;
-  //     rotation[index] = angleInRadians;
-  //     drawScene();
-  //   };
-  // }
-
-  // function updateScale(index) {
-  //   return function (event, ui) {
-  //     scale[index] = ui.value;
-  //     drawScene();
-  //   };
-  // }
 };
