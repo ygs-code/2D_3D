@@ -6,68 +6,10 @@ import VSHADER_SOURCE from "./index.vert";
 import controller from "@/pages/3d/utils/controller.js";
 import {fData} from "./data";
 // import {createHtmlMatrix} from "@/pages/3d/utils/matrix.js";
-import {createHtmlMatrix} from "@/pages/3d/utils/matrix.js";
+import {createHtmlMatrix, multiply} from "@/pages/3d/utils/matrix.js";
 import * as glMatrix from "gl-matrix";
 import "./index.less";
-// import "@/pages/index.less";
-
-let A = glMatrix.mat4.transpose(
-  [],
-  [1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 1, 0, 0, 1]
-);
-
-let B = glMatrix.mat4.transpose(
-  [],
-  [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15]
-);
-
-let C = glMatrix.mat4.multiply([], A, B);
-
-// C=glMatrix.mat4.transpose(
-//   [],
-//    C
-// );
-
-console.log("A====", A);
-console.log("B====", B);
-
-createHtmlMatrix(A, 4, 4, "a");
-createHtmlMatrix(B, 4, 4, "b");
-createHtmlMatrix(C, 4, 4, "ab");
-
-let $A = [1, 0, 0, 1, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1];
-
-let $B = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15];
-
-let $C = glMatrix.mat4.multiply([], $B, $A);
-
-$C = glMatrix.mat4.transpose([], $C);
-
-createHtmlMatrix($A, 4, 4, "$a");
-createHtmlMatrix($B, 4, 4, "$b");
-createHtmlMatrix($C, 4, 4, "$ab");
-
-let $$A = [
-  // 1,1,
-  // 0,1
-  1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 1, 0, 0, 1
-];
-
-let $$B = [
-  // 1,2,3,4
-  0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15
-];
-
-let $$C = glMatrix.mat2.multiply([], $$B, $$A);
-
-// $C=glMatrix.mat4.transpose(
-//   [],
-//   $C
-// );
-
-createHtmlMatrix($$A, 2, 2, "$$a");
-createHtmlMatrix($$B, 2, 2, "$$b");
-createHtmlMatrix($$C, 2, 2, "$$ab");
+import "@/pages/index.less";
 
 // Returns a random integer from 0 to range - 1.
 function randomInt(range) {
@@ -192,7 +134,7 @@ window.onload = function () {
         }
       },
       {
-        min: -1,
+        min: 0,
         max: 400,
         step: 0.01,
         key: "translation.y",
@@ -368,20 +310,98 @@ window.onload = function () {
       400
     );
 
+    let translationMatrix = [];
+
     // 变换这个正交投影 位移
     matrix = m4.translate(matrix, translation.x, translation.y, translation.z);
 
     // 旋转正交矩阵
     matrix = m4.xRotate(matrix, degToRad(angleX));
+
     matrix = m4.yRotate(matrix, degToRad(angleY));
+
     matrix = m4.zRotate(matrix, degToRad(angleZ));
 
     // 放大
     matrix = m4.scale(matrix, scale.x, scale.y, scale.z);
 
+    // 输出正交投影矩阵
     createHtmlMatrix(matrix, 4, 4, "matrix");
 
-    createHtmlMatrix(fData, 18, 3, "fData");
+    // F数据矩阵
+    createHtmlMatrix(fData, 16 * 6, 3, "fData");
+
+    let fMatrix = [];
+    for (let i = 0; i < 16 * 6; i++) {
+      // console.log(
+      //   multiply(
+      //     {
+      //       //
+      //       matrix: fData,
+      //       row: {
+      //         n: 16 * 6,
+      //         start: i,
+      //         end: i
+      //       },
+      //       list: {
+      //         n: 3
+      //         // start: 0,
+      //         // end: 3
+      //       }
+      //     },
+
+      //     {
+      //       matrix: matrix,
+      //       row: {
+      //         n: 4
+      //         // start: 0,
+      //         // end: 0
+      //       },
+      //       list: {
+      //         n: 4
+      //         // start: 0,
+      //         // end: 3
+      //       }
+      //     }
+      //   )
+      // );
+
+      fMatrix = fMatrix.concat(
+        multiply(
+          {
+            //
+            matrix: fData,
+            row: {
+              n: 16 * 6,
+              start: i,
+              end: i
+            },
+            list: {
+              n: 3
+              // start: 0,
+              // end: 3
+            }
+          },
+
+          {
+            matrix: matrix,
+            row: {
+              n: 4
+              // start: 0,
+              // end: 0
+            },
+            list: {
+              n: 4
+              // start: 0,
+              // end: 3
+            }
+          }
+        )
+      );
+    }
+
+    // F*正交投影矩阵
+    createHtmlMatrix(fMatrix, 16 * 6, 4, "fData");
 
     // Set the matrix.
     // 得到一个矩阵 放入 u_matrix 变量中传入gpu
@@ -391,7 +411,8 @@ window.onload = function () {
     // Draw the geometry.
     var primitiveType = gl.TRIANGLES; // 绘画类型
     // var offset = 0;
-    var count = 18; // 6 triangles in the 'F', 3 points per triangle  18个顶点
+    // var count = 18; // 6 triangles in the 'F', 3 points per triangle  18个顶点
+    var count = 16 * 6;
     gl.drawArrays(primitiveType, offset, count);
   }
 

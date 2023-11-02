@@ -1,3 +1,4 @@
+
 # WebGL 三维正射投影
 
 此文上接一系列相关文章，首先是[基础概念](https://webglfundamentals.org/webgl/lessons/zh_cn/webgl-fundamentals.html)，上一篇是 [二维矩阵运算](https://webglfundamentals.org/webgl/lessons/zh_cn/webgl-2d-matrices.html)，如果没读过请从那里开始。
@@ -38,7 +39,6 @@ void main() {
 }
 </script>
 ```
-
 
 它甚至变简单了！在二维中我们提供 `x`和 `y`并设置 `z`为1， 在三维中我们将提供 `x`，`y`和 `z`，然后将 `w`设置为1, 而在属性中 `w`的默认值就是1，我们可以利用这点不用再次设置。
 
@@ -91,7 +91,6 @@ function setGeometry(gl) {
       gl.STATIC_DRAW);
 }
 ```
-
 
 接下来把二维矩阵方法改成三维的
 
@@ -189,7 +188,6 @@ var m4 = {
 };
 ```
 
-
 注意到我们现在有三个旋转方法，在二维中只需要一个是因为我们只需要绕 Z 轴旋转，现在在三维中还可以绕 X 轴和 Y 轴旋转。它们看起来还是很简单， 如果使用它们后你会发现和之前一样
 
 绕 Z 轴旋转
@@ -211,7 +209,6 @@ newY = y * c + z * s;
 newZ = y * -s + z * c;
 
 它们提供这些旋转方式。
-
 
 <iframe src="https://webglfundamentals.org/webgl/lessons/resources/axis-diagram.html?cid=8B504C1595CD3973&resid=8B504C1595CD3973%2126382&authkey=AJzDcN30q6g4W0Y&em=2" width="700px" height="250px" frameborder="0" scrolling="no"> </iframe>
 
@@ -269,7 +266,6 @@ projection: function (width, height) {
     ];
   },
 ```
-
 
 就像 X 和 Y 需要从像素空间转换到裁剪空间一样，Z 也需要。 在这个例子中我也将 Z 单位化了，我会传递一些和 `width` 相似的值给 `depth` ，所以我们的空间将会是 0 到 `width` 像素宽，0 到 `height` 像素高， 但是对于 `depth`将会是 `-depth / 2` 到 `+depth / 2` 。
 
