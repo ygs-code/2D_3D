@@ -15,9 +15,7 @@
   }
 })(this, function () {
   "use strict";
-  // console.log('style===',style)
-  // debugger
-  function createHtmlMatrix(mat, row, list, id) {
+  function createHtmlMatrix({ matrix: mat, title, row, list, elId: id }) {
     let style = document.getElementById("create-html-matrix");
     if (!style) {
       style = document.createElement("style");
@@ -49,7 +47,7 @@
                 width: 10px;
                 height: calc(100% - 2px);
                 position: absolute;
-                left: 0;
+                right: 0;
                 top: 0;
                 bottom: 0;
                 border-bottom: 1px solid #0e393b;
@@ -78,9 +76,10 @@
       oDiv = el;
     }
 
-    oDiv.id = id;
-    oDiv.className = "create-html-matrix";
-    let html = "";
+    oDiv.id = id || "createHtmlMatrix";
+    let html = `
+       ${title} : <div class="create-html-matrix"> 
+    `;
     for (let i = 0; i < row; i++) {
       html += `<div>`;
       for (let j = 0; j < list; j++) {
@@ -90,6 +89,7 @@
       }
       html += `</div>`;
     }
+    html += `</div>`;
     oDiv.innerHTML = html;
 
     // if (!el) {

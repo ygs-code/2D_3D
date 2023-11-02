@@ -9,7 +9,6 @@ import {fData} from "./data";
 import {createHtmlMatrix, multiply} from "@/pages/3d/utils/matrix.js";
 import * as glMatrix from "gl-matrix";
 import "./index.less";
-import "@/pages/index.less";
 
 // Returns a random integer from 0 to range - 1.
 function randomInt(range) {
@@ -326,10 +325,41 @@ window.onload = function () {
     matrix = m4.scale(matrix, scale.x, scale.y, scale.z);
 
     // 输出正交投影矩阵
-    createHtmlMatrix(matrix, 4, 4, "matrix");
+    // createHtmlMatrix(matrix, 4, 4, "matrix");
+
+    createHtmlMatrix({
+      matrix,
+      title: "正交投影矩阵",
+      row: 4,
+      list: 4,
+      elId: "matrix"
+    });
+
+    /*
+    
+      createHtmlMatrix(
+        
+        {
+          matrix,
+          row:4,
+          list:4,
+          el:"matrix"
+        }
+        
+      
+      
+      );
+    */
 
     // F数据矩阵
-    createHtmlMatrix(fData, 16 * 6, 3, "fData");
+    createHtmlMatrix({
+      matrix: fData,
+      title: "F矩阵",
+      row: 16 * 6,
+      list: 3,
+      elId: "fData"
+    });
+    // createHtmlMatrix(fData, 16 * 6, 3, "fData");
 
     let fMatrix = [];
     for (let i = 0; i < 16 * 6; i++) {
