@@ -431,7 +431,13 @@ window.onload = function () {
     }
 
     // F*正交投影矩阵
-    createHtmlMatrix(fMatrix, 16 * 6, 4, "fData");
+    createHtmlMatrix({
+      matrix: fMatrix,
+      title: "F*正交投影矩阵",
+      row: 16 * 6,
+      list: 4,
+      elId: "fData"
+    });
 
     // Set the matrix.
     // 得到一个矩阵 放入 u_matrix 变量中传入gpu

@@ -64,7 +64,6 @@
       
       `;
       document.body.appendChild(style);
-      debugger;
     }
 
     let el = document.getElementById(id);
@@ -83,9 +82,9 @@
     for (let i = 0; i < row; i++) {
       html += `<div>`;
       for (let j = 0; j < list; j++) {
-        html += `<span title="${mat[i * list + j]}">${
-          mat[i * list + j]
-        },</span> `;
+        html += `<span title="${mat[i * list + j]}">${mat[i * list + j]}${
+          j < list - 1 ? "," : ""
+        }</span> `;
       }
       html += `</div>`;
     }
