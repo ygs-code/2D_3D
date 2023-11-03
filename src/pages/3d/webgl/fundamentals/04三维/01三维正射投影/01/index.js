@@ -30,10 +30,9 @@ let C = glMatrix.mat4.multiply([], A, B);
 
 console.log("A====", A);
 console.log("B====", B);
-
-createHtmlMatrix(A, 4, 4, "a");
-createHtmlMatrix(B, 4, 4, "b");
-createHtmlMatrix(C, 4, 4, "ab");
+createHtmlMatrix({matrix: A, title: "矩阵A", row: 4, list: 4, elId: "a"});
+createHtmlMatrix({matrix: B, title: "矩阵B", row: 4, list: 4, elId: "b"});
+createHtmlMatrix({matrix: C, title: "矩阵a*b", row: 4, list: 4, elId: "ab"});
 
 let $A = [1, 0, 0, 1, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1];
 
@@ -43,9 +42,15 @@ let $C = glMatrix.mat4.multiply([], $B, $A);
 
 $C = glMatrix.mat4.transpose([], $C);
 
-createHtmlMatrix($A, 4, 4, "$a");
-createHtmlMatrix($B, 4, 4, "$b");
-createHtmlMatrix($C, 4, 4, "$ab");
+createHtmlMatrix({matrix: $A, title: "矩阵$A", row: 4, list: 4, elId: "$a"});
+createHtmlMatrix({matrix: $B, title: "矩阵$B", row: 4, list: 4, elId: "$b"});
+createHtmlMatrix({
+  matrix: $C,
+  title: "矩阵$a*b",
+  row: 4,
+  list: 4,
+  elId: "$ab"
+});
 
 let $$A = [
   // 1,1,
@@ -65,9 +70,27 @@ let $$C = glMatrix.mat2.multiply([], $$B, $$A);
 //   $C
 // );
 
-createHtmlMatrix($$A, 2, 2, "$$a");
-createHtmlMatrix($$B, 2, 2, "$$b");
-createHtmlMatrix($$C, 2, 2, "$$ab");
+createHtmlMatrix({
+  matrix: $$A,
+  title: "矩阵$$A",
+  row: 2,
+  list: 2,
+  elId: "$$a"
+});
+createHtmlMatrix({
+  matrix: $$B,
+  title: "矩阵$$B",
+  row: 2,
+  list: 2,
+  elId: "$$b"
+});
+createHtmlMatrix({
+  matrix: $$C,
+  title: "矩阵$$a*b",
+  row: 2,
+  list: 2,
+  elId: "$$ab"
+});
 
 // Returns a random integer from 0 to range - 1.
 function randomInt(range) {

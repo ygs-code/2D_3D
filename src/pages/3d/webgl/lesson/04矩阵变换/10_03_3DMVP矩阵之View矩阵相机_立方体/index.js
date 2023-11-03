@@ -111,7 +111,14 @@ window.onload = function () {
       1 // z
     ]);
 
-    createHtmlMatrix(rotationMatrix, 4, 4, "rotationMatrix");
+    createHtmlMatrix({
+      matrix: rotationMatrix,
+      title: "旋转矩阵",
+      row: 4,
+      list: 4,
+      elId: "rotationMatrix"
+    });
+
     gl.uniformMatrix4fv(u_RotationMatrix, false, rotationMatrix);
 
     gl.clearColor(0.0, 0.0, 0.0, 1.0);
@@ -130,7 +137,14 @@ window.onload = function () {
       [up.x, up.y, up.z]
     );
 
-    createHtmlMatrix(viewMatrix, 4, 4, "viewMatrix");
+    createHtmlMatrix({
+      matrix: viewMatrix,
+      title: "视图矩阵",
+      row: 4,
+      list: 4,
+      elId: "viewMatrix"
+    });
+
     gl.uniformMatrix4fv(u_ViewMatrix, false, viewMatrix);
 
     // gl.drawArrays(gl.TRIANGLE_FAN, 0, 4);

@@ -151,7 +151,14 @@ window.onload = function () {
     //   1 // z
     // ]);
 
-    createHtmlMatrix(rotationMatrix, 4, 4, "rotationMatrix");
+    createHtmlMatrix({
+      matrix: rotationMatrix,
+      title: "旋转矩阵",
+      row: 4,
+      list: 4,
+      elId: "rotationMatrix"
+    });
+
     gl.uniformMatrix4fv(u_RotationMatrix, false, rotationMatrix);
 
     //初始化视图矩阵

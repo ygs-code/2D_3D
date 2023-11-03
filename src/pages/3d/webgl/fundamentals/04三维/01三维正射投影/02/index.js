@@ -325,8 +325,6 @@ window.onload = function () {
     matrix = m4.scale(matrix, scale.x, scale.y, scale.z);
 
     // 输出正交投影矩阵
-    // createHtmlMatrix(matrix, 4, 4, "matrix");
-
     createHtmlMatrix({
       matrix,
       title: "正交投影矩阵",
@@ -359,7 +357,6 @@ window.onload = function () {
       list: 3,
       elId: "fData"
     });
-    // createHtmlMatrix(fData, 16 * 6, 3, "fData");
 
     let fMatrix = [];
     for (let i = 0; i < 16 * 6; i++) {

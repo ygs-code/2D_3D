@@ -15,7 +15,14 @@
   }
 })(this, function () {
   "use strict";
-  function createHtmlMatrix({ matrix: mat, title, row, list, elId: id }) {
+  /*
+  matrix:矩阵
+  title：输出矩阵的标题
+  row：矩阵行
+  list：矩阵列  比如 矩阵是 4行3列  就传入  row:3  list:4
+  elId：矩阵输出到html中的节点id
+  */
+  function createHtmlMatrix({ matrix, title, row, list, elId }) {
     let style = document.getElementById("create-html-matrix");
     if (!style) {
       style = document.createElement("style");
@@ -66,7 +73,7 @@
       document.body.appendChild(style);
     }
 
-    let el = document.getElementById(id);
+    let el = document.getElementById(elId);
     let oDiv;
     if (!el) {
       oDiv = document.createElement("div");
@@ -75,14 +82,14 @@
       oDiv = el;
     }
 
-    oDiv.id = id || "createHtmlMatrix";
+    oDiv.id = elId || "createHtmlMatrix";
     let html = `
        ${title} : <div class="create-html-matrix"> 
     `;
     for (let i = 0; i < row; i++) {
       html += `<div>`;
       for (let j = 0; j < list; j++) {
-        html += `<span title="${mat[i * list + j]}">${mat[i * list + j]}${
+        html += `<span title="${matrix[i * list + j]}">${matrix[i * list + j]}${
           j < list - 1 ? "," : ""
         }</span> `;
       }
@@ -192,9 +199,6 @@
     // let B = transpose($A);
     console.log("A===", A);
     console.log("B===", B);
-
-    // return
-    // console.log(B)
     let list = A[0].length;
     let row = B.length;
 
@@ -213,9 +217,6 @@
     if (row !== list) {
       throw "矩阵A的行数不等于矩阵B列数，所以矩阵不能相乘";
     }
-
-    // console.log("A==", A);
-    // console.log("B==", B);
     // 矩阵相乘
     let sum = 0;
     let $mat = [];
@@ -235,66 +236,12 @@
           i++
         ) {
           flag = true;
-          // console.log("A-----", A[$i][i]);
-          // console.log("B-----", B[i][$j]);
-          // console.log("B-----", B);
-          //   console.log('i-----',i)
-          // // console.log('j-----',j)
-          // // console.log('$i-----',$i)
-          // console.log('$j-----',$j)
-          //   console.log("B[i]==", B[i]);
-          //   console.log("B[i][$j]==", B[i][$j]);
-          //   console.log("$j==", $j);
-          // console.log(A[$i]);
           sum += A[$i][i] * B[i][$j];
-
-          // console.log("B-----", B[$j][$i]);
         }
-
-        // sum += A[$i][$j] * B[$j][$i];
-        // console.log('i-----',i)
-        // // console.log('j-----',j)
-        // console.log('$i-----',$i)
-        // console.log('$j-----',$j)
-        // console.log('sum-----',sum)
-        // console.log("\n");
-
-        //  sum += A[i][j] * B[j][i];
-        // console.log('A-------[i][j]========',A[$i][$j])
-        // console.log("A[$i][$j===", A[$i][$j]);
-        // console.log("B[$j][$i]===", B[$j][$i]);
-        // console.log("A[i][j] * B[j][i]===", A[$i][$j] * B[$j][$i]);
-
-        //   sum += A[$i][$j] * B[$j][$i];
-        // console.log('i-----',$i)
-        // console.log('j-----',$j)
-        //     for (let $j = 0; $j < B[j].length; $j++) {
-
-        //         // console.log('A[i][j]=',A[i][j])
-        //         console.log('B------[j][$j]======',B[j][$j])
-
-        //         console.log('j-----',j)
-        //         console.log('$j-----',$j)
-        //         console.log('\n \n')
-
-        //         // console.log('A*B=',A[i][j]*B[j][$j])
-
-        // //   A[i][j]
-        //         //  sum += A[i][j] * B[j][i];
-
-        //         // console.log("A[i][j]=", A[i][j]);
-        //         // console.log("B[j][0]=", B[j][0]);
-        //     }
-
-        // console.log("A[i][j]=", A[i][j]);
-        // console.log("B[j][0]=", B[j][0]);
-
         if (flag) {
           $mat.push(sum);
         }
       }
-      //   $mat.push(sum);
-      console.log("\n");
     }
 
     return $mat;

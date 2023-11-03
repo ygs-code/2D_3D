@@ -183,8 +183,20 @@ window.onload = function () {
     console.log("verticesColors==", [...verticesColors]);
     console.log("matrix==", matrix);
 
-    createHtmlMatrix(viewMatrix, 4, 4, "mat");
-    createHtmlMatrix(matrix, 4, 4, "matrix");
+    createHtmlMatrix({
+      matrix: viewMatrix,
+      title: "视图矩阵",
+      row: 4,
+      list: 4,
+      elId: "mat"
+    });
+    createHtmlMatrix({
+      matrix: matrix,
+      title: "matrix",
+      row: 4,
+      list: 4,
+      elId: "matrix"
+    });
 
     gl.uniformMatrix4fv(u_ViewMatrix, false, viewMatrix);
 
