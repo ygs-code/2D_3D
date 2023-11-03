@@ -383,6 +383,7 @@
     function setGeometry(gl) {
       gl.bufferData(
           gl.ARRAY_BUFFER,
+          
           new Float32Array([
               // left column front
                 0,   0,  0,
@@ -510,7 +511,9 @@
               0, 150,  30,
               0,   0,   0,
               0, 150,  30,
-              0, 150,   0]),
+              0, 150,   0])
+              
+              ,
           gl.STATIC_DRAW);
     }
     
