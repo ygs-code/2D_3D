@@ -16,8 +16,8 @@ export const fData = new Float32Array([
 
   // middle rung front
   /*
-       F 的 右边第二条 ——
-    */
+        F 的 右边第二条 ——
+        */
   30, 60, 0, 67, 60, 0, 30, 90, 0,
 
   30, 90, 0, 67, 60, 0, 67, 90, 0,
