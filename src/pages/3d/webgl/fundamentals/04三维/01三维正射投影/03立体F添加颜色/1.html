@@ -1353,29 +1353,40 @@
     }
   
     // setup GLSL program
+    // 载入  vertex 和 frag
     var program = webglUtils.createProgramFromScripts(gl, ["vertex-shader-3d", "fragment-shader-3d"]);
   
     // look up where the vertex data needs to go.
+    // 获取 顶点位置  a_position
     var positionLocation = gl.getAttribLocation(program, "a_position");
     
+    // 获取顶点位置a_color 
     var colorLocation = gl.getAttribLocation(program, "a_color");
 
   
     // lookup uniforms
+    // 获取  u_matrix 相机矩阵
     var matrixLocation = gl.getUniformLocation(program, "u_matrix");
   
     // Create a buffer to put positions in
+    // 创建一个顶点位置的buffer
     var positionBuffer = gl.createBuffer();
+
     // Bind it to ARRAY_BUFFER (think of it as ARRAY_BUFFER = positionBuffer)
+    // // 把数据绑定上缓存中
     gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
     // Put geometry data into buffer
+    // 导入数据
     setGeometry(gl);
   
     // Create a buffer to put colors in
+    // 创建 颜色 buffer
     var colorBuffer = gl.createBuffer();
     // Bind it to ARRAY_BUFFER (think of it as ARRAY_BUFFER = colorBuffer)
+    // 绑定颜色的buffer到缓存中
     gl.bindBuffer(gl.ARRAY_BUFFER, colorBuffer);
     // Put geometry data into buffer
+    // 设置 颜色 buffer 数据
     setColors(gl);
   
     function radToDeg(r) {
@@ -1431,18 +1442,23 @@
       webglUtils.resizeCanvasToDisplaySize(gl.canvas);
   
       // Tell WebGL how to convert from clip space to pixels
+      // 告诉WebGL如何从剪辑空间转换为像素
       gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
   
-      // Clear the canvas.
+      // Clear the canvas. 清理画布
       gl.clear(gl.COLOR_BUFFER_BIT);
   
       // Tell it to use our program (pair of shaders)
+      //  告诉它使用我们的程序(一对着色器)
       gl.useProgram(program);
   
-      // Turn on the position attribute
+      // Turn on the position attribute 告诉它使用我们的程序(一对着色器)
+      //        // 连接a_position变量与分配给他的缓冲区对象
       gl.enableVertexAttribArray(positionLocation);
   
       // Bind the position buffer.
+
+      // 把数据绑定到缓存中
       gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
   
       // Tell the position attribute how to get data out of positionBuffer (ARRAY_BUFFER)
@@ -1459,9 +1475,11 @@
 
           
       // Turn on the color attribute
+      // 连接a_colors变量与分配给他的缓冲区对象
       gl.enableVertexAttribArray(colorLocation);
   
       // Bind the color buffer.
+      // 绑定 colors 顶点数据
       gl.bindBuffer(gl.ARRAY_BUFFER, colorBuffer);
   
       // Tell the attribute how to get data out of colorBuffer (ARRAY_BUFFER)

@@ -103,7 +103,7 @@ export const fData = new Float32Array([
   0, 0, 0, 0, 150, 30, 0, 150, 0
 ]);
 
-export const colors = new Float32Array([
+export const colors = new Uint8Array([
   // left column front
   200, 70, 120, 200, 70, 120, 200, 70, 120, 200, 70, 120, 200, 70, 120, 200, 70,
   120,

@@ -190,14 +190,14 @@ window.onload = function () {
       this.gl.vertexAttribPointer(
         a_colors, // 变量 指定要修改的顶点属性的索引。
         3, // size 三个数据为一组 告诉三个点位一组颜色  1, 2, 3, or 4. 指定每个顶点属性的组成数量，必须是 1，2，3 或 4。
-        this.gl.UNSIGNED_BYTE, //type gl.FLOAT: 32-bit IEEE floating point number 32 位 IEEE 标准的浮点数
-        true, // normalized 当转换为浮点数时是否应该将整数数值归一化到特定的范围。
-        colors.BYTES_PER_ELEMENT * 3, // stride 以字节为单位指定连续顶点属性开始之间的偏移量 (即数组中一行长度)。不能大于 255。如果 stride 为 0，则假定该属性是紧密打包的，即不交错属性，每个属性在一个单独的块中，下一个顶点的属性紧跟当前顶点之后。
+        this.gl.UNSIGNED_BYTE, //gl.UNSIGNED_BYTE 数据是8位无符号值  , type gl.FLOAT: 32-bit IEEE floating point number 32 位 IEEE 标准的浮点数 ,
+        true, // normalized 当转换为浮点数时是否应该将整数数值归一化到特定的范围。, 如果是false 则是0-1，如果是true 则是 0-255
+        colors.BYTES_PER_ELEMENT * 3, //colors.BYTES_PER_ELEMENT * 3, // stride 以字节为单位指定连续顶点属性开始之间的偏移量 (即数组中一行长度)。不能大于 255。如果 stride 为 0，则假定该属性是紧密打包的，即不交错属性，每个属性在一个单独的块中，下一个顶点的属性紧跟当前顶点之后。
         0 //offset 指定顶点属性数组中第一部分的字节偏移量。必须是类型的字节长度的倍数。 // 索引 从 0 开始
       ); //  告诉gl如何解析数据
 
       // 确认 // 启用数据
-      // 连接a_position变量与分配给他的缓冲区对象
+      // 连接a_colors变量与分配给他的缓冲区对象
       this.gl.enableVertexAttribArray(a_colors);
     };
 
@@ -224,7 +224,25 @@ window.onload = function () {
       var offset = 0;
       // var count = 18; // 6 triangles in the 'F', 3 points per triangle  18个顶点
       var count = 16 * 6;
+
       this.gl.drawArrays(primitiveType, offset, count);
+
+      // this.gl.drawArrays(primitiveType, 0, 6);
+      // this.gl.drawArrays(primitiveType, 6, 6);
+      // this.gl.drawArrays(primitiveType, 12, 6);
+      // this.gl.drawArrays(primitiveType, 18, 6);
+      // this.gl.drawArrays(primitiveType, 24, 6);
+      // this.gl.drawArrays(primitiveType, 30, 6);
+      // this.gl.drawArrays(primitiveType, 36, 6);
+      // this.gl.drawArrays(primitiveType, 42, 6);
+      // this.gl.drawArrays(primitiveType, 48, 6);
+      // this.gl.drawArrays(primitiveType, 54, 6);
+      // this.gl.drawArrays(primitiveType, 60, 6);
+      // this.gl.drawArrays(primitiveType, 66, 6);
+      // this.gl.drawArrays(primitiveType, 72, 6);
+      // this.gl.drawArrays(primitiveType, 78, 6);
+      // this.gl.drawArrays(primitiveType, 84, 6);
+      // this.gl.drawArrays(primitiveType, 90, 6);
     }
     setUniform() {
       console.log("this==", this);
