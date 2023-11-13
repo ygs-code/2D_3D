@@ -298,9 +298,141 @@ projection: function (width, height) {
 
 ```
 
- // 绘制几何体
+// 绘制几何体
     var primitiveType = gl.TRIANGLES;
     var offset = 0;
     var count = 16 * 6;
     gl.drawArrays(primitiveType, offset, count);
 ```
+
+拖动滑块很难看出它是三维的，让我们给矩形上不同的颜色。 需要在顶点着色器中添加一个属性和一个可变量， 将颜色值传到片段着色器中。
+
+这是新的顶点着色器
+
+```
+<script id="vertex-shader-3d" type="x-shader/x-vertex">
+attribute vec4 a_position;
+attribute vec4 a_color;
+ 
+uniform mat4 u_matrix;
+ 
+varying vec4 v_color;
+ 
+void main() {
+  // 将位置和矩阵相乘.
+  gl_Position = u_matrix * a_position;
+ 
+  // 将颜色传递给片段着色器
+  v_color = a_color;
+}
+</script>
+
+```
+
+然后在片段着色器中使用颜色
+
+```
+
+<script id="fragment-shader-3d" type="x-shader/x-fragment">
+precision mediump float;
+ 
+// 从顶点着色器中传入
+varying vec4 v_color;
+ 
+void main() {
+   gl_FragColor = v_color;
+}
+</script>
+```
+
+我们需要找到属性的位置，然后在另一个缓冲中存入对应的颜色。
+
+```
+ ...
+  var colorLocation = gl.getAttribLocation(program, "a_color");
+ 
+  ...
+  // 给颜色创建一个缓冲
+  var colorBuffer = gl.createBuffer();
+  gl.bindBuffer(gl.ARRAY_BUFFER, colorBuffer);
+  // 将颜色值传入缓冲
+  setColors(gl);
+ 
+ 
+  ...
+// 向缓冲传入 'F' 的颜色值
+ 
+function setColors(gl) {
+  gl.bufferData(
+      gl.ARRAY_BUFFER,
+      new Uint8Array([
+        // 正面左竖
+        200,  70, 120,
+        200,  70, 120,
+        200,  70, 120,
+        200,  70, 120,
+        200,  70, 120,
+        200,  70, 120,
+ 
+        // 正面上横
+        200,  70, 120,
+        200,  70, 120,
+        ...
+        ...
+      gl.STATIC_DRAW);
+}
+
+```
+
+在渲染时告诉颜色属性如何从缓冲中获取颜色值
+
+```
+// 启用颜色属性
+gl.enableVertexAttribArray(colorLocation);
+ 
+// 绑定颜色缓冲
+gl.bindBuffer(gl.ARRAY_BUFFER, colorBuffer);
+ 
+// 告诉颜色属性怎么从 colorBuffer (ARRAY_BUFFER) 中读取颜色值
+var size = 3;                 // 每次迭代使用3个单位的数据
+var type = gl.UNSIGNED_BYTE;  // 单位数据类型是无符号 8 位整数
+var normalize = true;         // 标准化数据 (从 0-255 转换到 0.0-1.0)
+var stride = 0;               // 0 = 移动距离 * 单位距离长度sizeof(type)  每次迭代跳多少距离到下一个数据
+var offset = 0;               // 从绑定缓冲的起始处开始
+gl.vertexAttribPointer(
+    colorLocation, size, type, normalize, stride, offset)
+
+```
+
+现在我们得到这个。
+
+<iframe src="https://webglfundamentals.org/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-3d-step3.html?cid=8B504C1595CD3973&resid=8B504C1595CD3973%2126382&authkey=AJzDcN30q6g4W0Y&em=2" width="700px" height="250px" frameborder="0" scrolling="no"> </iframe>
+
+
+
+呃，发生了什么？它好像把 'F' 的所有部分都按照提供的顺序显示出来了， 正面，背面，侧面等等。有时候这并不是想要的结果，在背面的物体反而被绘制出来了。
+
+![](https://webglfundamentals.org/webgl/lessons/resources/polygon-drawing-order.gif)
+
+红色部分 是 'F' 的 **正面** ，但是因为它在数据的前部所以最先被绘制出来，然后它后面的面绘制后挡住了它。 例如紫色部分 实际上是 'F' 的背面，由于它在数据中是第二个所以第二个被画出来。
+
+WebGL中的三角形有正反面的概念，正面三角形的顶点顺序是逆时针方向， 反面三角形是顺时针方向。
+
+![](https://webglfundamentals.org/webgl/lessons/resources/triangle-winding.svg)
+
+WebGL可以只绘制正面或反面三角形，可以这样开启
+
+```
+
+gl.enable(gl.CULL_FACE);
+```
+
+
+将它放在 `drawScene` 方法里，开启这个特性后WebGL默认“剔除”背面三角形， "剔除"在这里是“不用绘制”的花哨叫法。
+
+对于WebGL而言，一个三角形是顺时针还是逆时针是根据裁剪空间中的顶点顺序判断的， 换句话说，WebGL是根据你在顶点着色器中运算后提供的结果来判定的， 这就意味着如果你把一个顺时针的三角形沿 X 轴缩放 -1 ，它将会变成逆时针， 或者将顺时针的三角形旋转180度后变成逆时针。由于我们没有开启 CULL_FACE， 所以可以同时看到顺时针（正面）和逆时针（反面）三角形。现在开启了， 任何时候正面三角形无论是缩放还是旋转的原因导致翻转了，WebGL就不会绘制它。 这件事很有用，因为通常情况下你只需要看到你正面对的面。
+
+开启 CULL_FACE 后得到
+
+
+<iframe src="https://webglfundamentals.org/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-3d-step4.html?cid=8B504C1595CD3973&resid=8B504C1595CD3973%2126382&authkey=AJzDcN30q6g4W0Y&em=2" width="700px" height="250px" frameborder="0" scrolling="no"> </iframe>

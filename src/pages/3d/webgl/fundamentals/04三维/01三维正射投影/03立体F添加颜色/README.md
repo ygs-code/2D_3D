@@ -286,12 +286,7 @@ projection: function (width, height) {
 
 这是结果
 
-
 <iframe src="https://webglfundamentals.org/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-3d-step1.html?cid=8B504C1595CD3973&resid=8B504C1595CD3973%2126382&authkey=AJzDcN30q6g4W0Y&em=2" width="700px" height="250px" frameborder="0" scrolling="no"> </iframe>
-
-
-
-
 
 我们遇到的第一个问题是 F 在三维中过于扁平， 所以很难看出三维效果。解决这个问题的方法是将它拉伸成三维几何体。 现在的 F 是由三个矩形组成，每个矩形两个三角形。让它变三维需要 16 个矩形。 三个矩形在正面，三个背面，一个左侧，四个右侧，两个上侧，三个底面。
 
@@ -300,3 +295,121 @@ projection: function (width, height) {
 需要列出的还有很多，16 个矩形每个有两个三角形，每个三角形有 3 个顶点， 所以一共有 96 个顶点。如果你想看这些可以去示例的源码里找。
 
 我们需要绘制更多顶点所以
+
+```
+
+// 绘制几何体
+    var primitiveType = gl.TRIANGLES;
+    var offset = 0;
+    var count = 16 * 6;
+    gl.drawArrays(primitiveType, offset, count);
+```
+
+
+
+拖动滑块很难看出它是三维的，让我们给矩形上不同的颜色。 需要在顶点着色器中添加一个属性和一个可变量， 将颜色值传到片段着色器中。
+
+这是新的顶点着色器
+
+```
+<script id="vertex-shader-3d" type="x-shader/x-vertex">
+attribute vec4 a_position;
+attribute vec4 a_color;
+ 
+uniform mat4 u_matrix;
+ 
+varying vec4 v_color;
+ 
+void main() {
+  // 将位置和矩阵相乘.
+  gl_Position = u_matrix * a_position;
+ 
+  // 将颜色传递给片段着色器
+  v_color = a_color;
+}
+</script>
+
+```
+
+
+然后在片段着色器中使用颜色
+
+```
+
+<script id="fragment-shader-3d" type="x-shader/x-fragment">
+precision mediump float;
+ 
+// 从顶点着色器中传入
+varying vec4 v_color;
+ 
+void main() {
+   gl_FragColor = v_color;
+}
+</script>
+```
+
+我们需要找到属性的位置，然后在另一个缓冲中存入对应的颜色。
+
+
+```
+ ...
+  var colorLocation = gl.getAttribLocation(program, "a_color");
+ 
+  ...
+  // 给颜色创建一个缓冲
+  var colorBuffer = gl.createBuffer();
+  gl.bindBuffer(gl.ARRAY_BUFFER, colorBuffer);
+  // 将颜色值传入缓冲
+  setColors(gl);
+ 
+ 
+  ...
+// 向缓冲传入 'F' 的颜色值
+ 
+function setColors(gl) {
+  gl.bufferData(
+      gl.ARRAY_BUFFER,
+      new Uint8Array([
+        // 正面左竖
+        200,  70, 120,
+        200,  70, 120,
+        200,  70, 120,
+        200,  70, 120,
+        200,  70, 120,
+        200,  70, 120,
+ 
+        // 正面上横
+        200,  70, 120,
+        200,  70, 120,
+        ...
+        ...
+      gl.STATIC_DRAW);
+}
+
+```
+
+在渲染时告诉颜色属性如何从缓冲中获取颜色值
+
+```
+// 启用颜色属性
+gl.enableVertexAttribArray(colorLocation);
+ 
+// 绑定颜色缓冲
+gl.bindBuffer(gl.ARRAY_BUFFER, colorBuffer);
+ 
+// 告诉颜色属性怎么从 colorBuffer (ARRAY_BUFFER) 中读取颜色值
+var size = 3;                 // 每次迭代使用3个单位的数据
+var type = gl.UNSIGNED_BYTE;  // 单位数据类型是无符号 8 位整数
+var normalize = true;         // 标准化数据 (从 0-255 转换到 0.0-1.0)
+var stride = 0;               // 0 = 移动距离 * 单位距离长度sizeof(type)  每次迭代跳多少距离到下一个数据
+var offset = 0;               // 从绑定缓冲的起始处开始
+gl.vertexAttribPointer(
+    colorLocation, size, type, normalize, stride, offset)
+
+```
+
+现在我们得到这个。
+
+
+
+<iframe src="https://webglfundamentals.org/webgl/resources/editor.html?url=/webgl/lessons/..%2Fwebgl-3d-step3.html?cid=8B504C1595CD3973&resid=8B504C1595CD3973%2126382&authkey=AJzDcN30q6g4W0Y&em=2" width="700px" height="250px" frameborder="0" scrolling="no"> </iframe>
