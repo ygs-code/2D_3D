@@ -36,6 +36,9 @@ window.onload = function () {
 
       // 改变
       this.parmas = {
+        perspective: {
+          z: 1
+        },
         color: [Math.random(), Math.random(), Math.random(), 1],
         // 变换参数，平移  x y z
         translation: {
@@ -81,10 +84,10 @@ window.onload = function () {
 
       //打开筛选。默认情况下，背面三角形
       //将被剔除。
-        this.gl.enable(this.gl.CULL_FACE);
+      this.gl.enable(this.gl.CULL_FACE);
       // 1.开启隐藏面消除功能
-        this.gl.enable(this.gl.DEPTH_TEST); // gl.DEPTH_TEST、gl.BLEND(混合)、gl.POLYGON_OFFSET_FILL(多边形位移)
-        this.gl.enable(this.gl.SCISSOR_TEST); // 启用剪裁测试
+      this.gl.enable(this.gl.DEPTH_TEST); // gl.DEPTH_TEST、gl.BLEND(混合)、gl.POLYGON_OFFSET_FILL(多边形位移)
+      // this.gl.enable(this.gl.SCISSOR_TEST); // 启用剪裁测试
     }
     initShaders() {
       if (!initShaders(this.gl, VSHADER_SOURCE, FSHADER_SOURCE)) {
@@ -252,9 +255,6 @@ window.onload = function () {
       // this.gl.drawArrays(primitiveType, 90, 6);
     }
     setUniform() {
-      console.log("this==", this);
-      console.log("this.parmas==", this.parmas);
-      debugger;
       const {
         color,
         // 变换参数，平移  x y z
@@ -262,7 +262,8 @@ window.onload = function () {
         // 放大
         scale = {},
         // 旋转
-        rotation: {angleX, angleY, angleZ}
+        rotation: {angleX, angleY, angleZ},
+        perspective: {z}
       } = this.parmas;
 
       // Compute the matrices 计算矩阵 创建一个正交投影
@@ -271,6 +272,8 @@ window.onload = function () {
         this.gl.canvas.clientHeight,
         400
       );
+
+
       // 矩阵
       var matrixLocation = this.gl.getUniformLocation(
         this.gl.program,
@@ -295,6 +298,16 @@ window.onload = function () {
       matrix = m4.scale(matrix, scale.x, scale.y, scale.z);
       // 得到一个矩阵 放入 u_matrix 变量中传入gpu
       this.gl.uniformMatrix4fv(matrixLocation, false, matrix);
+
+
+      // 透视
+      let fudgeLocation = this.gl.getUniformLocation(
+        this.gl.program,
+        "u_fudgeFactor"
+      );
+      // let fudgeFactor = 1;
+      // 设置fudgeFactor
+      this.gl.uniform1f(fudgeLocation, z);
     }
 
     controller() {
@@ -308,6 +321,18 @@ window.onload = function () {
         },
         parmas: this.parmas,
         options: [
+          {
+            min: 0,
+            max: 2,
+            step: 0.001,
+            key: "perspective.z",
+            name: "透视投影z",
+            // onChange: (value) => {},
+            onFinishChange: (value) => {
+              // 完全修改停下来的时候触发这个事件
+              console.log("onFinishChange value==", value);
+            }
+          },
           {
             min: 0,
             max: 400,
