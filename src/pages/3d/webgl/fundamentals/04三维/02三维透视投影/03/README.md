@@ -92,3 +92,66 @@ void main() {
 orthographic vs perspective
 
 正交视觉物体大小不会变，透视有近大远小感觉
+
+事实上WebGL会将我们提供给 `gl_Position` 的 x,y,z,w 值自动除以 w 。
+
+我们可以通过修改着色器来证明，用 `zToDivideBy` 代替 `gl_Position.w`
+
+```
+
+<script id="vertex-shader-2d" type="x-shader/x-vertex">
+...
+uniform float u_fudgeFactor;
+...
+void main() {
+  // 将位置和矩阵相乘
+  vec4 position = u_matrix * a_position;
+ 
+  // 调整除数
+  float zToDivideBy = 1.0 + position.z * u_fudgeFactor;
+ 
+  // 将 x y z 除以 zToDivideBy
+  gl_Position = vec4(position.xyz, zToDivideBy);
+ 
+  // 传递颜色到给片段着色器
+  v_color = a_color;
+}
+</script>
+```
+
+看他们多像。
+
+当然可以这样写
+
+```
+
+
+attribute vec4 a_position;
+attribute vec4 a_colors;
+
+uniform mat4 u_matrix;
+uniform float u_fudgeFactor;
+
+varying vec4 v_colors;
+
+void main(){
+  // Multiply the position by the matrix.  //将位置乘以矩阵。
+  vec4 position=u_matrix*a_position;
+  
+  // Adjust the z to divide by 调整z来除以
+  float zToDivideBy=1.+position.z*u_fudgeFactor;
+  
+  // 展开x y z
+  gl_Position=vec4(
+    position.x,
+    position.y,
+    position.z,
+    zToDivideBy
+    );
+  
+  // Pass the color to the fragment shader.
+  v_colors=a_colors;
+}
+```
+
+<iframe src="https://webglfundamentals.org/webgl/webgl-3d-perspective-w.html?cid=8B504C1595CD3973&resid=8B504C1595CD3973%2126382&authkey=AJzDcN30q6g4W0Y&em=2" width="100%" height="400px" frameborder="0" scrolling="no"> </iframe>
