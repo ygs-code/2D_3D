@@ -12,8 +12,7 @@ void main(){
   vec4 position=u_matrix*a_position;
   
   // Adjust the z to divide by 调整z来除以
-  // float zToDivideBy=1.+position.z*u_fudgeFactor;
-  float zToDivideBy=1.+u_fudgeFactor;
+  float zToDivideBy=1.+position.z*u_fudgeFactor;
   
   // Divide x and y by z. 用x和y除以z。
   // gl_Position=vec4(position.xy/zToDivideBy,position.zw);

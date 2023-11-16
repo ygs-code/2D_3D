@@ -1,12 +1,1281 @@
-<html><head>
+<html>
+
+<head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-  <title>WebGL - 3D Perspective</title>
+  <title>WebGL - 3D Perspective using divide by W in a Matrix</title>
   <link type="text/css" href="resources/webgl-tutorials.css" rel="stylesheet">
-  </head>
-  <body>
+  <style type="text/css">
+    .cyxy-trs-target.colored {
+      background-color: rgba(0, 185, 119, 0.05);
+    }
+
+    .cyxy-target-popup {
+      padding: 1.3rem 12px;
+      position: absolute;
+      display: -webkit-flex;
+      display: inline-flex;
+      flex-direction: row;
+      overflow: scroll;
+      vertical-align: middle;
+      z-index: 199099;
+      top: 1px;
+      left: 1px;
+      background: #fff;
+      opacity: 0.98;
+      /*margin: 0px 5%;*/
+      height: auto;
+      width: auto;
+      border: 1px solid #e6e6e6;
+      box-shadow: 0 0 8px 0 rgba(0, 0, 0, 0.13);
+      border-radius: 5px;
+      /*height: 7rem;*/
+    }
+
+    @media (max-width: 468px) {
+      .cyxy-target-popup {
+        /*width: 90%;*/
+        /*margin: 0px 5%;*/
+        left: 10%;
+        /*right: 5%;*/
+        /*width: 30rem;*/
+        /*height: 14.58rem;*/
+      }
+    }
+
+    #cyxy-popup-left-slide {
+      height: 22px;
+      display: inline;
+      vertical-align: middle;
+      margin-right: 14px;
+      cursor: pointer;
+    }
+
+    #cyxy-popup-right-slide {
+      height: 22px;
+      display: inline;
+      vertical-align: middle;
+      margin-left: 0px;
+      cursor: pointer;
+    }
+
+    #cyxy-popup-userinfo {
+      display: inline;
+    }
+
+    .cyxy-target-count {
+      display: inline;
+      vertical-align: middle;
+      font-size: 10px;
+    }
+
+    #cyxy-popup-avatar {
+      /*margin-right: 30px;*/
+      /*font-size: 14px;*/
+      display: inline;
+      height: 32px;
+      vertical-align: middle;
+      border-radius: 16px;
+    }
+
+    #cyxy-popup-name-time {
+      display: -webkit-flex;
+      display: inline-flex;
+      flex-direction: column;
+      /*align-items: center;*/
+      /*position: relative;*/
+      vertical-align: middle;
+      text-align: left;
+      margin-left: 6px;
+    }
+
+    #cyxy-popup-name {
+      /*vertical-align: middle;*/
+      /*display: flex;*/
+      font-size: 14px;
+      color: #333;
+      height: 18px;
+      overflow: hidden;
+      max-width: 84px;
+    }
+
+    #cyxy-popup-time {
+      /*margin-right: 30px;*/
+      /*font-size: 14px;*/
+      /*display: flex;*/
+      font-size: 12px;
+      margin-top: 4px;
+      color: #999;
+    }
+
+    .cyxy-footer {
+      display: none;
+      position: fixed;
+      bottom: 0px;
+      padding: 0px 0px;
+      left: 0;
+      right: 0;
+      margin: auto;
+      opacity: 0.9;
+      border: 1px solid #e6e6e6;
+      box-shadow: 0 0 8px 0 rgba(0, 0, 0, 0.13);
+      border-radius: 2px;
+      z-index: 201712;
+      text-align: center;
+    }
+
+    .cyxy-footer-p {
+      padding: 12px 0px;
+      margin: 0px;
+      font-size: 12px;
+      color: #333;
+      background: #fff;
+      text-align: center;
+      line-height: 1.6;
+      font-weight: 200;
+    }
+
+    #cyxy-popup-favour {
+      text-align: center;
+      display: inline;
+      margin-right: 20px;
+      margin-left: 46px;
+      cursor: pointer;
+    }
+
+    #cyxy-popup-favour.commit {
+      /*padding: 2px 6px;*/
+      /*border: 1px solid #00B977;*/
+      /*border-radius: 4px;*/
+    }
+
+    #cyxy-popup-oppose {
+      text-align: center;
+      display: inline;
+      cursor: pointer;
+    }
+
+    #cyxy-popup-favour-img {
+      display: inline;
+      height: 20px;
+      /*width: 22px;*/
+      vertical-align: middle;
+    }
+
+    #cyxy-popup-favour-img.commit {
+      /*height: 22px;*/
+      /*vertical-align: middle;*/
+    }
+
+    #cyxy-popup-oppose-img {
+      display: inline;
+      height: 18px;
+      vertical-align: middle;
+    }
+
+    #cyxy-popup-favour-num {
+      font-size: 14px;
+      margin-left: 4px;
+      /*margin-left: 0.47rem;*/
+      color: #999999;
+    }
+
+    #cyxy-popup-oppose-num {
+      font-size: 14px;
+      margin-left: 4px;
+      /*margin-left: 0.47rem;*/
+      color: #999;
+    }
+
+    .caption-window.ytp-caption-window-bottom {
+      width: 800px;
+      /* height: 100px; */
+      /* margin-left: -400px; */
+    }
+
+    @media (max-width: 320px) {
+      #cyxy-popup-favour {
+        margin-right: 0.8rem;
+        margin-left: 1.5rem;
+      }
+
+      #cyxy-popup-left-slide {
+        margin-right: 0.8rem;
+      }
+
+      #cyxy-popup-right-slide {
+        margin-left: 1rem;
+      }
+    }
+
+    .login-hint-a {
+      border-bottom: none;
+      display: block;
+      color: #999;
+      font-size: 10px;
+    }
+
+    .login-hint-a:visited {
+      color: #999;
+    }
+
+    .layui-m-layer {
+      color: #333;
+      position: relative;
+      z-index: 2147483647;
+    }
+
+    .layui-m-layer * {
+      -webkit-box-sizing: content-box;
+      -moz-box-sizing: content-box;
+      box-sizing: content-box;
+    }
+
+    .layui-m-layermain,
+    .layui-m-layershade {
+      position: fixed;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+    }
+
+    .layui-m-layershade {
+      background-color: rgba(0, 0, 0, 0.7);
+      pointer-events: auto;
+    }
+
+    .layui-m-layermain {
+      display: table;
+      font-family: Helvetica, arial, sans-serif;
+      pointer-events: none;
+    }
+
+    .layui-m-layermain .layui-m-layersection {
+      display: table-cell;
+      vertical-align: middle;
+      text-align: center;
+    }
+
+    .layui-m-layerchild {
+      position: relative;
+      display: inline-block;
+      text-align: left;
+      background-color: #fff;
+      font-size: 14px;
+      border-radius: 5px;
+      box-shadow: 0 0 8px rgba(0, 0, 0, 0.1);
+      pointer-events: auto;
+      -webkit-overflow-scrolling: touch;
+      -webkit-animation-fill-mode: both;
+      animation-fill-mode: both;
+      -webkit-animation-duration: 0.2s;
+      animation-duration: 0.2s;
+    }
+
+    @-webkit-keyframes layui-m-anim-scale {
+      0% {
+        opacity: 0;
+        -webkit-transform: scale(0.5);
+        transform: scale(0.5);
+      }
+
+      100% {
+        opacity: 1;
+        -webkit-transform: scale(1);
+        transform: scale(1);
+      }
+    }
+
+    @keyframes layui-m-anim-scale {
+      0% {
+        opacity: 0;
+        -webkit-transform: scale(0.5);
+        transform: scale(0.5);
+      }
+
+      100% {
+        opacity: 1;
+        -webkit-transform: scale(1);
+        transform: scale(1);
+      }
+    }
+
+    .layui-m-anim-scale {
+      animation-name: layui-m-anim-scale;
+      -webkit-animation-name: layui-m-anim-scale;
+    }
+
+    @-webkit-keyframes layui-m-anim-up {
+      0% {
+        opacity: 0;
+        -webkit-transform: translateY(800px);
+        transform: translateY(800px);
+      }
+
+      100% {
+        opacity: 1;
+        -webkit-transform: translateY(0);
+        transform: translateY(0);
+      }
+    }
+
+    @keyframes layui-m-anim-up {
+      0% {
+        opacity: 0;
+        -webkit-transform: translateY(800px);
+        transform: translateY(800px);
+      }
+
+      100% {
+        opacity: 1;
+        -webkit-transform: translateY(0);
+        transform: translateY(0);
+      }
+    }
+
+    .layui-m-anim-up {
+      -webkit-animation-name: layui-m-anim-up;
+      animation-name: layui-m-anim-up;
+    }
+
+    .layui-m-layer0 .layui-m-layerchild {
+      width: 90%;
+      max-width: 640px;
+    }
+
+    .layui-m-layer1 .layui-m-layerchild {
+      border: none;
+      border-radius: 0;
+    }
+
+    .layui-m-layer2 .layui-m-layerchild {
+      width: auto;
+      max-width: 260px;
+      min-width: 40px;
+      border: none;
+      background: 0 0;
+      box-shadow: none;
+      color: #fff;
+    }
+
+    .layui-m-layerchild h3 {
+      padding: 0 10px;
+      height: 60px;
+      line-height: 60px;
+      font-size: 16px;
+      font-weight: 400;
+      border-radius: 5px 5px 0 0;
+      text-align: center;
+    }
+
+    .layui-m-layerbtn span,
+    .layui-m-layerchild h3 {
+      margin: 0;
+      padding: 0;
+      text-overflow: ellipsis;
+      overflow: hidden;
+      white-space: nowrap;
+    }
+
+    .layui-m-layercont {
+      padding: 50px 30px;
+      line-height: 22px;
+      text-align: center;
+    }
+
+    .layui-m-layer1 .layui-m-layercont {
+      padding: 0;
+      text-align: left;
+    }
+
+    .layui-m-layer2 .layui-m-layercont {
+      text-align: center;
+      padding: 0;
+      line-height: 0;
+    }
+
+    .layui-m-layer2 .layui-m-layercont i {
+      width: 25px;
+      height: 25px;
+      margin-left: 8px;
+      display: inline-block;
+      background-color: #fff;
+      border-radius: 100%;
+      -webkit-animation: layui-m-anim-loading 1.4s infinite ease-in-out;
+      animation: layui-m-anim-loading 1.4s infinite ease-in-out;
+      -webkit-animation-fill-mode: both;
+      animation-fill-mode: both;
+    }
+
+    .layui-m-layerbtn,
+    .layui-m-layerbtn span {
+      position: relative;
+      text-align: center;
+      border-radius: 0 0 5px 5px;
+    }
+
+    .layui-m-layer2 .layui-m-layercont p {
+      margin-top: 20px;
+    }
+
+    @-webkit-keyframes layui-m-anim-loading {
+
+      0%,
+      100%,
+      80% {
+        transform: scale(0);
+        -webkit-transform: scale(0);
+      }
+
+      40% {
+        transform: scale(1);
+        -webkit-transform: scale(1);
+      }
+    }
+
+    @keyframes layui-m-anim-loading {
+
+      0%,
+      100%,
+      80% {
+        transform: scale(0);
+        -webkit-transform: scale(0);
+      }
+
+      40% {
+        transform: scale(1);
+        -webkit-transform: scale(1);
+      }
+    }
+
+    .layui-m-layer2 .layui-m-layercont i:first-child {
+      margin-left: 0;
+      -webkit-animation-delay: -0.32s;
+      animation-delay: -0.32s;
+    }
+
+    .layui-m-layer2 .layui-m-layercont i.layui-m-layerload {
+      -webkit-animation-delay: -0.16s;
+      animation-delay: -0.16s;
+    }
+
+    .layui-m-layer2 .layui-m-layercont>div {
+      line-height: 22px;
+      padding-top: 7px;
+      margin-bottom: 20px;
+      font-size: 14px;
+    }
+
+    .layui-m-layerbtn {
+      display: box;
+      display: -moz-box;
+      display: -webkit-box;
+      width: 100%;
+      height: 50px;
+      line-height: 50px;
+      font-size: 0;
+      border-top: 1px solid #d0d0d0;
+      background-color: #f2f2f2;
+    }
+
+    .layui-m-layerbtn span {
+      display: block;
+      -moz-box-flex: 1;
+      box-flex: 1;
+      -webkit-box-flex: 1;
+      font-size: 14px;
+      cursor: pointer;
+    }
+
+    .layui-m-layerbtn span[yes] {
+      color: #40affe;
+    }
+
+    .layui-m-layerbtn span[no] {
+      border-right: 1px solid #d0d0d0;
+      border-radius: 0 0 0 5px;
+    }
+
+    .layui-m-layerbtn span:active {
+      background-color: #f6f6f6;
+    }
+
+    .layui-m-layerend {
+      position: absolute;
+      right: 7px;
+      top: 10px;
+      width: 30px;
+      height: 30px;
+      border: 0;
+      font-weight: 400;
+      background: 0 0;
+      cursor: pointer;
+      -webkit-appearance: none;
+      font-size: 30px;
+    }
+
+    .layui-m-layerend::after,
+    .layui-m-layerend::before {
+      position: absolute;
+      left: 5px;
+      top: 15px;
+      content: "";
+      width: 18px;
+      height: 1px;
+      background-color: #999;
+      transform: rotate(45deg);
+      -webkit-transform: rotate(45deg);
+      border-radius: 3px;
+    }
+
+    .layui-m-layerend::after {
+      transform: rotate(-45deg);
+      -webkit-transform: rotate(-45deg);
+    }
+
+    .layui-m-layer .layui-m-layer-footer {
+      position: fixed;
+      width: 95%;
+      max-width: 100%;
+      margin: 0 auto;
+      left: 0;
+      right: 0;
+      bottom: 10px;
+      background: 0 0;
+    }
+
+    .layui-m-layer-footer .layui-m-layercont {
+      padding: 20px;
+      border-radius: 5px 5px 0 0;
+      background-color: rgba(255, 255, 255, 0.8);
+    }
+
+    .layui-m-layer-footer .layui-m-layerbtn {
+      display: block;
+      height: auto;
+      background: 0 0;
+      border-top: none;
+    }
+
+    .layui-m-layer-footer .layui-m-layerbtn span {
+      background-color: rgba(255, 255, 255, 0.8);
+    }
+
+    .layui-m-layer-footer .layui-m-layerbtn span[no] {
+      color: #fd482c;
+      border-top: 1px solid #c2c2c2;
+      border-radius: 0 0 5px 5px;
+    }
+
+    .layui-m-layer-footer .layui-m-layerbtn span[yes] {
+      margin-top: 10px;
+      border-radius: 5px;
+    }
+
+    .layui-m-layer .layui-m-layer-msg {
+      width: auto;
+      max-width: 90%;
+      margin: 0 auto;
+      bottom: -150px;
+      background-color: rgba(0, 0, 0, 0.7);
+      color: #fff;
+    }
+
+    .layui-m-layer-msg .layui-m-layercont {
+      padding: 10px 20px;
+    }
+
+    .collection-success {
+      /*opacity: 0.6;*/
+      /*background: #EAEAEA;*/
+      color: #ffffff;
+    }
+
+    .collection-success:hover {
+      /*opacity: 0.45;*/
+      /*background: #000000;*/
+      color: #ffffff;
+    }
+
+    .layui-m-layercont .cyxy-trs-target {
+      display: none;
+    }
+
+    .collection-icon {
+      width: 12px;
+      height: 13px;
+      background: url("data:image/png;base64,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") no-repeat;
+      display: inline-block;
+      background-size: cover;
+      background-position: center;
+    }
+
+    .collection-success>a {
+      margin-left: 12px;
+      vertical-align: middle;
+    }
+
+    .cy_free_box {
+      position: relative;
+    }
+
+    .cy_free_box img {
+      width: 100%;
+      cursor: pointer;
+      -moz-user-select: none;
+      /*火狐*/
+      -webkit-user-select: none;
+      /*webkit浏览器*/
+      -ms-user-select: none;
+      /*IE10*/
+      -khtml-user-select: none;
+      /*早期浏览器*/
+      user-select: none;
+    }
+
+    .layui-m-layer-cy_free_content {
+      background: inherit !important;
+    }
+  </style>
+  <style type="text/css">
+    .cyxy-trs-target.colored {
+      background-color: rgba(0, 185, 119, 0.05);
+    }
+
+    .cyxy-target-popup {
+      padding: 1.3rem 12px;
+      position: absolute;
+      display: -webkit-flex;
+      display: inline-flex;
+      flex-direction: row;
+      overflow: scroll;
+      vertical-align: middle;
+      z-index: 199099;
+      top: 1px;
+      left: 1px;
+      background: #fff;
+      opacity: 0.98;
+      /*margin: 0px 5%;*/
+      height: auto;
+      width: auto;
+      border: 1px solid #e6e6e6;
+      box-shadow: 0 0 8px 0 rgba(0, 0, 0, 0.13);
+      border-radius: 5px;
+      /*height: 7rem;*/
+    }
+
+    @media (max-width: 468px) {
+      .cyxy-target-popup {
+        /*width: 90%;*/
+        /*margin: 0px 5%;*/
+        left: 10%;
+        /*right: 5%;*/
+        /*width: 30rem;*/
+        /*height: 14.58rem;*/
+      }
+    }
+
+    #cyxy-popup-left-slide {
+      height: 22px;
+      display: inline;
+      vertical-align: middle;
+      margin-right: 14px;
+      cursor: pointer;
+    }
+
+    #cyxy-popup-right-slide {
+      height: 22px;
+      display: inline;
+      vertical-align: middle;
+      margin-left: 0px;
+      cursor: pointer;
+    }
+
+    #cyxy-popup-userinfo {
+      display: inline;
+    }
+
+    .cyxy-target-count {
+      display: inline;
+      vertical-align: middle;
+      font-size: 10px;
+    }
+
+    #cyxy-popup-avatar {
+      /*margin-right: 30px;*/
+      /*font-size: 14px;*/
+      display: inline;
+      height: 32px;
+      vertical-align: middle;
+      border-radius: 16px;
+    }
+
+    #cyxy-popup-name-time {
+      display: -webkit-flex;
+      display: inline-flex;
+      flex-direction: column;
+      /*align-items: center;*/
+      /*position: relative;*/
+      vertical-align: middle;
+      text-align: left;
+      margin-left: 6px;
+    }
+
+    #cyxy-popup-name {
+      /*vertical-align: middle;*/
+      /*display: flex;*/
+      font-size: 14px;
+      color: #333;
+      height: 18px;
+      overflow: hidden;
+      max-width: 84px;
+    }
+
+    #cyxy-popup-time {
+      /*margin-right: 30px;*/
+      /*font-size: 14px;*/
+      /*display: flex;*/
+      font-size: 12px;
+      margin-top: 4px;
+      color: #999;
+    }
+
+    .cyxy-footer {
+      display: none;
+      position: fixed;
+      bottom: 0px;
+      padding: 0px 0px;
+      left: 0;
+      right: 0;
+      margin: auto;
+      opacity: 0.9;
+      border: 1px solid #e6e6e6;
+      box-shadow: 0 0 8px 0 rgba(0, 0, 0, 0.13);
+      border-radius: 2px;
+      z-index: 201712;
+      text-align: center;
+    }
+
+    .cyxy-footer-p {
+      padding: 12px 0px;
+      margin: 0px;
+      font-size: 12px;
+      color: #333;
+      background: #fff;
+      text-align: center;
+      line-height: 1.6;
+      font-weight: 200;
+    }
+
+    #cyxy-popup-favour {
+      text-align: center;
+      display: inline;
+      margin-right: 20px;
+      margin-left: 46px;
+      cursor: pointer;
+    }
+
+    #cyxy-popup-favour.commit {
+      /*padding: 2px 6px;*/
+      /*border: 1px solid #00B977;*/
+      /*border-radius: 4px;*/
+    }
+
+    #cyxy-popup-oppose {
+      text-align: center;
+      display: inline;
+      cursor: pointer;
+    }
+
+    #cyxy-popup-favour-img {
+      display: inline;
+      height: 20px;
+      /*width: 22px;*/
+      vertical-align: middle;
+    }
+
+    #cyxy-popup-favour-img.commit {
+      /*height: 22px;*/
+      /*vertical-align: middle;*/
+    }
+
+    #cyxy-popup-oppose-img {
+      display: inline;
+      height: 18px;
+      vertical-align: middle;
+    }
+
+    #cyxy-popup-favour-num {
+      font-size: 14px;
+      margin-left: 4px;
+      /*margin-left: 0.47rem;*/
+      color: #999999;
+    }
+
+    #cyxy-popup-oppose-num {
+      font-size: 14px;
+      margin-left: 4px;
+      /*margin-left: 0.47rem;*/
+      color: #999;
+    }
+
+    .caption-window.ytp-caption-window-bottom {
+      width: 800px;
+      /* height: 100px; */
+      /* margin-left: -400px; */
+    }
+
+    @media (max-width: 320px) {
+      #cyxy-popup-favour {
+        margin-right: 0.8rem;
+        margin-left: 1.5rem;
+      }
+
+      #cyxy-popup-left-slide {
+        margin-right: 0.8rem;
+      }
+
+      #cyxy-popup-right-slide {
+        margin-left: 1rem;
+      }
+    }
+
+    .login-hint-a {
+      border-bottom: none;
+      display: block;
+      color: #999;
+      font-size: 10px;
+    }
+
+    .login-hint-a:visited {
+      color: #999;
+    }
+
+    .layui-m-layer {
+      color: #333;
+      position: relative;
+      z-index: 2147483647;
+    }
+
+    .layui-m-layer * {
+      -webkit-box-sizing: content-box;
+      -moz-box-sizing: content-box;
+      box-sizing: content-box;
+    }
+
+    .layui-m-layermain,
+    .layui-m-layershade {
+      position: fixed;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+    }
+
+    .layui-m-layershade {
+      background-color: rgba(0, 0, 0, 0.7);
+      pointer-events: auto;
+    }
+
+    .layui-m-layermain {
+      display: table;
+      font-family: Helvetica, arial, sans-serif;
+      pointer-events: none;
+    }
+
+    .layui-m-layermain .layui-m-layersection {
+      display: table-cell;
+      vertical-align: middle;
+      text-align: center;
+    }
+
+    .layui-m-layerchild {
+      position: relative;
+      display: inline-block;
+      text-align: left;
+      background-color: #fff;
+      font-size: 14px;
+      border-radius: 5px;
+      box-shadow: 0 0 8px rgba(0, 0, 0, 0.1);
+      pointer-events: auto;
+      -webkit-overflow-scrolling: touch;
+      -webkit-animation-fill-mode: both;
+      animation-fill-mode: both;
+      -webkit-animation-duration: 0.2s;
+      animation-duration: 0.2s;
+    }
+
+    @-webkit-keyframes layui-m-anim-scale {
+      0% {
+        opacity: 0;
+        -webkit-transform: scale(0.5);
+        transform: scale(0.5);
+      }
+
+      100% {
+        opacity: 1;
+        -webkit-transform: scale(1);
+        transform: scale(1);
+      }
+    }
+
+    @keyframes layui-m-anim-scale {
+      0% {
+        opacity: 0;
+        -webkit-transform: scale(0.5);
+        transform: scale(0.5);
+      }
+
+      100% {
+        opacity: 1;
+        -webkit-transform: scale(1);
+        transform: scale(1);
+      }
+    }
+
+    .layui-m-anim-scale {
+      animation-name: layui-m-anim-scale;
+      -webkit-animation-name: layui-m-anim-scale;
+    }
+
+    @-webkit-keyframes layui-m-anim-up {
+      0% {
+        opacity: 0;
+        -webkit-transform: translateY(800px);
+        transform: translateY(800px);
+      }
+
+      100% {
+        opacity: 1;
+        -webkit-transform: translateY(0);
+        transform: translateY(0);
+      }
+    }
+
+    @keyframes layui-m-anim-up {
+      0% {
+        opacity: 0;
+        -webkit-transform: translateY(800px);
+        transform: translateY(800px);
+      }
+
+      100% {
+        opacity: 1;
+        -webkit-transform: translateY(0);
+        transform: translateY(0);
+      }
+    }
+
+    .layui-m-anim-up {
+      -webkit-animation-name: layui-m-anim-up;
+      animation-name: layui-m-anim-up;
+    }
+
+    .layui-m-layer0 .layui-m-layerchild {
+      width: 90%;
+      max-width: 640px;
+    }
+
+    .layui-m-layer1 .layui-m-layerchild {
+      border: none;
+      border-radius: 0;
+    }
+
+    .layui-m-layer2 .layui-m-layerchild {
+      width: auto;
+      max-width: 260px;
+      min-width: 40px;
+      border: none;
+      background: 0 0;
+      box-shadow: none;
+      color: #fff;
+    }
+
+    .layui-m-layerchild h3 {
+      padding: 0 10px;
+      height: 60px;
+      line-height: 60px;
+      font-size: 16px;
+      font-weight: 400;
+      border-radius: 5px 5px 0 0;
+      text-align: center;
+    }
+
+    .layui-m-layerbtn span,
+    .layui-m-layerchild h3 {
+      margin: 0;
+      padding: 0;
+      text-overflow: ellipsis;
+      overflow: hidden;
+      white-space: nowrap;
+    }
+
+    .layui-m-layercont {
+      padding: 50px 30px;
+      line-height: 22px;
+      text-align: center;
+    }
+
+    .layui-m-layer1 .layui-m-layercont {
+      padding: 0;
+      text-align: left;
+    }
+
+    .layui-m-layer2 .layui-m-layercont {
+      text-align: center;
+      padding: 0;
+      line-height: 0;
+    }
+
+    .layui-m-layer2 .layui-m-layercont i {
+      width: 25px;
+      height: 25px;
+      margin-left: 8px;
+      display: inline-block;
+      background-color: #fff;
+      border-radius: 100%;
+      -webkit-animation: layui-m-anim-loading 1.4s infinite ease-in-out;
+      animation: layui-m-anim-loading 1.4s infinite ease-in-out;
+      -webkit-animation-fill-mode: both;
+      animation-fill-mode: both;
+    }
+
+    .layui-m-layerbtn,
+    .layui-m-layerbtn span {
+      position: relative;
+      text-align: center;
+      border-radius: 0 0 5px 5px;
+    }
+
+    .layui-m-layer2 .layui-m-layercont p {
+      margin-top: 20px;
+    }
+
+    @-webkit-keyframes layui-m-anim-loading {
+
+      0%,
+      100%,
+      80% {
+        transform: scale(0);
+        -webkit-transform: scale(0);
+      }
+
+      40% {
+        transform: scale(1);
+        -webkit-transform: scale(1);
+      }
+    }
+
+    @keyframes layui-m-anim-loading {
+
+      0%,
+      100%,
+      80% {
+        transform: scale(0);
+        -webkit-transform: scale(0);
+      }
+
+      40% {
+        transform: scale(1);
+        -webkit-transform: scale(1);
+      }
+    }
+
+    .layui-m-layer2 .layui-m-layercont i:first-child {
+      margin-left: 0;
+      -webkit-animation-delay: -0.32s;
+      animation-delay: -0.32s;
+    }
+
+    .layui-m-layer2 .layui-m-layercont i.layui-m-layerload {
+      -webkit-animation-delay: -0.16s;
+      animation-delay: -0.16s;
+    }
+
+    .layui-m-layer2 .layui-m-layercont>div {
+      line-height: 22px;
+      padding-top: 7px;
+      margin-bottom: 20px;
+      font-size: 14px;
+    }
+
+    .layui-m-layerbtn {
+      display: box;
+      display: -moz-box;
+      display: -webkit-box;
+      width: 100%;
+      height: 50px;
+      line-height: 50px;
+      font-size: 0;
+      border-top: 1px solid #d0d0d0;
+      background-color: #f2f2f2;
+    }
+
+    .layui-m-layerbtn span {
+      display: block;
+      -moz-box-flex: 1;
+      box-flex: 1;
+      -webkit-box-flex: 1;
+      font-size: 14px;
+      cursor: pointer;
+    }
+
+    .layui-m-layerbtn span[yes] {
+      color: #40affe;
+    }
+
+    .layui-m-layerbtn span[no] {
+      border-right: 1px solid #d0d0d0;
+      border-radius: 0 0 0 5px;
+    }
+
+    .layui-m-layerbtn span:active {
+      background-color: #f6f6f6;
+    }
+
+    .layui-m-layerend {
+      position: absolute;
+      right: 7px;
+      top: 10px;
+      width: 30px;
+      height: 30px;
+      border: 0;
+      font-weight: 400;
+      background: 0 0;
+      cursor: pointer;
+      -webkit-appearance: none;
+      font-size: 30px;
+    }
+
+    .layui-m-layerend::after,
+    .layui-m-layerend::before {
+      position: absolute;
+      left: 5px;
+      top: 15px;
+      content: "";
+      width: 18px;
+      height: 1px;
+      background-color: #999;
+      transform: rotate(45deg);
+      -webkit-transform: rotate(45deg);
+      border-radius: 3px;
+    }
+
+    .layui-m-layerend::after {
+      transform: rotate(-45deg);
+      -webkit-transform: rotate(-45deg);
+    }
+
+    .layui-m-layer .layui-m-layer-footer {
+      position: fixed;
+      width: 95%;
+      max-width: 100%;
+      margin: 0 auto;
+      left: 0;
+      right: 0;
+      bottom: 10px;
+      background: 0 0;
+    }
+
+    .layui-m-layer-footer .layui-m-layercont {
+      padding: 20px;
+      border-radius: 5px 5px 0 0;
+      background-color: rgba(255, 255, 255, 0.8);
+    }
+
+    .layui-m-layer-footer .layui-m-layerbtn {
+      display: block;
+      height: auto;
+      background: 0 0;
+      border-top: none;
+    }
+
+    .layui-m-layer-footer .layui-m-layerbtn span {
+      background-color: rgba(255, 255, 255, 0.8);
+    }
+
+    .layui-m-layer-footer .layui-m-layerbtn span[no] {
+      color: #fd482c;
+      border-top: 1px solid #c2c2c2;
+      border-radius: 0 0 5px 5px;
+    }
+
+    .layui-m-layer-footer .layui-m-layerbtn span[yes] {
+      margin-top: 10px;
+      border-radius: 5px;
+    }
+
+    .layui-m-layer .layui-m-layer-msg {
+      width: auto;
+      max-width: 90%;
+      margin: 0 auto;
+      bottom: -150px;
+      background-color: rgba(0, 0, 0, 0.7);
+      color: #fff;
+    }
+
+    .layui-m-layer-msg .layui-m-layercont {
+      padding: 10px 20px;
+    }
+
+    .collection-success {
+      /*opacity: 0.6;*/
+      /*background: #EAEAEA;*/
+      color: #ffffff;
+    }
+
+    .collection-success:hover {
+      /*opacity: 0.45;*/
+      /*background: #000000;*/
+      color: #ffffff;
+    }
+
+    .layui-m-layercont .cyxy-trs-target {
+      display: none;
+    }
+
+    .collection-icon {
+      width: 12px;
+      height: 13px;
+      background: url("data:image/png;base64,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") no-repeat;
+      display: inline-block;
+      background-size: cover;
+      background-position: center;
+    }
+
+    .collection-success>a {
+      margin-left: 12px;
+      vertical-align: middle;
+    }
+
+    .cy_free_box {
+      position: relative;
+    }
+
+    .cy_free_box img {
+      width: 100%;
+      cursor: pointer;
+      -moz-user-select: none;
+      /*火狐*/
+      -webkit-user-select: none;
+      /*webkit浏览器*/
+      -ms-user-select: none;
+      /*IE10*/
+      -khtml-user-select: none;
+      /*早期浏览器*/
+      user-select: none;
+    }
+
+    .layui-m-layer-cy_free_content {
+      background: inherit !important;
+    }
+  </style>
+</head>
+
+<body>
   <div class="description">
-  Drag sliders to translate, rotate, and scale.
+    Drag sliders to translate, rotate, and scale.
   </div>
   <canvas id="canvas" width="398" height="298"></canvas>
   <div id="uiContainer">
@@ -14,7 +1283,7 @@
       <div id="fudgeFactor">
         <div class="gman-widget-outer">
           <div class="gman-widget-label">fudgeFactor</div>
-          <div class="gman-widget-value">1.000</div>
+          <div class="gman-widget-value">2.000</div>
           <input class="gman-widget-slider" type="range" min="0" max="2000" value="1000">
         </div>
       </div>
@@ -28,14 +1297,14 @@
       <div id="y">
         <div class="gman-widget-outer">
           <div class="gman-widget-label">y</div>
-          <div class="gman-widget-value">150</div>
+          <div class="gman-widget-value">145</div>
           <input class="gman-widget-slider" type="range" min="0" max="298" value="150">
         </div>
       </div>
       <div id="z">
         <div class="gman-widget-outer">
           <div class="gman-widget-label">z</div>
-          <div class="gman-widget-value">0</div>
+          <div class="gman-widget-value">160</div>
           <input class="gman-widget-slider" type="range" min="-298" max="298" value="0">
         </div>
       </div>
@@ -62,26 +1331,19 @@
       </div>
     </div>
   </div>
-  
-  
+
+
   <script id="vertex-shader-3d" type="x-shader/x-vertex">
   attribute vec4 a_position;
   attribute vec4 a_color;
   
   uniform mat4 u_matrix;
-  uniform float u_fudgeFactor;
   
   varying vec4 v_color;
   
   void main() {
     // Multiply the position by the matrix.
-    vec4 position = u_matrix * a_position;
-  
-    // Adjust the z to divide by
-    float zToDivideBy = 1.0 + position.z * u_fudgeFactor;
-  
-    // Divide x and y by z.
-    gl_Position = vec4(position.xy / zToDivideBy, position.zw);
+    gl_Position = u_matrix * a_position;
   
     // Pass the color to the fragment shader.
     v_color = a_color;
@@ -108,571 +1370,579 @@
   <script src="resources/webgl-utils.js"></script>
   <script src="resources/webgl-lessons-ui.js"></script>
   <script>
-  "use strict";
-  
-  function main() {
-    // Get A WebGL context
-    /** @type {HTMLCanvasElement} */
-    var canvas = document.querySelector("#canvas");
-    var gl = canvas.getContext("webgl");
-    if (!gl) {
-      return;
-    }
-  
-    // setup GLSL program
-    var program = webglUtils.createProgramFromScripts(gl, ["vertex-shader-3d", "fragment-shader-3d"]);
-  
-    // look up where the vertex data needs to go.
-    var positionLocation = gl.getAttribLocation(program, "a_position");
-    var colorLocation = gl.getAttribLocation(program, "a_color");
-  
-    // lookup uniforms
-    var matrixLocation = gl.getUniformLocation(program, "u_matrix");
-    var fudgeLocation = gl.getUniformLocation(program, "u_fudgeFactor");
-  
-    // Create a buffer to put positions in
-    var positionBuffer = gl.createBuffer();
-    // Bind it to ARRAY_BUFFER (think of it as ARRAY_BUFFER = positionBuffer)
-    gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
-    // Put geometry data into buffer
-    setGeometry(gl);
-  
-    // Create a buffer to put colors in
-    var colorBuffer = gl.createBuffer();
-    // Bind it to ARRAY_BUFFER (think of it as ARRAY_BUFFER = colorBuffer)
-    gl.bindBuffer(gl.ARRAY_BUFFER, colorBuffer);
-    // Put geometry data into buffer
-    setColors(gl);
-  
-    function radToDeg(r) {
-      return r * 180 / Math.PI;
-    }
-  
-    function degToRad(d) {
-      return d * Math.PI / 180;
-    }
-  
-    var translation = [45, 150, 0];
-    var rotation = [degToRad(40), degToRad(25), degToRad(325)];
-    var scale = [1, 1, 1];
-    var fudgeFactor = 1;
-  
-    drawScene();
-  
-    // Setup a ui.
-    webglLessonsUI.setupSlider("#fudgeFactor", {value: fudgeFactor, slide: updateFudgeFactor, max: 2, step: 0.001, precision: 3 });
-    webglLessonsUI.setupSlider("#x", {value: translation[0], slide: updatePosition(0), max: gl.canvas.width });
-    webglLessonsUI.setupSlider("#y", {value: translation[1], slide: updatePosition(1), max: gl.canvas.height});
-    webglLessonsUI.setupSlider("#z", {value: translation[2], slide: updatePosition(2), max: gl.canvas.height, min: -gl.canvas.height});
-    webglLessonsUI.setupSlider("#angleX", {value: radToDeg(rotation[0]), slide: updateRotation(0), max: 360});
-    webglLessonsUI.setupSlider("#angleY", {value: radToDeg(rotation[1]), slide: updateRotation(1), max: 360});
-    webglLessonsUI.setupSlider("#angleZ", {value: radToDeg(rotation[2]), slide: updateRotation(2), max: 360});
-    webglLessonsUI.setupSlider("#scaleX", {value: scale[0], slide: updateScale(0), min: -5, max: 5, step: 0.01, precision: 2});
-    webglLessonsUI.setupSlider("#scaleY", {value: scale[1], slide: updateScale(1), min: -5, max: 5, step: 0.01, precision: 2});
-    webglLessonsUI.setupSlider("#scaleZ", {value: scale[2], slide: updateScale(2), min: -5, max: 5, step: 0.01, precision: 2});
-  
-    function updateFudgeFactor(event, ui) {
-      fudgeFactor = ui.value;
-      drawScene();
-    }
-  
-    function updatePosition(index) {
-      return function(event, ui) {
-        translation[index] = ui.value;
-        drawScene();
-      };
-    }
-  
-    function updateRotation(index) {
-      return function(event, ui) {
-        var angleInDegrees = ui.value;
-        var angleInRadians = angleInDegrees * Math.PI / 180;
-        rotation[index] = angleInRadians;
-        drawScene();
-      };
-    }
-  
-    function updateScale(index) {
-      return function(event, ui) {
-        scale[index] = ui.value;
-        drawScene();
-      };
-    }
-  
-    // Draw the scene.
-    function drawScene() {
-      webglUtils.resizeCanvasToDisplaySize(gl.canvas);
-  
-      // Tell WebGL how to convert from clip space to pixels
-      gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
-  
-      // Clear the canvas AND the depth buffer.
-      gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
-  
-      // Turn on culling. By default backfacing triangles
-      // will be culled.
-      gl.enable(gl.CULL_FACE);
-  
-      // Enable the depth buffer
-      gl.enable(gl.DEPTH_TEST);
-  
-      // Tell it to use our program (pair of shaders)
-      gl.useProgram(program);
-  
-      // Turn on the position attribute
-      gl.enableVertexAttribArray(positionLocation);
-  
-      // Bind the position buffer.
+    "use strict";
+
+    function main() {
+      // Get A WebGL context
+      /** @type {HTMLCanvasElement} */
+      var canvas = document.querySelector("#canvas");
+      var gl = canvas.getContext("webgl");
+      if (!gl) {
+        return;
+      }
+
+      // setup GLSL program
+      var program = webglUtils.createProgramFromScripts(gl, ["vertex-shader-3d", "fragment-shader-3d"]);
+
+      // look up where the vertex data needs to go.
+      var positionLocation = gl.getAttribLocation(program, "a_position");
+      var colorLocation = gl.getAttribLocation(program, "a_color");
+
+      // lookup uniforms
+      var matrixLocation = gl.getUniformLocation(program, "u_matrix");
+
+      // Create a buffer to put positions in
+      var positionBuffer = gl.createBuffer();
+      // Bind it to ARRAY_BUFFER (think of it as ARRAY_BUFFER = positionBuffer)
       gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
-  
-      // Tell the position attribute how to get data out of positionBuffer (ARRAY_BUFFER)
-      var size = 3;          // 3 components per iteration
-      var type = gl.FLOAT;   // the data is 32bit floats
-      var normalize = false; // don't normalize the data
-      var stride = 0;        // 0 = move forward size * sizeof(type) each iteration to get the next position
-      var offset = 0;        // start at the beginning of the buffer
-      gl.vertexAttribPointer(
-          positionLocation, size, type, normalize, stride, offset);
-  
-      // Turn on the color attribute
-      gl.enableVertexAttribArray(colorLocation);
-  
-      // Bind the color buffer.
+      // Put geometry data into buffer
+      setGeometry(gl);
+
+      // Create a buffer to put colors in
+      var colorBuffer = gl.createBuffer();
+      // Bind it to ARRAY_BUFFER (think of it as ARRAY_BUFFER = colorBuffer)
       gl.bindBuffer(gl.ARRAY_BUFFER, colorBuffer);
-  
-      // Tell the attribute how to get data out of colorBuffer (ARRAY_BUFFER)
-      var size = 3;                 // 3 components per iteration
-      var type = gl.UNSIGNED_BYTE;  // the data is 8bit unsigned values
-      var normalize = true;         // normalize the data (convert from 0-255 to 0-1)
-      var stride = 0;               // 0 = move forward size * sizeof(type) each iteration to get the next position
-      var offset = 0;               // start at the beginning of the buffer
-      gl.vertexAttribPointer(
+      // Put geometry data into buffer
+      setColors(gl);
+
+      function radToDeg(r) {
+        return r * 180 / Math.PI;
+      }
+
+      function degToRad(d) {
+        return d * Math.PI / 180;
+      }
+
+      var translation = [45, 150, 0];
+      var rotation = [degToRad(40), degToRad(25), degToRad(325)];
+      var scale = [1, 1, 1];
+      var fudgeFactor = 1;
+
+      drawScene();
+
+      // Setup a ui.
+      webglLessonsUI.setupSlider("#fudgeFactor", { value: fudgeFactor, slide: updateFudgeFactor, max: 2, step: 0.001, precision: 3 });
+      webglLessonsUI.setupSlider("#x", { value: translation[0], slide: updatePosition(0), max: gl.canvas.width });
+      webglLessonsUI.setupSlider("#y", { value: translation[1], slide: updatePosition(1), max: gl.canvas.height });
+      webglLessonsUI.setupSlider("#z", { value: translation[2], slide: updatePosition(2), max: gl.canvas.height, min: -gl.canvas.height });
+      webglLessonsUI.setupSlider("#angleX", { value: radToDeg(rotation[0]), slide: updateRotation(0), max: 360 });
+      webglLessonsUI.setupSlider("#angleY", { value: radToDeg(rotation[1]), slide: updateRotation(1), max: 360 });
+      webglLessonsUI.setupSlider("#angleZ", { value: radToDeg(rotation[2]), slide: updateRotation(2), max: 360 });
+      webglLessonsUI.setupSlider("#scaleX", { value: scale[0], slide: updateScale(0), min: -5, max: 5, step: 0.01, precision: 2 });
+      webglLessonsUI.setupSlider("#scaleY", { value: scale[1], slide: updateScale(1), min: -5, max: 5, step: 0.01, precision: 2 });
+      webglLessonsUI.setupSlider("#scaleZ", { value: scale[2], slide: updateScale(2), min: -5, max: 5, step: 0.01, precision: 2 });
+
+      function updateFudgeFactor(event, ui) {
+        fudgeFactor = ui.value;
+        drawScene();
+      }
+
+      function updatePosition(index) {
+        return function (event, ui) {
+          translation[index] = ui.value;
+          drawScene();
+        };
+      }
+
+      function updateRotation(index) {
+        return function (event, ui) {
+          var angleInDegrees = ui.value;
+          var angleInRadians = angleInDegrees * Math.PI / 180;
+          rotation[index] = angleInRadians;
+          drawScene();
+        };
+      }
+
+      function updateScale(index) {
+        return function (event, ui) {
+          scale[index] = ui.value;
+          drawScene();
+        };
+      }
+
+      // Draw the scene.
+      function drawScene() {
+        webglUtils.resizeCanvasToDisplaySize(gl.canvas);
+
+        // Tell WebGL how to convert from clip space to pixels
+        gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
+
+        // Clear the canvas AND the depth buffer.
+        gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+
+        // Turn on culling. By default backfacing triangles
+        // will be culled.
+        gl.enable(gl.CULL_FACE);
+
+        // Enable the depth buffer
+        gl.enable(gl.DEPTH_TEST);
+
+        // Tell it to use our program (pair of shaders)
+        gl.useProgram(program);
+
+        // Turn on the position attribute
+        gl.enableVertexAttribArray(positionLocation);
+
+        // Bind the position buffer.
+        gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
+
+        // Tell the position attribute how to get data out of positionBuffer (ARRAY_BUFFER)
+        var size = 3;          // 3 components per iteration
+        var type = gl.FLOAT;   // the data is 32bit floats
+        var normalize = false; // don't normalize the data
+        var stride = 0;        // 0 = move forward size * sizeof(type) each iteration to get the next position
+        var offset = 0;        // start at the beginning of the buffer
+        gl.vertexAttribPointer(
+          positionLocation, size, type, normalize, stride, offset);
+
+        // Turn on the color attribute
+        gl.enableVertexAttribArray(colorLocation);
+
+        // Bind the color buffer.
+        gl.bindBuffer(gl.ARRAY_BUFFER, colorBuffer);
+
+        // Tell the attribute how to get data out of colorBuffer (ARRAY_BUFFER)
+        var size = 3;                 // 3 components per iteration
+        var type = gl.UNSIGNED_BYTE;  // the data is 8bit unsigned values
+        var normalize = true;         // normalize the data (convert from 0-255 to 0-1)
+        var stride = 0;               // 0 = move forward size * sizeof(type) each iteration to get the next position
+        var offset = 0;               // start at the beginning of the buffer
+        gl.vertexAttribPointer(
           colorLocation, size, type, normalize, stride, offset);
-  
-      // Compute the matrices
-      var matrix = m4.projection(gl.canvas.clientWidth, gl.canvas.clientHeight, 400);
-      matrix = m4.translate(matrix, translation[0], translation[1], translation[2]);
-      matrix = m4.xRotate(matrix, rotation[0]);
-      matrix = m4.yRotate(matrix, rotation[1]);
-      matrix = m4.zRotate(matrix, rotation[2]);
-      matrix = m4.scale(matrix, scale[0], scale[1], scale[2]);
-  
-      // Set the matrix.
-      gl.uniformMatrix4fv(matrixLocation, false, matrix);
-  
-      // Set the fudgeFactor
-      gl.uniform1f(fudgeLocation, fudgeFactor);
-  
-      // Draw the geometry.
-      var primitiveType = gl.TRIANGLES;
-      var offset = 0;
-      var count = 16 * 6;
-      gl.drawArrays(primitiveType, offset, count);
+
+        // Compute the matrices
+        var matrix = makeZToWMatrix(fudgeFactor);
+        
+        matrix = m4.multiply(matrix, m4.projection(gl.canvas.clientWidth, gl.canvas.clientHeight, 400));
+
+        matrix = m4.translate(matrix, translation[0], translation[1], translation[2]);
+        matrix = m4.xRotate(matrix, rotation[0]);
+        matrix = m4.yRotate(matrix, rotation[1]);
+        matrix = m4.zRotate(matrix, rotation[2]);
+        matrix = m4.scale(matrix, scale[0], scale[1], scale[2]);
+
+        // Set the matrix.
+        gl.uniformMatrix4fv(matrixLocation, false, matrix);
+
+        // Draw the geometry.
+        var primitiveType = gl.TRIANGLES;
+        var offset = 0;
+        var count = 16 * 6;
+        gl.drawArrays(primitiveType, offset, count);
+      }
     }
-  }
-  
-  var m4 = {
-  
-    projection: function(width, height, depth) {
-      // Note: This matrix flips the Y axis so 0 is at the top.
-      return [
-         2 / width, 0, 0, 0,
-         0, -2 / height, 0, 0,
-         0, 0, 2 / depth, 0,
-        -1, 1, 0, 1,
-      ];
-    },
-  
-    multiply: function(a, b) {
-      var a00 = a[0 * 4 + 0];
-      var a01 = a[0 * 4 + 1];
-      var a02 = a[0 * 4 + 2];
-      var a03 = a[0 * 4 + 3];
-      var a10 = a[1 * 4 + 0];
-      var a11 = a[1 * 4 + 1];
-      var a12 = a[1 * 4 + 2];
-      var a13 = a[1 * 4 + 3];
-      var a20 = a[2 * 4 + 0];
-      var a21 = a[2 * 4 + 1];
-      var a22 = a[2 * 4 + 2];
-      var a23 = a[2 * 4 + 3];
-      var a30 = a[3 * 4 + 0];
-      var a31 = a[3 * 4 + 1];
-      var a32 = a[3 * 4 + 2];
-      var a33 = a[3 * 4 + 3];
-      var b00 = b[0 * 4 + 0];
-      var b01 = b[0 * 4 + 1];
-      var b02 = b[0 * 4 + 2];
-      var b03 = b[0 * 4 + 3];
-      var b10 = b[1 * 4 + 0];
-      var b11 = b[1 * 4 + 1];
-      var b12 = b[1 * 4 + 2];
-      var b13 = b[1 * 4 + 3];
-      var b20 = b[2 * 4 + 0];
-      var b21 = b[2 * 4 + 1];
-      var b22 = b[2 * 4 + 2];
-      var b23 = b[2 * 4 + 3];
-      var b30 = b[3 * 4 + 0];
-      var b31 = b[3 * 4 + 1];
-      var b32 = b[3 * 4 + 2];
-      var b33 = b[3 * 4 + 3];
-      return [
-        b00 * a00 + b01 * a10 + b02 * a20 + b03 * a30,
-        b00 * a01 + b01 * a11 + b02 * a21 + b03 * a31,
-        b00 * a02 + b01 * a12 + b02 * a22 + b03 * a32,
-        b00 * a03 + b01 * a13 + b02 * a23 + b03 * a33,
-        b10 * a00 + b11 * a10 + b12 * a20 + b13 * a30,
-        b10 * a01 + b11 * a11 + b12 * a21 + b13 * a31,
-        b10 * a02 + b11 * a12 + b12 * a22 + b13 * a32,
-        b10 * a03 + b11 * a13 + b12 * a23 + b13 * a33,
-        b20 * a00 + b21 * a10 + b22 * a20 + b23 * a30,
-        b20 * a01 + b21 * a11 + b22 * a21 + b23 * a31,
-        b20 * a02 + b21 * a12 + b22 * a22 + b23 * a32,
-        b20 * a03 + b21 * a13 + b22 * a23 + b23 * a33,
-        b30 * a00 + b31 * a10 + b32 * a20 + b33 * a30,
-        b30 * a01 + b31 * a11 + b32 * a21 + b33 * a31,
-        b30 * a02 + b31 * a12 + b32 * a22 + b33 * a32,
-        b30 * a03 + b31 * a13 + b32 * a23 + b33 * a33,
-      ];
-    },
-  
-    translation: function(tx, ty, tz) {
-      return [
-         1,  0,  0,  0,
-         0,  1,  0,  0,
-         0,  0,  1,  0,
-         tx, ty, tz, 1,
-      ];
-    },
-  
-    xRotation: function(angleInRadians) {
-      var c = Math.cos(angleInRadians);
-      var s = Math.sin(angleInRadians);
-  
+
+    function makeZToWMatrix(fudgeFactor) {
       return [
         1, 0, 0, 0,
-        0, c, s, 0,
-        0, -s, c, 0,
-        0, 0, 0, 1,
-      ];
-    },
-  
-    yRotation: function(angleInRadians) {
-      var c = Math.cos(angleInRadians);
-      var s = Math.sin(angleInRadians);
-  
-      return [
-        c, 0, -s, 0,
         0, 1, 0, 0,
-        s, 0, c, 0,
+        0, 0, 1, fudgeFactor,
         0, 0, 0, 1,
       ];
-    },
-  
-    zRotation: function(angleInRadians) {
-      var c = Math.cos(angleInRadians);
-      var s = Math.sin(angleInRadians);
-  
-      return [
-         c, s, 0, 0,
-        -s, c, 0, 0,
-         0, 0, 1, 0,
-         0, 0, 0, 1,
-      ];
-    },
-  
-    scaling: function(sx, sy, sz) {
-      return [
-        sx, 0,  0,  0,
-        0, sy,  0,  0,
-        0,  0, sz,  0,
-        0,  0,  0,  1,
-      ];
-    },
-  
-    translate: function(m, tx, ty, tz) {
-      return m4.multiply(m, m4.translation(tx, ty, tz));
-    },
-  
-    xRotate: function(m, angleInRadians) {
-      return m4.multiply(m, m4.xRotation(angleInRadians));
-    },
-  
-    yRotate: function(m, angleInRadians) {
-      return m4.multiply(m, m4.yRotation(angleInRadians));
-    },
-  
-    zRotate: function(m, angleInRadians) {
-      return m4.multiply(m, m4.zRotation(angleInRadians));
-    },
-  
-    scale: function(m, sx, sy, sz) {
-      return m4.multiply(m, m4.scaling(sx, sy, sz));
-    },
-  
-  };
-  
-  // Fill the buffer with the values that define a letter 'F'.
-  function setGeometry(gl) {
-    gl.bufferData(
+    }
+
+    var m4 = {
+
+      projection: function (width, height, depth) {
+        // Note: This matrix flips the Y axis so 0 is at the top.
+        return [
+          2 / width, 0, 0, 0,
+          0, -2 / height, 0, 0,
+          0, 0, 2 / depth, 0,
+          -1, 1, 0, 1,
+        ];
+      },
+
+      multiply: function (a, b) {
+        var a00 = a[0 * 4 + 0];
+        var a01 = a[0 * 4 + 1];
+        var a02 = a[0 * 4 + 2];
+        var a03 = a[0 * 4 + 3];
+        var a10 = a[1 * 4 + 0];
+        var a11 = a[1 * 4 + 1];
+        var a12 = a[1 * 4 + 2];
+        var a13 = a[1 * 4 + 3];
+        var a20 = a[2 * 4 + 0];
+        var a21 = a[2 * 4 + 1];
+        var a22 = a[2 * 4 + 2];
+        var a23 = a[2 * 4 + 3];
+        var a30 = a[3 * 4 + 0];
+        var a31 = a[3 * 4 + 1];
+        var a32 = a[3 * 4 + 2];
+        var a33 = a[3 * 4 + 3];
+        var b00 = b[0 * 4 + 0];
+        var b01 = b[0 * 4 + 1];
+        var b02 = b[0 * 4 + 2];
+        var b03 = b[0 * 4 + 3];
+        var b10 = b[1 * 4 + 0];
+        var b11 = b[1 * 4 + 1];
+        var b12 = b[1 * 4 + 2];
+        var b13 = b[1 * 4 + 3];
+        var b20 = b[2 * 4 + 0];
+        var b21 = b[2 * 4 + 1];
+        var b22 = b[2 * 4 + 2];
+        var b23 = b[2 * 4 + 3];
+        var b30 = b[3 * 4 + 0];
+        var b31 = b[3 * 4 + 1];
+        var b32 = b[3 * 4 + 2];
+        var b33 = b[3 * 4 + 3];
+        return [
+          b00 * a00 + b01 * a10 + b02 * a20 + b03 * a30,
+          b00 * a01 + b01 * a11 + b02 * a21 + b03 * a31,
+          b00 * a02 + b01 * a12 + b02 * a22 + b03 * a32,
+          b00 * a03 + b01 * a13 + b02 * a23 + b03 * a33,
+          b10 * a00 + b11 * a10 + b12 * a20 + b13 * a30,
+          b10 * a01 + b11 * a11 + b12 * a21 + b13 * a31,
+          b10 * a02 + b11 * a12 + b12 * a22 + b13 * a32,
+          b10 * a03 + b11 * a13 + b12 * a23 + b13 * a33,
+          b20 * a00 + b21 * a10 + b22 * a20 + b23 * a30,
+          b20 * a01 + b21 * a11 + b22 * a21 + b23 * a31,
+          b20 * a02 + b21 * a12 + b22 * a22 + b23 * a32,
+          b20 * a03 + b21 * a13 + b22 * a23 + b23 * a33,
+          b30 * a00 + b31 * a10 + b32 * a20 + b33 * a30,
+          b30 * a01 + b31 * a11 + b32 * a21 + b33 * a31,
+          b30 * a02 + b31 * a12 + b32 * a22 + b33 * a32,
+          b30 * a03 + b31 * a13 + b32 * a23 + b33 * a33,
+        ];
+      },
+
+      translation: function (tx, ty, tz) {
+        return [
+          1, 0, 0, 0,
+          0, 1, 0, 0,
+          0, 0, 1, 0,
+          tx, ty, tz, 1,
+        ];
+      },
+
+      xRotation: function (angleInRadians) {
+        var c = Math.cos(angleInRadians);
+        var s = Math.sin(angleInRadians);
+
+        return [
+          1, 0, 0, 0,
+          0, c, s, 0,
+          0, -s, c, 0,
+          0, 0, 0, 1,
+        ];
+      },
+
+      yRotation: function (angleInRadians) {
+        var c = Math.cos(angleInRadians);
+        var s = Math.sin(angleInRadians);
+
+        return [
+          c, 0, -s, 0,
+          0, 1, 0, 0,
+          s, 0, c, 0,
+          0, 0, 0, 1,
+        ];
+      },
+
+      zRotation: function (angleInRadians) {
+        var c = Math.cos(angleInRadians);
+        var s = Math.sin(angleInRadians);
+
+        return [
+          c, s, 0, 0,
+          -s, c, 0, 0,
+          0, 0, 1, 0,
+          0, 0, 0, 1,
+        ];
+      },
+
+      scaling: function (sx, sy, sz) {
+        return [
+          sx, 0, 0, 0,
+          0, sy, 0, 0,
+          0, 0, sz, 0,
+          0, 0, 0, 1,
+        ];
+      },
+
+      translate: function (m, tx, ty, tz) {
+        return m4.multiply(m, m4.translation(tx, ty, tz));
+      },
+
+      xRotate: function (m, angleInRadians) {
+        return m4.multiply(m, m4.xRotation(angleInRadians));
+      },
+
+      yRotate: function (m, angleInRadians) {
+        return m4.multiply(m, m4.yRotation(angleInRadians));
+      },
+
+      zRotate: function (m, angleInRadians) {
+        return m4.multiply(m, m4.zRotation(angleInRadians));
+      },
+
+      scale: function (m, sx, sy, sz) {
+        return m4.multiply(m, m4.scaling(sx, sy, sz));
+      },
+
+    };
+
+    // Fill the buffer with the values that define a letter 'F'.
+    function setGeometry(gl) {
+      gl.bufferData(
         gl.ARRAY_BUFFER,
         new Float32Array([
-            // left column front
-            0,   0,  0,
-            0, 150,  0,
-            30,   0,  0,
-            0, 150,  0,
-            30, 150,  0,
-            30,   0,  0,
-  
-            // top rung front
-            30,   0,  0,
-            30,  30,  0,
-            100,   0,  0,
-            30,  30,  0,
-            100,  30,  0,
-            100,   0,  0,
-  
-            // middle rung front
-            30,  60,  0,
-            30,  90,  0,
-            67,  60,  0,
-            30,  90,  0,
-            67,  90,  0,
-            67,  60,  0,
-  
-            // left column back
-              0,   0,  30,
-             30,   0,  30,
-              0, 150,  30,
-              0, 150,  30,
-             30,   0,  30,
-             30, 150,  30,
-  
-            // top rung back
-             30,   0,  30,
-            100,   0,  30,
-             30,  30,  30,
-             30,  30,  30,
-            100,   0,  30,
-            100,  30,  30,
-  
-            // middle rung back
-             30,  60,  30,
-             67,  60,  30,
-             30,  90,  30,
-             30,  90,  30,
-             67,  60,  30,
-             67,  90,  30,
-  
-            // top
-              0,   0,   0,
-            100,   0,   0,
-            100,   0,  30,
-              0,   0,   0,
-            100,   0,  30,
-              0,   0,  30,
-  
-            // top rung right
-            100,   0,   0,
-            100,  30,   0,
-            100,  30,  30,
-            100,   0,   0,
-            100,  30,  30,
-            100,   0,  30,
-  
-            // under top rung
-            30,   30,   0,
-            30,   30,  30,
-            100,  30,  30,
-            30,   30,   0,
-            100,  30,  30,
-            100,  30,   0,
-  
-            // between top rung and middle
-            30,   30,   0,
-            30,   60,  30,
-            30,   30,  30,
-            30,   30,   0,
-            30,   60,   0,
-            30,   60,  30,
-  
-            // top of middle rung
-            30,   60,   0,
-            67,   60,  30,
-            30,   60,  30,
-            30,   60,   0,
-            67,   60,   0,
-            67,   60,  30,
-  
-            // right of middle rung
-            67,   60,   0,
-            67,   90,  30,
-            67,   60,  30,
-            67,   60,   0,
-            67,   90,   0,
-            67,   90,  30,
-  
-            // bottom of middle rung.
-            30,   90,   0,
-            30,   90,  30,
-            67,   90,  30,
-            30,   90,   0,
-            67,   90,  30,
-            67,   90,   0,
-  
-            // right of bottom
-            30,   90,   0,
-            30,  150,  30,
-            30,   90,  30,
-            30,   90,   0,
-            30,  150,   0,
-            30,  150,  30,
-  
-            // bottom
-            0,   150,   0,
-            0,   150,  30,
-            30,  150,  30,
-            0,   150,   0,
-            30,  150,  30,
-            30,  150,   0,
-  
-            // left side
-            0,   0,   0,
-            0,   0,  30,
-            0, 150,  30,
-            0,   0,   0,
-            0, 150,  30,
-            0, 150,   0]),
+          // left column front
+          0, 0, 0,
+          0, 150, 0,
+          30, 0, 0,
+          0, 150, 0,
+          30, 150, 0,
+          30, 0, 0,
+
+          // top rung front
+          30, 0, 0,
+          30, 30, 0,
+          100, 0, 0,
+          30, 30, 0,
+          100, 30, 0,
+          100, 0, 0,
+
+          // middle rung front
+          30, 60, 0,
+          30, 90, 0,
+          67, 60, 0,
+          30, 90, 0,
+          67, 90, 0,
+          67, 60, 0,
+
+          // left column back
+          0, 0, 30,
+          30, 0, 30,
+          0, 150, 30,
+          0, 150, 30,
+          30, 0, 30,
+          30, 150, 30,
+
+          // top rung back
+          30, 0, 30,
+          100, 0, 30,
+          30, 30, 30,
+          30, 30, 30,
+          100, 0, 30,
+          100, 30, 30,
+
+          // middle rung back
+          30, 60, 30,
+          67, 60, 30,
+          30, 90, 30,
+          30, 90, 30,
+          67, 60, 30,
+          67, 90, 30,
+
+          // top
+          0, 0, 0,
+          100, 0, 0,
+          100, 0, 30,
+          0, 0, 0,
+          100, 0, 30,
+          0, 0, 30,
+
+          // top rung right
+          100, 0, 0,
+          100, 30, 0,
+          100, 30, 30,
+          100, 0, 0,
+          100, 30, 30,
+          100, 0, 30,
+
+          // under top rung
+          30, 30, 0,
+          30, 30, 30,
+          100, 30, 30,
+          30, 30, 0,
+          100, 30, 30,
+          100, 30, 0,
+
+          // between top rung and middle
+          30, 30, 0,
+          30, 60, 30,
+          30, 30, 30,
+          30, 30, 0,
+          30, 60, 0,
+          30, 60, 30,
+
+          // top of middle rung
+          30, 60, 0,
+          67, 60, 30,
+          30, 60, 30,
+          30, 60, 0,
+          67, 60, 0,
+          67, 60, 30,
+
+          // right of middle rung
+          67, 60, 0,
+          67, 90, 30,
+          67, 60, 30,
+          67, 60, 0,
+          67, 90, 0,
+          67, 90, 30,
+
+          // bottom of middle rung.
+          30, 90, 0,
+          30, 90, 30,
+          67, 90, 30,
+          30, 90, 0,
+          67, 90, 30,
+          67, 90, 0,
+
+          // right of bottom
+          30, 90, 0,
+          30, 150, 30,
+          30, 90, 30,
+          30, 90, 0,
+          30, 150, 0,
+          30, 150, 30,
+
+          // bottom
+          0, 150, 0,
+          0, 150, 30,
+          30, 150, 30,
+          0, 150, 0,
+          30, 150, 30,
+          30, 150, 0,
+
+          // left side
+          0, 0, 0,
+          0, 0, 30,
+          0, 150, 30,
+          0, 0, 0,
+          0, 150, 30,
+          0, 150, 0]),
         gl.STATIC_DRAW);
-  }
-  
-  // Fill the buffer with colors for the 'F'.
-  function setColors(gl) {
-    gl.bufferData(
+    }
+
+    // Fill the buffer with colors for the 'F'.
+    function setColors(gl) {
+      gl.bufferData(
         gl.ARRAY_BUFFER,
         new Uint8Array([
-            // left column front
-          200,  70, 120,
-          200,  70, 120,
-          200,  70, 120,
-          200,  70, 120,
-          200,  70, 120,
-          200,  70, 120,
-  
-            // top rung front
-          200,  70, 120,
-          200,  70, 120,
-          200,  70, 120,
-          200,  70, 120,
-          200,  70, 120,
-          200,  70, 120,
-  
-            // middle rung front
-          200,  70, 120,
-          200,  70, 120,
-          200,  70, 120,
-          200,  70, 120,
-          200,  70, 120,
-          200,  70, 120,
-  
-            // left column back
+          // left column front
+          200, 70, 120,
+          200, 70, 120,
+          200, 70, 120,
+          200, 70, 120,
+          200, 70, 120,
+          200, 70, 120,
+
+          // top rung front
+          200, 70, 120,
+          200, 70, 120,
+          200, 70, 120,
+          200, 70, 120,
+          200, 70, 120,
+          200, 70, 120,
+
+          // middle rung front
+          200, 70, 120,
+          200, 70, 120,
+          200, 70, 120,
+          200, 70, 120,
+          200, 70, 120,
+          200, 70, 120,
+
+          // left column back
           80, 70, 200,
           80, 70, 200,
           80, 70, 200,
           80, 70, 200,
           80, 70, 200,
           80, 70, 200,
-  
-            // top rung back
+
+          // top rung back
           80, 70, 200,
           80, 70, 200,
           80, 70, 200,
           80, 70, 200,
           80, 70, 200,
           80, 70, 200,
-  
-            // middle rung back
+
+          // middle rung back
           80, 70, 200,
           80, 70, 200,
           80, 70, 200,
           80, 70, 200,
           80, 70, 200,
           80, 70, 200,
-  
-            // top
+
+          // top
           70, 200, 210,
           70, 200, 210,
           70, 200, 210,
           70, 200, 210,
           70, 200, 210,
           70, 200, 210,
-  
-            // top rung right
+
+          // top rung right
           200, 200, 70,
           200, 200, 70,
           200, 200, 70,
           200, 200, 70,
           200, 200, 70,
           200, 200, 70,
-  
-            // under top rung
+
+          // under top rung
           210, 100, 70,
           210, 100, 70,
           210, 100, 70,
           210, 100, 70,
           210, 100, 70,
           210, 100, 70,
-  
-            // between top rung and middle
+
+          // between top rung and middle
           210, 160, 70,
           210, 160, 70,
           210, 160, 70,
           210, 160, 70,
           210, 160, 70,
           210, 160, 70,
-  
-            // top of middle rung
+
+          // top of middle rung
           70, 180, 210,
           70, 180, 210,
           70, 180, 210,
           70, 180, 210,
           70, 180, 210,
           70, 180, 210,
-  
-            // right of middle rung
+
+          // right of middle rung
           100, 70, 210,
           100, 70, 210,
           100, 70, 210,
           100, 70, 210,
           100, 70, 210,
           100, 70, 210,
-  
-            // bottom of middle rung.
+
+          // bottom of middle rung.
           76, 210, 100,
           76, 210, 100,
           76, 210, 100,
           76, 210, 100,
           76, 210, 100,
           76, 210, 100,
-  
-            // right of bottom
+
+          // right of bottom
           140, 210, 80,
           140, 210, 80,
           140, 210, 80,
           140, 210, 80,
           140, 210, 80,
           140, 210, 80,
-  
-            // bottom
+
+          // bottom
           90, 130, 110,
           90, 130, 110,
           90, 130, 110,
           90, 130, 110,
           90, 130, 110,
           90, 130, 110,
-  
-            // left side
+
+          // left side
           160, 160, 220,
           160, 160, 220,
           160, 160, 220,
@@ -680,11 +1950,47 @@
           160, 160, 220,
           160, 160, 220]),
         gl.STATIC_DRAW);
-  }
-  
-  main();
+    }
+
+    main();
   </script>
-  
-  
-  
-  </body><!-- vertex shader --></html>
+
+
+  <div style="position: static; width: 0px; height: 0px; border: none; padding: 0px; margin: 0px;">
+    <div id="trans-tooltip">
+      <div id="tip-left-top"
+        style="background: url(&quot;chrome-extension://ccfjcepmiaackkccabgeeegeklgifffd/imgs/map/tip-left-top.png&quot;);">
+      </div>
+      <div id="tip-top"
+        style="background: url(&quot;chrome-extension://ccfjcepmiaackkccabgeeegeklgifffd/imgs/map/tip-top.png&quot;) repeat-x;">
+      </div>
+      <div id="tip-right-top"
+        style="background: url(&quot;chrome-extension://ccfjcepmiaackkccabgeeegeklgifffd/imgs/map/tip-right-top.png&quot;);">
+      </div>
+      <div id="tip-right"
+        style="background: url(&quot;chrome-extension://ccfjcepmiaackkccabgeeegeklgifffd/imgs/map/tip-right.png&quot;) repeat-y;">
+      </div>
+      <div id="tip-right-bottom"
+        style="background: url(&quot;chrome-extension://ccfjcepmiaackkccabgeeegeklgifffd/imgs/map/tip-right-bottom.png&quot;);">
+      </div>
+      <div id="tip-bottom"
+        style="background: url(&quot;chrome-extension://ccfjcepmiaackkccabgeeegeklgifffd/imgs/map/tip-bottom.png&quot;) repeat-x;">
+      </div>
+      <div id="tip-left-bottom"
+        style="background: url(&quot;chrome-extension://ccfjcepmiaackkccabgeeegeklgifffd/imgs/map/tip-left-bottom.png&quot;);">
+      </div>
+      <div id="tip-left"
+        style="background: url(&quot;chrome-extension://ccfjcepmiaackkccabgeeegeklgifffd/imgs/map/tip-left.png&quot;);">
+      </div>
+      <div id="trans-content"></div>
+    </div>
+    <div id="tip-arrow-bottom"
+      style="background: url(&quot;chrome-extension://ccfjcepmiaackkccabgeeegeklgifffd/imgs/map/tip-arrow-bottom.png&quot;);">
+    </div>
+    <div id="tip-arrow-top"
+      style="background: url(&quot;chrome-extension://ccfjcepmiaackkccabgeeegeklgifffd/imgs/map/tip-arrow-top.png&quot;);">
+    </div>
+  </div>
+</body><!-- vertex shader -->
+
+</html>

@@ -16,13 +16,7 @@ void main(){
   
   // Divide x and y by z. 用x和y除以z。
   // gl_Position=vec4(position.xy/zToDivideBy,position.zw);
-  // gl_Position=vec4(position.xyz,zToDivideBy);
-  gl_Position=vec4(
-    position.x,
-    position.y,
-    position.z,
-    zToDivideBy
-    );
+  gl_Position=vec4(position.xyz,zToDivideBy);
   
   // Pass the color to the fragment shader.
   v_colors=a_colors;

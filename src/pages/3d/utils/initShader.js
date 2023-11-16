@@ -107,6 +107,7 @@ function createProgram(gl, vshader, fshader) {
 function initShaders(gl, vshader, fshader) {
   // gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
   // 创建Program
+  
   var program = createProgram(gl, vshader, fshader);
   if (!program) {
     console.error("Failed to create program");
