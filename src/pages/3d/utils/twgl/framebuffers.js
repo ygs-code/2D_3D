@@ -103,8 +103,8 @@ const LINEAR                         = 0x2601;
  */
 
 const defaultAttachments = [
-  { format: RGBA, type: UNSIGNED_BYTE, min: LINEAR, wrap: CLAMP_TO_EDGE, },
-  { format: DEPTH_STENCIL, },
+  {format: RGBA, type: UNSIGNED_BYTE, min: LINEAR, wrap: CLAMP_TO_EDGE,},
+  {format: DEPTH_STENCIL,},
 ];
 
 const attachmentsByFormat = {};

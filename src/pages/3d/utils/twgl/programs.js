@@ -724,25 +724,25 @@ function matAttribSetter(gl, index, typeInfo) {
 }
 
 const attrTypeMap = {};
-attrTypeMap[FLOAT] = { size: 4, setter: floatAttribSetter };
-attrTypeMap[FLOAT_VEC2] = { size: 8, setter: floatAttribSetter };
-attrTypeMap[FLOAT_VEC3] = { size: 12, setter: floatAttribSetter };
-attrTypeMap[FLOAT_VEC4] = { size: 16, setter: floatAttribSetter };
-attrTypeMap[INT] = { size: 4, setter: intAttribSetter };
-attrTypeMap[INT_VEC2] = { size: 8, setter: intAttribSetter };
-attrTypeMap[INT_VEC3] = { size: 12, setter: intAttribSetter };
-attrTypeMap[INT_VEC4] = { size: 16, setter: intAttribSetter };
-attrTypeMap[UNSIGNED_INT] = { size: 4, setter: uintAttribSetter };
-attrTypeMap[UNSIGNED_INT_VEC2] = { size: 8, setter: uintAttribSetter };
-attrTypeMap[UNSIGNED_INT_VEC3] = { size: 12, setter: uintAttribSetter };
-attrTypeMap[UNSIGNED_INT_VEC4] = { size: 16, setter: uintAttribSetter };
-attrTypeMap[BOOL] = { size: 4, setter: intAttribSetter };
-attrTypeMap[BOOL_VEC2] = { size: 8, setter: intAttribSetter };
-attrTypeMap[BOOL_VEC3] = { size: 12, setter: intAttribSetter };
-attrTypeMap[BOOL_VEC4] = { size: 16, setter: intAttribSetter };
-attrTypeMap[FLOAT_MAT2] = { size: 4, setter: matAttribSetter, count: 2 };
-attrTypeMap[FLOAT_MAT3] = { size: 9, setter: matAttribSetter, count: 3 };
-attrTypeMap[FLOAT_MAT4] = { size: 16, setter: matAttribSetter, count: 4 };
+attrTypeMap[FLOAT] = {size: 4, setter: floatAttribSetter};
+attrTypeMap[FLOAT_VEC2] = {size: 8, setter: floatAttribSetter};
+attrTypeMap[FLOAT_VEC3] = {size: 12, setter: floatAttribSetter};
+attrTypeMap[FLOAT_VEC4] = {size: 16, setter: floatAttribSetter};
+attrTypeMap[INT] = {size: 4, setter: intAttribSetter};
+attrTypeMap[INT_VEC2] = {size: 8, setter: intAttribSetter};
+attrTypeMap[INT_VEC3] = {size: 12, setter: intAttribSetter};
+attrTypeMap[INT_VEC4] = {size: 16, setter: intAttribSetter};
+attrTypeMap[UNSIGNED_INT] = {size: 4, setter: uintAttribSetter};
+attrTypeMap[UNSIGNED_INT_VEC2] = {size: 8, setter: uintAttribSetter};
+attrTypeMap[UNSIGNED_INT_VEC3] = {size: 12, setter: uintAttribSetter};
+attrTypeMap[UNSIGNED_INT_VEC4] = {size: 16, setter: uintAttribSetter};
+attrTypeMap[BOOL] = {size: 4, setter: intAttribSetter};
+attrTypeMap[BOOL_VEC2] = {size: 8, setter: intAttribSetter};
+attrTypeMap[BOOL_VEC3] = {size: 12, setter: intAttribSetter};
+attrTypeMap[BOOL_VEC4] = {size: 16, setter: intAttribSetter};
+attrTypeMap[FLOAT_MAT2] = {size: 4, setter: matAttribSetter, count: 2};
+attrTypeMap[FLOAT_MAT3] = {size: 9, setter: matAttribSetter, count: 3};
+attrTypeMap[FLOAT_MAT4] = {size: 16, setter: matAttribSetter, count: 4};
 
 // make sure we don't see a global gl
 const gl = undefined; /* eslint-disable-line */
@@ -811,7 +811,7 @@ function prepShaderSource(shaderSource) {
     lineOffset = 1;
     shaderSource = shaderSource.replace(spaceRE, "");
   }
-  return { lineOffset, shaderSource };
+  return {lineOffset, shaderSource};
 }
 
 /**
@@ -847,7 +847,7 @@ function checkShaderStatus(gl, shaderType, shader, errFn) {
     // Something went wrong during compilation; get the error
     const lastError = gl.getShaderInfoLog(shader);
     // 头文件兼容性转换
-    const { lineOffset, shaderSource } = prepShaderSource(
+    const {lineOffset, shaderSource} = prepShaderSource(
       gl.getShaderSource(shader)
     );
     const error = `${addLineNumbersWithError(
@@ -976,7 +976,7 @@ const wait = (ms = 0) => new Promise((resolve) => setTimeout(resolve, ms));
 function createProgramNoCheck(gl, shaders, programOptions) {
     // 创建Program
   const program = gl.createProgram();
-  const { attribLocations, transformFeedbackVaryings, transformFeedbackMode } =
+  const {attribLocations, transformFeedbackVaryings, transformFeedbackMode} =
     getProgramOptions(programOptions);
 
   for (let ndx = 0; ndx < shaders.length; ++ndx) {
@@ -2470,7 +2470,7 @@ function checkAllPrograms(
 ) {
   // check errors for everything.
   for (const [name, program] of Object.entries(programs)) {
-    const options = { ...programOptions };
+    const options = {...programOptions};
     const spec = programSpecs[name];
     if (!Array.isArray(spec)) {
       Object.assign(options, spec);
@@ -2527,7 +2527,7 @@ function createPrograms(gl, programSpecs, programOptions = {}) {
   // compile and link everything
   const programs = Object.fromEntries(
     Object.entries(programSpecs).map(([name, spec]) => {
-      const options = { ...programOptions };
+      const options = {...programOptions};
       const shaders = Array.isArray(spec) ? spec : spec.shaders;
       if (!Array.isArray(spec)) {
         Object.assign(options, spec);

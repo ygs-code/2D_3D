@@ -52,11 +52,15 @@
  *
  * @module twgl/primitives
  */
+
+/*eslint-disable*/
+
 import * as attributes from './attributes.js';
 import * as helper from './helper.js';
 import * as typedArrays from './typedarrays.js';
 import * as m4 from './m4.js';
 import * as v3 from './v3.js';
+ 
 
 const getArray = attributes.getArray_;  // eslint-disable-line
 const getNumComponents = attributes.getNumComponents_;  // eslint-disable-line
@@ -685,6 +689,10 @@ const CUBE_FACE_INDICES = [
  * @param {number} [size] width, height and depth of the cube.
  * @return {Object.<string, TypedArray>} The created vertices.
  * @memberOf module:twgl/primitives
+ * *创建立方体的顶点和索引。
+
+*立方体是围绕原点创建的。(-size / 2, size / 2)。
+ * 
  */
 function createCubeVertices(size) {
   size = size || 1;
@@ -2167,3 +2175,4 @@ export {
   duplicateVertices,
 };
 
+/*eslint-disable*/

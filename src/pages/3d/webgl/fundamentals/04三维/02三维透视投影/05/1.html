@@ -1249,37 +1249,6 @@ Drag sliders to change the frustum.
 <canvas id="canvas" width="796" height="1196"></canvas>
 <img id="eye" src="resources/eye-icon.png" style="position: absolute; z-index: 2; left: 18px; top: 269px; width: 32px; height: auto;">
 </div>
-<div id="uiContainer">
-<div id="ui">
-  <div id="fieldOfView">
-    <div class="gman-widget-outer">
-      <div class="gman-widget-label">fieldOfView</div>
-      <div class="gman-widget-value">30</div>
-      <input class="gman-widget-slider" type="range" min="0" max="179" value="30">
-    </div>
-  </div>
-  <div id="zNear">
-    <div class="gman-widget-outer">
-      <div class="gman-widget-label">zNear</div>
-      <div class="gman-widget-value">10</div>
-      <input class="gman-widget-slider" type="range" min="1" max="50" value="10">
-    </div>
-  </div>
-  <div id="zFar">
-    <div class="gman-widget-outer">
-      <div class="gman-widget-label">zFar</div>
-      <div class="gman-widget-value">50</div>
-      <input class="gman-widget-slider" type="range" min="1" max="50" value="50">
-    </div>
-  </div>
-  <div id="zPosition">
-    <div class="gman-widget-outer">
-      <div class="gman-widget-label">zPosition</div>
-      <div class="gman-widget-value">-25</div>
-      <input class="gman-widget-slider" type="range" min="-60" max="1" value="-25">
-    </div>
-  </div>
-</div>
 </div>
 
 <!-- Vertex顶点 -->
@@ -1427,9 +1396,10 @@ var vertexColorProgramInfo = twgl.createProgramInfo(gl, [
 // 创建 Buffer
 var wireCubeBufferInfo = twgl.createBufferInfoFromArrays(gl, wireCubeArrays);
 
-//
+//顶点参数选项
 var cubeRaysArrays = {
   position: wireCubeArrays.position,
+  // 颜色
   color: [
       1, 1, 1, 1,
       1, 1, 1, 1,
@@ -1445,6 +1415,8 @@ var cubeRaysArrays = {
       0, 4, 1, 5, 2, 6, 3, 7,
   ],
 };
+
+// 创建 Buffer
 var cubeRaysBufferInfo = twgl.createBufferInfoFromArrays(gl, cubeRaysArrays);
 
   // 创建Program 返回 program
@@ -1452,9 +1424,13 @@ var colorProgramInfo = twgl.createProgramInfo(gl, [
     'baseVertexShader',
     'colorFragmentShader',
 ]);
+
+// *创建立方体的顶点和索引。
 var cubeArrays = twgl.primitives.createCubeVertices(2);
+
 delete cubeArrays.normal;
 delete cubeArrays.texcoord;
+// 颜色
 var faceColors = [
   [ 1, 0, 0, 1, ],
   [ 0, 1, 0, 1, ],
@@ -1470,8 +1446,10 @@ for (var f = 0; f < 6; ++f) {
   }
 }
 cubeArrays.color = colorVerts;
+// 创建 Buffer
 var cubeBufferInfo = twgl.createBufferInfoFromArrays(gl, cubeArrays);
 
+// 创建 Buffer
 var fBufferInfo = twgl.createBufferInfoFromArrays(gl, {
   position: [
         // left column front
@@ -1752,6 +1730,7 @@ var v3t0 = new Float32Array(3);
 var zeroMat = new Float32Array(16);
 
 var targetToEye = new Float32Array(3);
+// 相机
 v3.subtract(eyePosition, target, targetToEye);
 
 // uniforms.
@@ -1807,6 +1786,7 @@ webglLessonsUI.setupSlider("#zNear", {value: zNear, slide: updateZNear, min: 1, 
 webglLessonsUI.setupSlider("#zFar", {value: zFar, slide: updateZFar, min: 1, max: 50});
 webglLessonsUI.setupSlider("#zPosition", {value: zPosition, slide: updateZPosition, min: -60, max: 0});
 
+// 渲染
 function render(time) {
   time *= 0.001;
 
@@ -1828,6 +1808,7 @@ function render(time) {
 
   var aspect = gl.canvas.clientWidth / (gl.canvas.clientHeight / 2);
 
+  // 透视矩阵
   m4.perspective(
       degToRad(60),
       aspect,
@@ -1880,12 +1861,15 @@ function render(time) {
     twgl.setUniforms(colorProgramInfo, sceneCubeUniforms);
     twgl.drawBufferInfo(gl, fBufferInfo);
   }
+
+
   drawScene(viewProjection, exampleProjection);
 
   // Draw Frustum Cube behind
   function drawFrustumCube() {
     gl.useProgram(colorProgramInfo.program);
     twgl.setBuffersAndAttributes(gl, colorProgramInfo, cubeBufferInfo);
+    // 透视矩阵
     m4.perspective(
         degToRad(fieldOfView),
         aspect,
@@ -1914,6 +1898,7 @@ function render(time) {
   gl.disable(gl.CULL_FACE);
 
   // Draw view cone.
+  // 透视矩阵
   m4.perspective(
       degToRad(fieldOfView),
       aspect,
@@ -1978,6 +1963,8 @@ function render(time) {
 
   requestAnimationFrame(render);
 }
+
+
 
 requestAnimationFrame(render);
 }

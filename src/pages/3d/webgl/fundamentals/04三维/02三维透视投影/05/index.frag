@@ -1,10 +1,11 @@
 precision mediump float;
-
-// uniform vec4 u_color;
-
-// 从顶点着色器中传入
-varying vec4 v_colors;
-
+varying vec4 v_color;
+varying vec4 v_position;
+uniform vec4 u_color;
 void main() {
-   gl_FragColor = v_colors;   //v_colors;
+bool blend = (v_position.x < -1.0 || v_position.x > 1.0 ||
+              v_position.y < -1.0 || v_position.y > 1.0 ||
+              v_position.z < -1.0 || v_position.z > 1.0);
+vec4 blendColor = blend ? vec4(0.35, 0.35, 0.35, 1.0) : vec4(1, 1, 1, 1);
+gl_FragColor = v_color * u_color * blendColor;
 }

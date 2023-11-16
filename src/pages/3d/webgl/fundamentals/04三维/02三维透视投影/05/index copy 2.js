@@ -1,6 +1,28 @@
-import * as twgl from "@/pages/3d/utils/twgl";
+import {getWebGLContext, initShaders} from "@/pages/3d/utils/lib/cuon-utils";
+import initShader from "./initShader";
+import {resizeCanvasToDisplaySize} from "@/pages/3d/utils/webgl-utils.js";
+// import m4 from "./m4";
+import FSHADER_SOURCE from "./index.frag";
+import VSHADER_SOURCE from "./index.vert";
 
-window.onload = () => {
+import COLOR_FSHADER_SOURCE from "./color.frag";
+import COLOR_VSHADER_SOURCE from "./color.vert";
+
+import controller from "@/pages/3d/utils/controller.js";
+// import {colors, fData} from "./data";
+// import {createHtmlMatrix} from "@/pages/3d/utils/matrix.js";
+import {createHtmlMatrix, multiply} from "@/pages/3d/utils/matrix.js";
+import * as twgl from "@/pages/3d/utils/twgl";
+import * as glMatrix from "gl-matrix";
+
+
+// import "./index.less";
+
+console.log('twgl==',twgl);
+   
+window.onload = function () {
+  "use strict";
+
   const v3 = twgl.v3;
   const m4 = twgl.m4;
 
@@ -12,13 +34,25 @@ window.onload = () => {
   var scale = 1;
 
   function main() {
+     
     // Get A WebGL context
-    /** @type {HTMLCanvasElement} */
+ 
     var canvas = document.querySelector("#canvas");
+
+    console.log('canvas==',canvas);
+ 
     var gl = canvas.getContext("webgl");
     if (!gl) {
       return;
     }
+
+
+    // let a=1;
+    // if(a){
+    //   return;
+    // }
+
+ 
 
     const darkColors = {
       lines: [1, 1, 1, 1]
@@ -58,12 +92,21 @@ window.onload = () => {
       ]
     };
 
+
+//     import COLOR_FSHADER_SOURCE from "./color.frag";
+// import COLOR_VSHADER_SOURCE from "./color.vert";
+
     // 颜色
     // 创建Program 返回 program
-    var vertexColorProgramInfo = twgl.createProgramInfo(gl, [
-      "vertexColorVertexShader",
-      "vertexColorFragmentShader"
+    var vertexColorProgramInfo = initShader(gl, [
+      "COLOR_FSHADER_SOURCE",
+      "COLOR_VSHADER_SOURCE"
     ]);
+
+
+  // 创建Program 返回 program
+  // var colorProgramInfo = initShader(gl, VSHADER_SOURCE, FSHADER_SOURCE);
+
 
     // 创建 Buffer
     var wireCubeBufferInfo = twgl.createBufferInfoFromArrays(
@@ -92,7 +135,6 @@ window.onload = () => {
         1,
         1,
         1,
-
         ...colors.lines,
         ...colors.lines,
         ...colors.lines,
@@ -112,8 +154,6 @@ window.onload = () => {
       "baseVertexShader",
       "colorFragmentShader"
     ]);
-
-  
 
     // *创建立方体的顶点和索引。
     var cubeArrays = twgl.primitives.createCubeVertices(2);
@@ -192,71 +232,71 @@ window.onload = () => {
       ],
       color: {
         numComponents: 3,
-        data: new Uint8Array([
-          // left column front
-          200, 70, 120, 200, 70, 120, 200, 70, 120, 200, 70, 120, 200, 70, 120,
-          200, 70, 120,
+        // data: new Uint8Array([
+        //   // left column front
+        //   200, 70, 120, 200, 70, 120, 200, 70, 120, 200, 70, 120, 200, 70, 120,
+        //   200, 70, 120,
 
-          // top rung front
-          200, 70, 120, 200, 70, 120, 200, 70, 120, 200, 70, 120, 200, 70, 120,
-          200, 70, 120,
+        //   // top rung front
+        //   200, 70, 120, 200, 70, 120, 200, 70, 120, 200, 70, 120, 200, 70, 120,
+        //   200, 70, 120,
 
-          // middle rung front
-          200, 70, 120, 200, 70, 120, 200, 70, 120, 200, 70, 120, 200, 70, 120,
-          200, 70, 120,
+        //   // middle rung front
+        //   200, 70, 120, 200, 70, 120, 200, 70, 120, 200, 70, 120, 200, 70, 120,
+        //   200, 70, 120,
 
-          // left column back
-          80, 70, 200, 80, 70, 200, 80, 70, 200, 80, 70, 200, 80, 70, 200, 80,
-          70, 200,
+        //   // left column back
+        //   80, 70, 200, 80, 70, 200, 80, 70, 200, 80, 70, 200, 80, 70, 200, 80,
+        //   70, 200,
 
-          // top rung back
-          80, 70, 200, 80, 70, 200, 80, 70, 200, 80, 70, 200, 80, 70, 200, 80,
-          70, 200,
+        //   // top rung back
+        //   80, 70, 200, 80, 70, 200, 80, 70, 200, 80, 70, 200, 80, 70, 200, 80,
+        //   70, 200,
 
-          // middle rung back
-          80, 70, 200, 80, 70, 200, 80, 70, 200, 80, 70, 200, 80, 70, 200, 80,
-          70, 200,
+        //   // middle rung back
+        //   80, 70, 200, 80, 70, 200, 80, 70, 200, 80, 70, 200, 80, 70, 200, 80,
+        //   70, 200,
 
-          // top
-          70, 200, 210, 70, 200, 210, 70, 200, 210, 70, 200, 210, 70, 200, 210,
-          70, 200, 210,
+        //   // top
+        //   70, 200, 210, 70, 200, 210, 70, 200, 210, 70, 200, 210, 70, 200, 210,
+        //   70, 200, 210,
 
-          // top rung right
-          200, 200, 70, 200, 200, 70, 200, 200, 70, 200, 200, 70, 200, 200, 70,
-          200, 200, 70,
+        //   // top rung right
+        //   200, 200, 70, 200, 200, 70, 200, 200, 70, 200, 200, 70, 200, 200, 70,
+        //   200, 200, 70,
 
-          // under top rung
-          210, 100, 70, 210, 100, 70, 210, 100, 70, 210, 100, 70, 210, 100, 70,
-          210, 100, 70,
+        //   // under top rung
+        //   210, 100, 70, 210, 100, 70, 210, 100, 70, 210, 100, 70, 210, 100, 70,
+        //   210, 100, 70,
 
-          // between top rung and middle
-          210, 160, 70, 210, 160, 70, 210, 160, 70, 210, 160, 70, 210, 160, 70,
-          210, 160, 70,
+        //   // between top rung and middle
+        //   210, 160, 70, 210, 160, 70, 210, 160, 70, 210, 160, 70, 210, 160, 70,
+        //   210, 160, 70,
 
-          // top of middle rung
-          70, 180, 210, 70, 180, 210, 70, 180, 210, 70, 180, 210, 70, 180, 210,
-          70, 180, 210,
+        //   // top of middle rung
+        //   70, 180, 210, 70, 180, 210, 70, 180, 210, 70, 180, 210, 70, 180, 210,
+        //   70, 180, 210,
 
-          // right of middle rung
-          100, 70, 210, 100, 70, 210, 100, 70, 210, 100, 70, 210, 100, 70, 210,
-          100, 70, 210,
+        //   // right of middle rung
+        //   100, 70, 210, 100, 70, 210, 100, 70, 210, 100, 70, 210, 100, 70, 210,
+        //   100, 70, 210,
 
-          // bottom of middle rung.
-          76, 210, 100, 76, 210, 100, 76, 210, 100, 76, 210, 100, 76, 210, 100,
-          76, 210, 100,
+        //   // bottom of middle rung.
+        //   76, 210, 100, 76, 210, 100, 76, 210, 100, 76, 210, 100, 76, 210, 100,
+        //   76, 210, 100,
 
-          // right of bottom
-          140, 210, 80, 140, 210, 80, 140, 210, 80, 140, 210, 80, 140, 210, 80,
-          140, 210, 80,
+        //   // right of bottom
+        //   140, 210, 80, 140, 210, 80, 140, 210, 80, 140, 210, 80, 140, 210, 80,
+        //   140, 210, 80,
 
-          // bottom
-          90, 130, 110, 90, 130, 110, 90, 130, 110, 90, 130, 110, 90, 130, 110,
-          90, 130, 110,
+        //   // bottom
+        //   90, 130, 110, 90, 130, 110, 90, 130, 110, 90, 130, 110, 90, 130, 110,
+        //   90, 130, 110,
 
-          // left side
-          160, 160, 220, 160, 160, 220, 160, 160, 220, 160, 160, 220, 160, 160,
-          220, 160, 160, 220
-        ])
+        //   // left side
+        //   160, 160, 220, 160, 160, 220, 160, 160, 220, 160, 160, 220, 160, 160,
+        //   220, 160, 160, 220
+        // ])
       }
     });
 
@@ -326,10 +366,29 @@ window.onload = () => {
       zPosition = ui.value;
     }
 
-    // webglLessonsUI.setupSlider("#fieldOfView", {value: fieldOfView, slide: updateFieldOfView, max: 179});
-    // webglLessonsUI.setupSlider("#zNear", {value: zNear, slide: updateZNear, min: 1, max: 50});
-    // webglLessonsUI.setupSlider("#zFar", {value: zFar, slide: updateZFar, min: 1, max: 50});
-    // webglLessonsUI.setupSlider("#zPosition", {value: zPosition, slide: updateZPosition, min: -60, max: 0});
+    // webglLessonsUI.setupSlider("#fieldOfView", {
+    //   value: fieldOfView,
+    //   slide: updateFieldOfView,
+    //   max: 179
+    // });
+    // webglLessonsUI.setupSlider("#zNear", {
+    //   value: zNear,
+    //   slide: updateZNear,
+    //   min: 1,
+    //   max: 50
+    // });
+    // webglLessonsUI.setupSlider("#zFar", {
+    //   value: zFar,
+    //   slide: updateZFar,
+    //   min: 1,
+    //   max: 50
+    // });
+    // webglLessonsUI.setupSlider("#zPosition", {
+    //   value: zPosition,
+    //   slide: updateZPosition,
+    //   min: -60,
+    //   max: 0
+    // });
 
     // 渲染
     function render(time) {
@@ -383,7 +442,6 @@ window.onload = () => {
           m4.rotateX(world, Math.PI / 4, world);
           m4.rotateZ(world, Math.PI / 4, world);
           m4.scale(world, [cubeScale, cubeScale, cubeScale], world);
-
           m4.multiply(viewProjection, world, worldViewProjection);
 
           m4.multiply(exampleProjection, world, exampleWorldViewProjection);
@@ -398,7 +456,6 @@ window.onload = () => {
         m4.rotateY(world, rotation[1], world);
         m4.rotateZ(world, rotation[2], world);
         m4.multiply(viewProjection, world, worldViewProjection);
-
         m4.multiply(exampleProjection, world, exampleWorldViewProjection);
         twgl.setBuffersAndAttributes(gl, colorProgramInfo, fBufferInfo);
         twgl.setUniforms(colorProgramInfo, sceneCubeUniforms);
@@ -528,3 +585,4 @@ window.onload = () => {
 
   main();
 };
+ 

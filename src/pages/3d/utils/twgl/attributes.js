@@ -20,21 +20,21 @@
  * DEALINGS IN THE SOFTWARE.
  */
 
-import * as typedArrays from './typedarrays.js';
-import * as helper from './helper.js';
+import * as typedArrays from "./typedarrays.js";
+import * as helper from "./helper.js";
 
-const STATIC_DRAW                  = 0x88e4;
-const ARRAY_BUFFER                 = 0x8892;
-const ELEMENT_ARRAY_BUFFER         = 0x8893;
-const BUFFER_SIZE                  = 0x8764;
+const STATIC_DRAW = 0x88e4;
+const ARRAY_BUFFER = 0x8892;
+const ELEMENT_ARRAY_BUFFER = 0x8893;
+const BUFFER_SIZE = 0x8764;
 
-const BYTE                         = 0x1400;
-const UNSIGNED_BYTE                = 0x1401;
-const SHORT                        = 0x1402;
-const UNSIGNED_SHORT               = 0x1403;
-const INT                          = 0x1404;
-const UNSIGNED_INT                 = 0x1405;
-const FLOAT                        = 0x1406;
+const BYTE = 0x1400;
+const UNSIGNED_BYTE = 0x1401;
+const SHORT = 0x1402;
+const UNSIGNED_SHORT = 0x1403;
+const INT = 0x1404;
+const UNSIGNED_INT = 0x1405;
+const FLOAT = 0x1406;
 
 /**
  * Low level attribute and buffer related functions
@@ -52,9 +52,9 @@ const FLOAT                        = 0x1406;
  */
 
 // make sure we don't see a global gl
-const gl = undefined;  /* eslint-disable-line */
+const gl = undefined; /* eslint-disable-line */
 const defaults = {
-  attribPrefix: "",
+  attribPrefix: ""
 };
 
 /**
@@ -118,8 +118,12 @@ function isIndices(name) {
 // This is really just a guess. Though I can't really imagine using
 // anything else? Maybe for some compression?
 function getNormalizationForTypedArrayType(typedArrayType) {
-  if (typedArrayType === Int8Array)    { return true; }  // eslint-disable-line
-  if (typedArrayType === Uint8Array)   { return true; }  // eslint-disable-line
+  if (typedArrayType === Int8Array) {
+    return true;
+  } // eslint-disable-line
+  if (typedArrayType === Uint8Array) {
+    return true;
+  } // eslint-disable-line
   return false;
 }
 
@@ -137,18 +141,24 @@ function guessNumComponentsFromName(name, length) {
   } else if (colorRE.test(name)) {
     numComponents = 4;
   } else {
-    numComponents = 3;  // position, normals, indices ...
+    numComponents = 3; // position, normals, indices ...
   }
 
   if (length % numComponents > 0) {
-    throw new Error(`Can not guess numComponents for attribute '${name}'. Tried ${numComponents} but ${length} values is not evenly divisible by ${numComponents}. You should specify it.`);
+    throw new Error(
+      `Can not guess numComponents for attribute '${name}'. Tried ${numComponents} but ${length} values is not evenly divisible by ${numComponents}. You should specify it.`
+    );
   }
 
   return numComponents;
 }
 
 function getNumComponents(array, arrayName, numValues) {
-  return array.numComponents || array.size || guessNumComponentsFromName(arrayName, numValues || getArray(array).length);
+  return (
+    array.numComponents ||
+    array.size ||
+    guessNumComponentsFromName(arrayName, numValues || getArray(array).length)
+  );
 }
 
 function makeTypedArray(array, name) {
@@ -162,11 +172,13 @@ function makeTypedArray(array, name) {
 
   if (Array.isArray(array)) {
     array = {
-      data: array,
+      data: array
     };
   }
 
-  let Type = array.type ? typedArrayTypeFromGLTypeOrTypedArrayCtor(array.type) : undefined;
+  let Type = array.type
+    ? typedArrayTypeFromGLTypeOrTypedArrayCtor(array.type)
+    : undefined;
   if (!Type) {
     if (isIndices(name)) {
       Type = Uint16Array;
@@ -178,27 +190,29 @@ function makeTypedArray(array, name) {
 }
 
 function glTypeFromGLTypeOrTypedArrayType(glTypeOrTypedArrayCtor) {
-  return typeof glTypeOrTypedArrayCtor === 'number'
-      ? glTypeOrTypedArrayCtor
-      : glTypeOrTypedArrayCtor ? typedArrays.getGLTypeForTypedArrayType(glTypeOrTypedArrayCtor) : FLOAT;
+  return typeof glTypeOrTypedArrayCtor === "number"
+    ? glTypeOrTypedArrayCtor
+    : glTypeOrTypedArrayCtor
+    ? typedArrays.getGLTypeForTypedArrayType(glTypeOrTypedArrayCtor)
+    : FLOAT;
 }
 
 function typedArrayTypeFromGLTypeOrTypedArrayCtor(glTypeOrTypedArrayCtor) {
-  return typeof glTypeOrTypedArrayCtor === 'number'
-      ? typedArrays.getTypedArrayTypeForGLType(glTypeOrTypedArrayCtor)
-      : glTypeOrTypedArrayCtor || Float32Array;
+  return typeof glTypeOrTypedArrayCtor === "number"
+    ? typedArrays.getTypedArrayTypeForGLType(glTypeOrTypedArrayCtor)
+    : glTypeOrTypedArrayCtor || Float32Array;
 }
 
-function attribBufferFromBuffer(gl, array/*, arrayName */) {
+function attribBufferFromBuffer(gl, array /*, arrayName */) {
   return {
     buffer: array.buffer,
-    numValues: 2 * 3 * 4,  // safely divided by 2, 3, 4
+    numValues: 2 * 3 * 4, // safely divided by 2, 3, 4
     type: glTypeFromGLTypeOrTypedArrayType(array.type),
-    arrayType: typedArrayTypeFromGLTypeOrTypedArrayCtor(array.type),
+    arrayType: typedArrayTypeFromGLTypeOrTypedArrayCtor(array.type)
   };
 }
 
-function attribBufferFromSize(gl, array/*, arrayName*/) {
+function attribBufferFromSize(gl, array /*, arrayName*/) {
   const numValues = array.data || array;
   const arrayType = typedArrayTypeFromGLTypeOrTypedArrayCtor(array.type);
   const numBytes = numValues * arrayType.BYTES_PER_ELEMENT;
@@ -209,7 +223,7 @@ function attribBufferFromSize(gl, array/*, arrayName*/) {
     buffer,
     numValues,
     type: typedArrays.getGLTypeForTypedArrayType(arrayType),
-    arrayType,
+    arrayType
   };
 }
 
@@ -217,9 +231,14 @@ function attribBufferFromArrayLike(gl, array, arrayName) {
   const typedArray = makeTypedArray(array, arrayName);
   return {
     arrayType: typedArray.constructor,
-    buffer: createBufferFromTypedArray(gl, typedArray, undefined, array.drawType),
+    buffer: createBufferFromTypedArray(
+      gl,
+      typedArray,
+      undefined,
+      array.drawType
+    ),
     type: typedArrays.getGLTypeForTypedArray(typedArray),
-    numValues: 0,
+    numValues: 0
   };
 }
 
@@ -338,7 +357,6 @@ function attribBufferFromArrayLike(gl, array, arrayName) {
  * @memberOf module:twgl
  */
 
-
 /**
  * Creates a set of attribute data and WebGLBuffers from set of arrays
  *
@@ -397,42 +415,96 @@ function attribBufferFromArrayLike(gl, array, arrayName) {
  * @return {Object.<string, module:twgl.AttribInfo>} the attribs
  * @memberOf module:twgl/attributes
  */
-function createAttribsFromArrays(gl, arrays) {
-  const attribs = {};
-  Object.keys(arrays).forEach(function(arrayName) {
-   // 
-    if (!isIndices(arrayName)) {
 
+/*
+// 线立方阵列
+var wireCubeArrays = {
+  position: [  // 顶点位置
+      -1,  1, -1,
+       1,  1, -1,
+       1, -1, -1,
+      -1, -1, -1,
+
+      -1,  1,  1,
+       1,  1,  1,
+       1, -1,  1,
+      -1, -1,  1,
+  ],
+  color: [  // 颜色
+      1, 1, 1, 1,
+      1, 1, 1, 1,
+      1, 1, 1, 1,
+      1, 1, 1, 1,
+
+      1, 1, 1, 1,
+      1, 1, 1, 1,
+      1, 1, 1, 1,
+      1, 1, 1, 1,
+  ],
+  indices: [ //指数
+      0, 1, 1, 2, 2, 3, 3, 0,
+      4, 5, 5, 6, 6, 7, 7, 4,
+      0, 4, 1, 5, 2, 6, 3, 7,
+  ],
+};
+
+*/
+function createAttribsFromArrays(
+  gl,
+  arrays //参数
+) {
+  const attribs = {};
+
+  // 循环 参数
+  Object.keys(arrays).forEach(function (arrayName) {
+    // 如果 name === "indices";
+    if (!isIndices(arrayName)) {
+      // 获取到数组参数
       const array = arrays[arrayName];
-      const attribName = array.attrib || array.name || array.attribName || (defaults.attribPrefix + arrayName);
+      const attribName =
+        array.attrib ||
+        array.name ||
+        array.attribName ||
+        defaults.attribPrefix + arrayName;
       if (array.value) {
-        if (!Array.isArray(array.value) && !typedArrays.isArrayBuffer(array.value)) {
-          throw new Error('array.value is not array or typedarray');
+        if (
+          !Array.isArray(array.value) &&
+          !typedArrays.isArrayBuffer(array.value)
+        ) {
+          throw new Error("array.value is not array or typedarray");
         }
         attribs[attribName] = {
-          value: array.value,
+          value: array.value
         };
       } else {
         let fn;
         if (array.buffer && array.buffer instanceof WebGLBuffer) {
           fn = attribBufferFromBuffer;
-        } else if (typeof array === "number" || typeof array.data === "number") {
+        } else if (
+          typeof array === "number" ||
+          typeof array.data === "number"
+        ) {
           fn = attribBufferFromSize;
         } else {
           fn = attribBufferFromArrayLike;
         }
+        
         const {buffer, type, numValues, arrayType} = fn(gl, array, arrayName);
-        const normalization = array.normalize !== undefined ? array.normalize : getNormalizationForTypedArrayType(arrayType);
+
+        const normalization =
+          array.normalize !== undefined
+            ? array.normalize
+            : getNormalizationForTypedArrayType(arrayType);
         const numComponents = getNumComponents(array, arrayName, numValues);
         attribs[attribName] = {
-          buffer:        buffer,
+          buffer: buffer,
           numComponents: numComponents,
-          type:          type,
-          normalize:     normalization,
-          stride:        array.stride || 0,
-          offset:        array.offset || 0,
-          divisor:       array.divisor === undefined ? undefined : array.divisor,
-          drawType:      array.drawType,
+          type: type,
+          normalize: normalization,
+          stride: array.stride || 0,
+          offset: array.offset || 0,
+          divisor: array.divisor === undefined ? undefined : array.divisor,
+          drawType: array.drawType
         };
       }
     }
@@ -484,23 +556,29 @@ function setAttribInfoBufferFromArray(gl, attribInfo, array, offset) {
     gl.bindBuffer(ARRAY_BUFFER, attribInfo.buffer);
     gl.bufferSubData(ARRAY_BUFFER, offset, array);
   } else {
-    setBufferFromTypedArray(gl, ARRAY_BUFFER, attribInfo.buffer, array, attribInfo.drawType);
+    setBufferFromTypedArray(
+      gl,
+      ARRAY_BUFFER,
+      attribInfo.buffer,
+      array,
+      attribInfo.drawType
+    );
   }
 }
 
 function getBytesPerValueForGLType(gl, type) {
-  if (type === BYTE)           return 1;  // eslint-disable-line
-  if (type === UNSIGNED_BYTE)  return 1;  // eslint-disable-line
-  if (type === SHORT)          return 2;  // eslint-disable-line
-  if (type === UNSIGNED_SHORT) return 2;  // eslint-disable-line
-  if (type === INT)            return 4;  // eslint-disable-line
-  if (type === UNSIGNED_INT)   return 4;  // eslint-disable-line
-  if (type === FLOAT)          return 4;  // eslint-disable-line
+  if (type === BYTE) return 1; // eslint-disable-line
+  if (type === UNSIGNED_BYTE) return 1; // eslint-disable-line
+  if (type === SHORT) return 2; // eslint-disable-line
+  if (type === UNSIGNED_SHORT) return 2; // eslint-disable-line
+  if (type === INT) return 4; // eslint-disable-line
+  if (type === UNSIGNED_INT) return 4; // eslint-disable-line
+  if (type === FLOAT) return 4; // eslint-disable-line
   return 0;
 }
 
 // Tries to get the number of elements from a set of arrays.
-const positionKeys = ['position', 'positions', 'a_position'];
+const positionKeys = ["position", "positions", "a_position"];
 function getNumElementsFromNonIndexedArrays(arrays) {
   let key;
   let ii;
@@ -516,12 +594,14 @@ function getNumElementsFromNonIndexedArrays(arrays) {
   const array = arrays[key];
   const length = getArray(array).length;
   if (length === undefined) {
-    return 1;   // There's no arrays
+    return 1; // There's no arrays
   }
   const numComponents = getNumComponents(array, key);
   const numElements = length / numComponents;
   if (length % numComponents > 0) {
-    throw new Error(`numComponents ${numComponents} not correct for length ${length}`);
+    throw new Error(
+      `numComponents ${numComponents} not correct for length ${length}`
+    );
   }
   return numElements;
 }
@@ -556,7 +636,9 @@ function getNumElementsFromAttributes(gl, attribs) {
   // TODO: check stride
   const numElements = totalElements / numComponents;
   if (numElements % 1 !== 0) {
-    throw new Error(`numComponents ${numComponents} not correct for length ${length}`);
+    throw new Error(
+      `numComponents ${numComponents} not correct for length ${length}`
+    );
   }
   return numElements;
 }
@@ -667,21 +749,30 @@ function getNumElementsFromAttributes(gl, attribs) {
  * @memberOf module:twgl/attributes
  */
 
-
-// 
+// 创建buffer
 function createBufferInfoFromArrays(gl, arrays, srcBufferInfo) {
-
   const newAttribs = createAttribsFromArrays(gl, arrays);
   const bufferInfo = Object.assign({}, srcBufferInfo ? srcBufferInfo : {});
-  bufferInfo.attribs = Object.assign({}, srcBufferInfo ? srcBufferInfo.attribs : {}, newAttribs);
+  bufferInfo.attribs = Object.assign(
+    {},
+    srcBufferInfo ? srcBufferInfo.attribs : {},
+    newAttribs
+  );
   const indices = arrays.indices;
   if (indices) {
     const newIndices = makeTypedArray(indices, "indices");
-    bufferInfo.indices = createBufferFromTypedArray(gl, newIndices, ELEMENT_ARRAY_BUFFER);
+    bufferInfo.indices = createBufferFromTypedArray(
+      gl,
+      newIndices,
+      ELEMENT_ARRAY_BUFFER
+    );
     bufferInfo.numElements = newIndices.length;
     bufferInfo.elementType = typedArrays.getGLTypeForTypedArray(newIndices);
   } else if (!bufferInfo.numElements) {
-    bufferInfo.numElements = getNumElementsFromAttributes(gl, bufferInfo.attribs);
+    bufferInfo.numElements = getNumElementsFromAttributes(
+      gl,
+      bufferInfo.attribs
+    );
   }
 
   return bufferInfo;
@@ -744,15 +835,18 @@ function createBufferFromArray(gl, array, arrayName) {
  * @memberOf module:twgl/attributes
  */
 function createBuffersFromArrays(gl, arrays) {
-  const buffers = { };
-  Object.keys(arrays).forEach(function(key) {
+  const buffers = {};
+  Object.keys(arrays).forEach(function (key) {
     buffers[key] = createBufferFromArray(gl, arrays[key], key);
   });
 
   // Ugh!
   if (arrays.indices) {
     buffers.numElements = arrays.indices.length;
-    buffers.elementType = typedArrays.getGLTypeForTypedArray(makeTypedArray(arrays.indices), 'indices');
+    buffers.elementType = typedArrays.getGLTypeForTypedArray(
+      makeTypedArray(arrays.indices),
+      "indices"
+    );
   } else {
     buffers.numElements = getNumElementsFromNonIndexedArrays(arrays);
   }
@@ -767,11 +861,8 @@ export {
   createBufferFromTypedArray,
   createBufferInfoFromArrays,
   setAttribInfoBufferFromArray,
-
   setAttributePrefix,
-
   setDefaults as setAttributeDefaults_,
   getNumComponents as getNumComponents_,
-  getArray as getArray_,
+  getArray as getArray_
 };
-
