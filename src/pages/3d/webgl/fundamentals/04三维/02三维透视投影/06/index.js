@@ -1,6 +1,6 @@
 import * as twgl from "@/pages/3d/utils/twgl";
 import eyeIcon from "static/image/eye-icon.png";
-// import initShader from "./initShader";
+import initShader from "./initShader";
 import FSHADER_SOURCE from "./index.frag";
 import VSHADER_SOURCE from "./index.vert";
 
@@ -82,14 +82,53 @@ window.onload = () => {
       ]
     };
 
-    
     // 颜色
-    // 创建Program 返回 program
-    var vertexColorProgramInfo = twgl.createProgramInfo(gl, [
-      "vertexColorVertexShader",
-      "vertexColorFragmentShader"
-    ]);
+    // // 创建Program 返回 program
+    // var vertexColorProgramInfo = twgl.createProgramInfo(gl, [
+    //   "vertexColorVertexShader",
+    //   "vertexColorFragmentShader"
+    // ]);
 
+    // 创建 ProgramFromSources
+    // const vertexColorProgramInfo = twgl.createProgramInfo(
+    //   gl,
+    //   [COLOR_VSHADER_SOURCE, COLOR_FSHADER_SOURCE]
+    //   // progOptions
+    // );
+
+    // import COLOR_FSHADER_SOURCE from "./color.frag";
+    // import COLOR_VSHADER_SOURCE from "./color.vert";
+
+    // 创建 ProgramFromSources
+    // const program = twgl.createProgramFromSources(
+    //   gl,
+    //   [COLOR_VSHADER_SOURCE, COLOR_FSHADER_SOURCE]
+    //   // progOptions
+    // );
+
+    // initShader
+
+    // 创建 ProgramFromSources
+    const program = initShader(
+      gl,
+      COLOR_VSHADER_SOURCE,
+      COLOR_FSHADER_SOURCE
+      // progOptions
+    );
+
+    /*
+  返回一个对象 对象包含
+  program
+  uniformSetters    uniform中有uniform变量设置函数
+  attribSetters attrib中有attrib变量设置函数
+  */
+    const vertexColorProgramInfo = twgl.createProgramInfoFromProgram(
+      gl,
+      program
+    );
+
+    console.log("vertexColorProgramInfo======", vertexColorProgramInfo);
+    debugger;
     // 颜色
     // 创建Program 返回 program
     // var vertexColorProgramInfo = initShader(gl,
@@ -140,6 +179,12 @@ window.onload = () => {
     );
 
     // 创建Program 返回 program
+  /*
+  返回一个对象 对象包含
+  program
+  uniformSetters    uniform中有uniform变量设置函数
+  attribSetters     attrib中有attrib变量设置函数
+  */
     var colorProgramInfo = twgl.createProgramInfo(gl, [
       "baseVertexShader",
       "colorFragmentShader"

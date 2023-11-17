@@ -1,5 +1,6 @@
 /*
  * Copyright 2019 Gregg Tavares
+
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
@@ -333,6 +334,7 @@ function samplerArraySetter(gl, type, unit, location, size) {
       };
 }
 
+// typeMap=[type] 设置一些枚举值
 typeMap[FLOAT] = {
   Type: Float32Array,
   size: 4,
@@ -972,9 +974,13 @@ function deleteProgramAndShaders(gl, program, notThese) {
 
 const wait = (ms = 0) => new Promise((resolve) => setTimeout(resolve, ms));
 
+// 创建Program 这个才是底层webgl 创建Program
+function createProgramNoCheck(
+  gl,
+  shaders, // vertex 和 fragment
+  programOptions
+) {
   // 创建Program
-function createProgramNoCheck(gl, shaders, programOptions) {
-    // 创建Program
   const program = gl.createProgram();
   const {attribLocations, transformFeedbackVaryings, transformFeedbackMode} =
     getProgramOptions(programOptions);
@@ -1008,8 +1014,6 @@ function createProgramNoCheck(gl, shaders, programOptions) {
       gl.attachShader(program, shader);
     }
   }
-
-
 
   // 如果有 attribLocations 则绑定属性
   // 一般用函数glBindAttribLocation（）来绑定每个attribute变量的位置，
@@ -1062,27 +1066,31 @@ function createProgramNoCheck(gl, shaders, programOptions) {
  * @memberOf module:twgl/programs
  */
 
-  // 创建Program
+// 创建Program
 function createProgram(
   gl,
-  shaders,
+  shaders, // vertex 和 fragment
   opt_attribs,
   opt_locations,
   opt_errorCallback
 ) {
   // This code is really convoluted, because it may or may not be async
   // Maybe it would be better to have a separate function
-
   const progOptions = getProgramOptions(
     opt_attribs,
     opt_locations,
     opt_errorCallback
   );
 
+  // vertex 和 fragment
   const shaderSet = new Set(shaders);
 
-    // 创建Program
-  const program = createProgramNoCheck(gl, shaders, progOptions);
+  // 创建Program 这个才是底层webgl 创建Program
+  const program = createProgramNoCheck(
+    gl,
+    shaders, // 创建Program  // vertex 和 fragment
+    progOptions
+  );
 
   function hasErrors(gl, program) {
     const errors = getProgramErrors(gl, program, progOptions.errorCallback);
@@ -1236,7 +1244,7 @@ function getProgramErrors(gl, program, errFn) {
  * @return {WebGLProgram?} the created program or null if error or a callback was provided.
  * @memberOf module:twgl/programs
  */
-  // 创建Program
+// 创建Program
 function createProgramFromScripts(
   gl,
   shaderScriptIds,
@@ -1257,7 +1265,7 @@ function createProgramFromScripts(
     }
     shaders.push(shaderScript.text);
   }
-    // 创建Program
+  // 创建Program
   return createProgram(gl, shaders, progOptions);
 }
 
@@ -1285,14 +1293,15 @@ function createProgramFromScripts(
  */
 function createProgramFromSources(
   gl,
-  shaderSources,
+  shaderSources, // vertex 和 fragment
   opt_attribs,
   opt_locations,
   opt_errorCallback
 ) {
+  // 创建  createProgram
   return createProgram(
     gl,
-    shaderSources,
+    shaderSources, // vertex 和 fragment
     opt_attribs,
     opt_locations,
     opt_errorCallback
@@ -1316,6 +1325,8 @@ function createProgramFromSources(
  * @return {bool} true if it's reserved
  * @private
  */
+
+// 匹配 开头是  "gl_" 或者 是  "webgl_" 开头的
 function isBuiltIn(info) {
   const name = info.name;
   return name.startsWith("gl_") || name.startsWith("webgl_");
@@ -1323,16 +1334,35 @@ function isBuiltIn(info) {
 
 const tokenRE = /(\.|\[|]|\w+)/g;
 const isDigit = (s) => s >= "0" && s <= "9";
-function addSetterToUniformTree(fullPath, setter, node, uniformSetters) {
+
+function addSetterToUniformTree(
+  fullPath, //  u_color
+  setter, // 设置方法
+  node, //  对象  uniformTree
+  uniformSetters // 存储  uniform  对象{} 设置方法
+) {
+  console.log("addSetterToUniformTree===========");
+
+  console.log("fullPath===========", fullPath);
+  console.log("setter===========", setter);
+  console.log("node===========", node);
+  console.log("uniformSetters===========", uniformSetters);
+
   const tokens = fullPath.split(tokenRE).filter((s) => s !== "");
   let tokenNdx = 0;
   let path = "";
 
+  console.log("tokens===========", tokens);
+
+  // 不断循环
   for (;;) {
     const token = tokens[tokenNdx++]; // has to be name or number
     path += token;
+    // 0-9
     const isArrayIndex = isDigit(token[0]);
+
     const accessor = isArrayIndex ? parseInt(token) : token;
+
     if (isArrayIndex) {
       path += tokens[tokenNdx++]; // skip ']'
     }
@@ -1346,6 +1376,7 @@ function addSetterToUniformTree(fullPath, setter, node, uniformSetters) {
       const child = node[accessor] || (isArray ? [] : {});
       node[accessor] = child;
       node = child;
+
       uniformSetters[path] =
         uniformSetters[path] ||
         (function (node) {
@@ -1353,6 +1384,7 @@ function addSetterToUniformTree(fullPath, setter, node, uniformSetters) {
             setUniformTree(node, value);
           };
         })(child);
+
       path += token;
     }
   }
@@ -1369,6 +1401,8 @@ function addSetterToUniformTree(fullPath, setter, node, uniformSetters) {
  * @returns {Object.<string, function>} an object with a setter by name for each uniform
  * @memberOf module:twgl/programs
  */
+
+//  自动获取到 webgl中的 // vertex    uniform 变量 并且根据 uniform变量数据格式返回一个 可以设置uniform 变量值的函数
 function createUniformSetters(gl, program) {
   let textureUnit = 0;
 
@@ -1379,19 +1413,58 @@ function createUniformSetters(gl, program) {
    * @param {WebGLUniformInfo} uniformInfo
    * @returns {function} the created setter.
    */
+
+  /*
+     {
+      name: "u_color",
+      size: 1,
+      type: 35666
+     }
+    */
+
+  // 为给定程序的统一对象创建一个setter方法
+  // *位置嵌入setter中。
+  // 命令模式 根据type 获取到  一个set 方法 uniform1fv 比如
+  // 自动获取到 webgl中的 // vertex    uniform 变量 并且根据 uniform变量数据格式返回一个 可以设置uniform 变量值的函数
   function createUniformSetter(program, uniformInfo, location) {
+    // 如果  uniform 名称的 结尾为 [0]
     const isArray = uniformInfo.name.endsWith("[0]");
+    // 获取  uniform 类型
     const type = uniformInfo.type;
+    console.log("type=======", type);
+
+    /*
+    {
+      name: "u_color",
+      size: 1,
+      type: 35666
+     }
+    
+    */
+
+    // 命令模式 根据type 获取到  一个set 方法 uniform1fv 比如
     const typeInfo = typeMap[type];
+
+    console.log("typeMap=======", typeMap);
+    // 如果获取不到 类型  则报错
+
     if (!typeInfo) {
       throw new Error(`unknown type: 0x${type.toString(16)}`); // we should never get here.
     }
     let setter;
+
+    console.log("typeInfo=====", typeInfo);
+    debugger;
+    // 内置的配置
     if (typeInfo.bindPoint) {
       // it's a sampler
       const unit = textureUnit;
       textureUnit += uniformInfo.size;
       if (isArray) {
+        console.log("typeInfo.arraySetter=====", typeInfo.arraySetter);
+        debugger;
+        // 设置值
+        // 一个set 方法 uniform1fv 比如
         setter = typeInfo.arraySetter(
           gl,
           type,
@@ -1400,12 +1473,15 @@ function createUniformSetters(gl, program) {
           uniformInfo.size
         );
       } else {
+        // 一个set 方法 uniform1fv 比如
         setter = typeInfo.setter(gl, type, unit, location, uniformInfo.size);
       }
     } else {
       if (typeInfo.arraySetter && isArray) {
+        // 一个set 方法 uniform1fv 比如
         setter = typeInfo.arraySetter(gl, location);
       } else {
+        // 一个set 方法 uniform1fv 比如
         setter = typeInfo.setter(gl, location);
       }
     }
@@ -1415,27 +1491,62 @@ function createUniformSetters(gl, program) {
 
   const uniformSetters = {};
   const uniformTree = {};
+  //   const ACTIVE_UNIFORMS = 0x8b86;
+  //文档 https://developer.mozilla.org/en-US/docs/Web/API/WebGLRenderingContext/getProgramParameter
+
+  // const ACTIVE_UNIFORMS = 0x8b86; 返回一个GLint，指示程序中活动的统一变量的数量。
   const numUniforms = gl.getProgramParameter(program, ACTIVE_UNIFORMS);
+  console.log("ACTIVE_UNIFORMS=======", ACTIVE_UNIFORMS);
 
   for (let ii = 0; ii < numUniforms; ++ii) {
+    // WebGL API的WebGLRenderingContext.getActiveUniform()方法返回一个WebGLActiveInfo对象，
+    // 该对象包含一个统一属性的大小、类型和名称。它通常用于查询未知制服以进行调试或创建泛型库。
+    /*
+     {
+      name: "u_color",
+      size: 1,
+      type: 35666
+     }
+    */
     const uniformInfo = gl.getActiveUniform(program, ii);
+    console.log("uniformInfo-----", uniformInfo);
+    // 匹配 开头是  "gl_" 或者 是  "webgl_" 开头的
     if (isBuiltIn(uniformInfo)) {
       continue;
     }
+    // 获取 Uniform 变量 名称 比如 u_xxxx
     let name = uniformInfo.name;
+    // console.log('name=======',name);
     // remove the array suffix.
     if (name.endsWith("[0]")) {
       name = name.substr(0, name.length - 3);
     }
+
+    // js 获取到 Uniform 变量的地址
     const location = gl.getUniformLocation(program, uniformInfo.name);
-    // the uniform will have no location if it's in a uniform block
+    // the uniform will have no location if it's in a uniform block 如果制服在一个制服块中，它将没有位置
     if (location) {
+      // 创建set函数
+      // 为给定程序的统一对象创建一个setter方法
+      // *位置嵌入setter中。
+      // 命令模式 根据type 获取到  一个set 方法 uniform1fv 比如
+      // 自动获取到 webgl中的 // vertex    uniform 变量 并且根据 uniform变量数据格式返回一个 可以设置uniform 变量值的函数
       const setter = createUniformSetter(program, uniformInfo, location);
       uniformSetters[name] = setter;
-      addSetterToUniformTree(name, setter, uniformTree, uniformSetters);
+
+      // 添加设置
+      addSetterToUniformTree(
+        name, //  Uniform 名称
+        setter, // Uniform set值函数
+        uniformTree, // 树
+        uniformSetters // 存储 Uniform 对象
+      );
     }
   }
 
+  console.log("uniformSetters========", uniformSetters);
+  console.log("uniformTree========", uniformTree);
+  //  自动获取到 webgl中的 // vertex    uniform 变量 并且根据 uniform变量数据格式返回一个 可以设置uniform 变量值的函数
   return uniformSetters;
 }
 
@@ -1982,9 +2093,12 @@ function setBlockUniforms(uniformBlockInfo, values) {
   }
 }
 
+// 递归
 function setUniformTree(tree, values) {
+  // 循环 values 对象
   for (const name in values) {
     const prop = tree[name];
+    // 如果 prop是函数则执行
     if (typeof prop === "function") {
       prop(values[name]);
     } else {
@@ -2193,19 +2307,33 @@ const setUniformsAndBindTextures = setUniforms;
  * @return {Object.<string, function>} an object with a setter for each attribute by name.
  * @memberOf module:twgl/programs
  */
+
+// 自动获取到 webgl中的 // vertex    attribute 变量 并且根据 attribute  变量数据格式返回一个 可以设置 attribute 变量值的函数
 function createAttributeSetters(gl, program) {
   const attribSetters = {};
-
+  // const ACTIVE_ATTRIBUTES = 0x8b89;
+  // 获取到  numAttribs 的数量
   const numAttribs = gl.getProgramParameter(program, ACTIVE_ATTRIBUTES);
+
   for (let ii = 0; ii < numAttribs; ++ii) {
+    // 获取到 attribInfo 信息
     const attribInfo = gl.getActiveAttrib(program, ii);
+    // 匹配 开头是  "gl_" 或者 是  "webgl_" 开头的
     if (isBuiltIn(attribInfo)) {
       continue;
     }
+    // 获取到索引
     const index = gl.getAttribLocation(program, attribInfo.name);
+
+    // 根据信息 type 获取到set函数
     const typeInfo = attrTypeMap[attribInfo.type];
+
+    //
     const setter = typeInfo.setter(gl, index, typeInfo);
+
     setter.location = index;
+
+    // 把set函数挂载到attribSetters中
     attribSetters[attribInfo.name] = setter;
   }
 
@@ -2351,26 +2479,42 @@ function setBuffersAndAttributes(gl, programInfo, buffers) {
  * @return {module:twgl.ProgramInfo} The created ProgramInfo.
  * @memberOf module:twgl/programs
  */
+
+/*
+  返回一个对象 对象包含
+  program
+  uniformSetters    uniform中有uniform变量设置函数
+  attribSetters attrib中有attrib变量设置函数
+*/
 function createProgramInfoFromProgram(gl, program) {
+  // 自动获取到 webgl中的 // vertex    uniform 变量 并且根据 uniform变量数据格式返回一个 可以设置uniform 变量值的函数
   const uniformSetters = createUniformSetters(gl, program);
+
+  // 自动获取到 webgl中的 // vertex    attribute 变量 并且根据 attribute  变量数据格式返回一个 可以设置 attribute 变量值的函数
   const attribSetters = createAttributeSetters(gl, program);
+
   const programInfo = {
     program,
     uniformSetters,
     attribSetters
   };
 
+  // 如果他是 isWebGL2 的话
   if (utils.isWebGL2(gl)) {
+    // 从程序中创建统一块规格
     programInfo.uniformBlockSpec = createUniformBlockSpecFromProgram(
       gl,
       program
     );
+
+    // 从程序中创建统一块规格
     programInfo.transformFeedbackInfo = createTransformFeedbackInfo(
       gl,
       program
     );
   }
 
+  // 返回这个信息
   return programInfo;
 }
 
@@ -2407,13 +2551,13 @@ const notIdRE = /\s|{|}|;/;
  * @memberOf module:twgl/programs
  */
 function createProgramInfo(
-  gl,
-  shaderSources,
-  opt_attribs,
+  gl, // gl 对象
+  shaderSources, // vertex 和 fragment  [  "./index.vert",  "./index.frag"]
+  opt_attribs, //
   opt_locations,
   opt_errorCallback
 ) {
-
+  // 获取参数
   const progOptions = getProgramOptions(
     opt_attribs,
     opt_locations,
@@ -2421,8 +2565,10 @@ function createProgramInfo(
   );
 
   const errors = [];
+  // 从 script 脚本中获取  vertex 和 fragment  如果 不是 script 脚本则直接 返回
   shaderSources = shaderSources.map(function (source) {
     // Lets assume if there is no \n it's an id
+    // 我们假设如果没有\n，它就是一个id
     if (!notIdRE.test(source)) {
       // 获取 source
       const script = getElementById(source);
@@ -2453,7 +2599,11 @@ function createProgramInfo(
   }
 
   // 创建 ProgramFromSources
-  const program = createProgramFromSources(gl, shaderSources, progOptions);
+  const program = createProgramFromSources(
+    gl,
+    shaderSources, // vertex 和 fragment
+    progOptions
+  );
   if (!program) {
     return null;
   }
@@ -2533,7 +2683,7 @@ function createPrograms(gl, programSpecs, programOptions = {}) {
         Object.assign(options, spec);
       }
       shaders.forEach(noDeleteShadersSet.add, noDeleteShadersSet);
-        // 创建Program
+      // 创建Program 这个才是底层webgl 创建Program
       return [name, createProgramNoCheck(gl, shaders, options)];
     })
   );
@@ -2683,7 +2833,7 @@ export {
   createProgramAsync,
   createPrograms,
   createProgramsAsync,
-    // 创建Program
+  // 创建Program
   createProgramFromScripts,
   createProgramFromSources,
   createProgramInfo,

@@ -1,5 +1,5 @@
 function loadShader(gl, type, source) {
-  
+  console.log("loadShader");
   // Create shader object
   // 创建着色器对象
   var shader = gl.createShader(type);
@@ -11,7 +11,7 @@ function loadShader(gl, type, source) {
   }
 
   // Set the shader program
-  // 向着色器对象中填充着色器程序的源代码
+  // 向着色器对象中填充着色器程序的源代码 
   gl.shaderSource(shader, source);
 
   // Compile the shader
@@ -117,7 +117,7 @@ function initShaders(gl, vshader, fshader) {
   // 使用程序对象
   gl.useProgram(program);
   // 挂着对象属性
-  // gl.program = program;
+  gl.program = program;
 
   return program;
 }
