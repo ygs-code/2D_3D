@@ -606,15 +606,19 @@ function floatAttribSetter(gl, index) {
       gl.disableVertexAttribArray(index);
       switch (b.value.length) {
         case 4:
+          // 设置4个向量的 数据
           gl.vertexAttrib4fv(index, b.value);
           break;
         case 3:
+          // 设置3个向量的 数据
           gl.vertexAttrib3fv(index, b.value);
           break;
         case 2:
+          // 设置2个向量的 数据
           gl.vertexAttrib2fv(index, b.value);
           break;
         case 1:
+          // 设置1个向量的 数据
           gl.vertexAttrib1fv(index, b.value);
           break;
         default:
@@ -623,8 +627,17 @@ function floatAttribSetter(gl, index) {
           );
       }
     } else {
+      // 绑定buffer数据
       gl.bindBuffer(ARRAY_BUFFER, b.buffer);
+      // 连接Attrib 变量与分配给他的缓冲区对象
       gl.enableVertexAttribArray(index);
+      /*
+     
+     告诉显卡从当前绑定的缓冲区（bindBuffer() 指定的缓冲区）中读取顶点数据。
+     方法绑定当前缓冲区范围到gl.ARRAY_BUFFER,
+     成为当前顶点缓冲区对象的通用顶点属性并指定它的布局 (缓冲区对象中的偏移量)。
+
+     */
       gl.vertexAttribPointer(
         index,
         b.numComponents || b.size,
@@ -645,13 +658,21 @@ function intAttribSetter(gl, index) {
     if (b.value) {
       gl.disableVertexAttribArray(index);
       if (b.value.length === 4) {
+        // 设置4个向量的数据
         gl.vertexAttrib4iv(index, b.value);
       } else {
         throw new Error("The length of an integer constant value must be 4!");
       }
     } else {
+      // 绑定buffer数据
       gl.bindBuffer(ARRAY_BUFFER, b.buffer);
+      // 连接Attrib 变量与分配给他的缓冲区对象
       gl.enableVertexAttribArray(index);
+      /*
+          告诉显卡从当前绑定的缓冲区（bindBuffer() 指定的缓冲区）中读取顶点数据。
+           方法绑定当前缓冲区范围到gl.ARRAY_BUFFER,
+           成为当前顶点缓冲区对象的通用顶点属性并指定它的布局 (缓冲区对象中的偏移量)。
+           */
       gl.vertexAttribIPointer(
         index,
         b.numComponents || b.size,
@@ -671,6 +692,7 @@ function uintAttribSetter(gl, index) {
     if (b.value) {
       gl.disableVertexAttribArray(index);
       if (b.value.length === 4) {
+        // 设置4个向量的数据
         gl.vertexAttrib4uiv(index, b.value);
       } else {
         throw new Error(
@@ -678,8 +700,15 @@ function uintAttribSetter(gl, index) {
         );
       }
     } else {
+      // 绑定buffer
       gl.bindBuffer(ARRAY_BUFFER, b.buffer);
+      // 连接Attrib 变量与分配给他的缓冲区对象
       gl.enableVertexAttribArray(index);
+      /*
+          告诉显卡从当前绑定的缓冲区（bindBuffer() 指定的缓冲区）中读取顶点数据。
+           方法绑定当前缓冲区范围到gl.ARRAY_BUFFER,
+           成为当前顶点缓冲区对象的通用顶点属性并指定它的布局 (缓冲区对象中的偏移量)。
+           */
       gl.vertexAttribIPointer(
         index,
         b.numComponents || b.size,
@@ -699,6 +728,7 @@ function matAttribSetter(gl, index, typeInfo) {
   const count = typeInfo.count;
 
   return function (b) {
+    // 绑定buffer
     gl.bindBuffer(ARRAY_BUFFER, b.buffer);
     const numComponents = b.size || b.numComponents || defaultSize;
     const size = numComponents / count;
@@ -708,8 +738,15 @@ function matAttribSetter(gl, index, typeInfo) {
     const normalize = b.normalize || false;
     const offset = b.offset || 0;
     const rowOffset = stride / count;
+
     for (let i = 0; i < count; ++i) {
+      // 连接Attrib 变量与分配给他的缓冲区对象
       gl.enableVertexAttribArray(index + i);
+      /*
+      告诉显卡从当前绑定的缓冲区（bindBuffer() 指定的缓冲区）中读取顶点数据。
+       方法绑定当前缓冲区范围到gl.ARRAY_BUFFER,
+       成为当前顶点缓冲区对象的通用顶点属性并指定它的布局 (缓冲区对象中的偏移量)。
+       */
       gl.vertexAttribPointer(
         index + i,
         size,
@@ -2265,21 +2302,41 @@ function setUniformTree(tree, values) {
  *
  * @memberOf module:twgl/programs
  */
+
+// 设置  Uniform 值 比如 gl.uniform1fv(location, v);
 function setUniforms(setters, ...args) {
   // eslint-disable-line
   const actualSetters = setters.uniformSetters || setters;
   const numArgs = args.length;
+
   for (let aNdx = 0; aNdx < numArgs; ++aNdx) {
     const values = args[aNdx];
+
+    // 判断value 是不是数组
     if (Array.isArray(values)) {
+      /*
+      如果他是数组 需要循环一个个设置
+      比如
+       twgl.setUniforms(programInfo, {
+            lights: [
+              { intensity: 5.0, color: [1, 0, 0, 1], nearFar[0.1, 10] },
+              { intensity: 2.0, color: [0, 0, 1, 1], nearFar[0.2, 15] },
+            ],
+       });
+
+      */
+
       const numValues = values.length;
+
       for (let ii = 0; ii < numValues; ++ii) {
         setUniforms(actualSetters, values[ii]);
       }
     } else {
+      // 枚举 values 对象 设置值
       for (const name in values) {
         const setter = actualSetters[name];
         if (setter) {
+          // 设置值  gl.uniform1fv(location, v);
           setter(values[name]);
         }
       }
@@ -2441,12 +2498,45 @@ function setAttributes(setters, buffers) {
  *   or a `VertexArrayInfo` as returned from {@link module:twgl.createVertexArrayInfo}
  * @memberOf module:twgl/programs
  */
+
+/*
+       执行set函数 比如  gl.vertexAttrib4iv
+       或者：
+        1.绑定buffer数据  bindBuffer  
+            gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
+
+        2.连接 attrib 变量与分配给他的缓冲区对象
+            gl.enableVertexAttribArray(a_texcoordLocation);
+
+        3.告诉显卡从当前绑定的缓冲区（bindBuffer() 指定的缓冲区）中读取顶点数据。
+        方法绑定当前缓冲区范围到gl.ARRAY_BUFFER,
+        成为当前顶点缓冲区对象的通用顶点属性并指定它的布局 (缓冲区对象中的偏移量)。
+           gl.vertexAttribPointer(a_texcoordLocation, 4, gl.FLOAT, false, 0, 0);
+     */
 function setBuffersAndAttributes(gl, programInfo, buffers) {
   if (buffers.vertexArrayObject) {
+    /*
+     
+     告诉显卡从当前绑定的缓冲区（bindBuffer() 指定的缓冲区）中读取顶点数据。
+     方法绑定当前缓冲区范围到gl.ARRAY_BUFFER,
+     成为当前顶点缓冲区对象的通用顶点属性并指定它的布局 (缓冲区对象中的偏移量)。
+
+     */
     gl.bindVertexArray(buffers.vertexArrayObject);
   } else {
+    /*
+       执行set函数 比如  gl.vertexAttrib4iv
+       或者：
+        1.绑定buffer数据
+        2.连接Attrib 变量与分配给他的缓冲区对象
+        3.告诉显卡从当前绑定的缓冲区（bindBuffer() 指定的缓冲区）中读取顶点数据。
+        方法绑定当前缓冲区范围到gl.ARRAY_BUFFER,
+        成为当前顶点缓冲区对象的通用顶点属性并指定它的布局 (缓冲区对象中的偏移量)。
+     */
+
     setAttributes(programInfo.attribSetters || programInfo, buffers.attribs);
     if (buffers.indices) {
+      // 绑定 buffer
       gl.bindBuffer(ELEMENT_ARRAY_BUFFER, buffers.indices);
     }
   }
@@ -2849,7 +2939,22 @@ export {
   createTransformFeedbackInfo,
   bindTransformFeedbackInfo,
   setAttributes,
+  /*
+       执行set函数 比如  gl.vertexAttrib4iv
+       或者：
+        1.绑定buffer数据  bindBuffer  
+            gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
+
+        2.连接 attrib 变量与分配给他的缓冲区对象
+            gl.enableVertexAttribArray(a_texcoordLocation);
+
+        3.告诉显卡从当前绑定的缓冲区（bindBuffer() 指定的缓冲区）中读取顶点数据。
+        方法绑定当前缓冲区范围到gl.ARRAY_BUFFER,
+        成为当前顶点缓冲区对象的通用顶点属性并指定它的布局 (缓冲区对象中的偏移量)。
+           gl.vertexAttribPointer(a_texcoordLocation, 4, gl.FLOAT, false, 0, 0);
+     */
   setBuffersAndAttributes,
+  // 设置  Uniform 值 比如 gl.uniform1fv(location, v);
   setUniforms,
   setUniformsAndBindTextures,
   setUniformBlock,

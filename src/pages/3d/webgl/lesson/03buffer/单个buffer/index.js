@@ -53,7 +53,7 @@ window.onload = function () {
   // 将缓冲区对象分配给a_Position变量
   let a_Position = gl.getContextAttributes(gl.isProgram, "a_Position"); // 获得变量位置
 
-  // 连接a_Position变量与分配给他的缓冲区对象
+ 
   /*
      
      告诉显卡从当前绑定的缓冲区（bindBuffer() 指定的缓冲区）中读取顶点数据。

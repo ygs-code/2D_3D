@@ -6,6 +6,15 @@ import VSHADER_SOURCE from "./index.vert";
 
 import COLOR_FSHADER_SOURCE from "./color.frag";
 import COLOR_VSHADER_SOURCE from "./color.vert";
+import {
+  FArrays,
+  cubeArrays,
+  colorVerts,
+  faceColors,
+  cubeRaysArrays,
+  wireCubeArrays,
+  colors
+} from "./data";
 
 import "@/pages/index.less";
 import "./index.less";
@@ -47,67 +56,6 @@ window.onload = () => {
       return;
     }
 
-    const darkColors = {
-      lines: [1, 1, 1, 1]
-    };
-    const lightColors = {
-      lines: [0, 0, 0, 1]
-    };
-
-    // 媒体查询
-    const darkMatcher = window.matchMedia("(prefers-color-scheme: dark)");
-
-    const isDarkMode = darkMatcher.matches;
-    // 颜色 背景颜色
-    const colors = isDarkMode ? darkColors : lightColors;
-
-    // Create Geometry. 创建几何。
-    // 线立方阵列
-    var wireCubeArrays = {
-      position: [
-        // 顶点位置
-        -1, 1, -1, 1, 1, -1, 1, -1, -1, -1, -1, -1,
-
-        -1, 1, 1, 1, 1, 1, 1, -1, 1, -1, -1, 1
-      ],
-      color: [
-        // 颜色
-        1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
-
-        1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1
-      ],
-      indices: [
-        //指数
-        0, 1, 1, 2, 2, 3, 3, 0, 4, 5, 5, 6, 6, 7, 7, 4, 0, 4, 1, 5, 2, 6, 3, 7
-      ]
-    };
-
-    // 颜色
-    // // 创建Program 返回 program
-    // var vertexColorProgramInfo = twgl.createProgramInfo(gl, [
-    //   "vertexColorVertexShader",
-    //   "vertexColorFragmentShader"
-    // ]);
-
-    // 创建 ProgramFromSources
-    // const vertexColorProgramInfo = twgl.createProgramInfo(
-    //   gl,
-    //   [COLOR_VSHADER_SOURCE, COLOR_FSHADER_SOURCE]
-    //   // progOptions
-    // );
-
-    // import COLOR_FSHADER_SOURCE from "./color.frag";
-    // import COLOR_VSHADER_SOURCE from "./color.vert";
-
-    // 创建 ProgramFromSources
-    // const program = twgl.createProgramFromSources(
-    //   gl,
-    //   [COLOR_VSHADER_SOURCE, COLOR_FSHADER_SOURCE]
-    //   // progOptions
-    // );
-
-    // initShader
-
     // 创建 ProgramFromSources
     const program = initShader(
       gl,
@@ -128,58 +76,21 @@ window.onload = () => {
     );
 
     console.log("vertexColorProgramInfo======", vertexColorProgramInfo);
-    debugger;
-    // 颜色
-    // 创建Program 返回 program
-    // var vertexColorProgramInfo = initShader(gl,
-    //   COLOR_VSHADER_SOURCE,
-    //   COLOR_FSHADER_SOURCE,
-    // );
 
-    // 创建 Buffer
+    // 1. 创建 buffer 2.绑定buffer  3.向缓冲区写入数据
     var wireCubeBufferInfo = twgl.createBufferInfoFromArrays(
       gl,
       wireCubeArrays
     );
 
-    //顶点参数选项
-    var cubeRaysArrays = {
-      position: wireCubeArrays.position,
-      // 颜色
-      color: [
-        1,
-        1,
-        1,
-        1,
-        1,
-        1,
-        1,
-        1,
-        1,
-        1,
-        1,
-        1,
-        1,
-        1,
-        1,
-        1,
-
-        ...colors.lines,
-        ...colors.lines,
-        ...colors.lines,
-        ...colors.lines
-      ],
-      indices: [0, 4, 1, 5, 2, 6, 3, 7]
-    };
-
-    // 创建 Buffer
+    // 1. 创建 buffer 2.绑定buffer  3.向缓冲区写入数据
     var cubeRaysBufferInfo = twgl.createBufferInfoFromArrays(
       gl,
       cubeRaysArrays
     );
 
     // 创建Program 返回 program
-  /*
+    /*
   返回一个对象 对象包含
   program
   uniformSetters    uniform中有uniform变量设置函数
@@ -196,150 +107,16 @@ window.onload = () => {
     //   FSHADER_SOURCE,
     // );
 
-    // *创建立方体的顶点和索引。
-    var cubeArrays = twgl.primitives.createCubeVertices(2);
+    // *创建立方体的顶点和索引。 3个立方体一共 72个顶点数据
+    // var cubeArrays = twgl.primitives.createCubeVertices(2);
 
-    delete cubeArrays.normal;
-    delete cubeArrays.texcoord;
-    // 颜色
-    var faceColors = [
-      [1, 0, 0, 1],
-      [0, 1, 0, 1],
-      [1, 1, 0, 1],
-      [0, 0, 1, 1],
-      [1, 0, 1, 1],
-      [0, 1, 1, 1]
-    ];
-    var colorVerts = [];
-    for (var f = 0; f < 6; ++f) {
-      for (var v = 0; v < 4; ++v) {
-        colorVerts.push(...faceColors[f]);
-      }
-    }
-    cubeArrays.color = colorVerts;
-    // 创建 Buffer
+    console.log("cubeArrays==", cubeArrays);
+
+    // 1. 创建 buffer 2.绑定buffer  3.向缓冲区写入数据
     var cubeBufferInfo = twgl.createBufferInfoFromArrays(gl, cubeArrays);
 
-    // 创建 Buffer
-    var fBufferInfo = twgl.createBufferInfoFromArrays(gl, {
-      position: [
-        // left column front
-        0, 0, 0, 0, 150, 0, 30, 0, 0, 0, 150, 0, 30, 150, 0, 30, 0, 0,
-
-        // top rung front
-        30, 0, 0, 30, 30, 0, 100, 0, 0, 30, 30, 0, 100, 30, 0, 100, 0, 0,
-
-        // middle rung front
-        30, 60, 0, 30, 90, 0, 67, 60, 0, 30, 90, 0, 67, 90, 0, 67, 60, 0,
-
-        // left column back
-        0, 0, 30, 30, 0, 30, 0, 150, 30, 0, 150, 30, 30, 0, 30, 30, 150, 30,
-
-        // top rung back
-        30, 0, 30, 100, 0, 30, 30, 30, 30, 30, 30, 30, 100, 0, 30, 100, 30, 30,
-
-        // middle rung back
-        30, 60, 30, 67, 60, 30, 30, 90, 30, 30, 90, 30, 67, 60, 30, 67, 90, 30,
-
-        // top
-        0, 0, 0, 100, 0, 0, 100, 0, 30, 0, 0, 0, 100, 0, 30, 0, 0, 30,
-
-        // top rung right
-        100, 0, 0, 100, 30, 0, 100, 30, 30, 100, 0, 0, 100, 30, 30, 100, 0, 30,
-
-        // under top rung
-        30, 30, 0, 30, 30, 30, 100, 30, 30, 30, 30, 0, 100, 30, 30, 100, 30, 0,
-
-        // between top rung and middle
-        30, 30, 0, 30, 60, 30, 30, 30, 30, 30, 30, 0, 30, 60, 0, 30, 60, 30,
-
-        // top of middle rung
-        30, 60, 0, 67, 60, 30, 30, 60, 30, 30, 60, 0, 67, 60, 0, 67, 60, 30,
-
-        // right of middle rung
-        67, 60, 0, 67, 90, 30, 67, 60, 30, 67, 60, 0, 67, 90, 0, 67, 90, 30,
-
-        // bottom of middle rung.
-        30, 90, 0, 30, 90, 30, 67, 90, 30, 30, 90, 0, 67, 90, 30, 67, 90, 0,
-
-        // right of bottom
-        30, 90, 0, 30, 150, 30, 30, 90, 30, 30, 90, 0, 30, 150, 0, 30, 150, 30,
-
-        // bottom
-        0, 150, 0, 0, 150, 30, 30, 150, 30, 0, 150, 0, 30, 150, 30, 30, 150, 0,
-
-        // left side
-        0, 0, 0, 0, 0, 30, 0, 150, 30, 0, 0, 0, 0, 150, 30, 0, 150, 0
-      ],
-      color: {
-        numComponents: 3,
-        data: new Uint8Array([
-          // left column front
-          200, 70, 120, 200, 70, 120, 200, 70, 120, 200, 70, 120, 200, 70, 120,
-          200, 70, 120,
-
-          // top rung front
-          200, 70, 120, 200, 70, 120, 200, 70, 120, 200, 70, 120, 200, 70, 120,
-          200, 70, 120,
-
-          // middle rung front
-          200, 70, 120, 200, 70, 120, 200, 70, 120, 200, 70, 120, 200, 70, 120,
-          200, 70, 120,
-
-          // left column back
-          80, 70, 200, 80, 70, 200, 80, 70, 200, 80, 70, 200, 80, 70, 200, 80,
-          70, 200,
-
-          // top rung back
-          80, 70, 200, 80, 70, 200, 80, 70, 200, 80, 70, 200, 80, 70, 200, 80,
-          70, 200,
-
-          // middle rung back
-          80, 70, 200, 80, 70, 200, 80, 70, 200, 80, 70, 200, 80, 70, 200, 80,
-          70, 200,
-
-          // top
-          70, 200, 210, 70, 200, 210, 70, 200, 210, 70, 200, 210, 70, 200, 210,
-          70, 200, 210,
-
-          // top rung right
-          200, 200, 70, 200, 200, 70, 200, 200, 70, 200, 200, 70, 200, 200, 70,
-          200, 200, 70,
-
-          // under top rung
-          210, 100, 70, 210, 100, 70, 210, 100, 70, 210, 100, 70, 210, 100, 70,
-          210, 100, 70,
-
-          // between top rung and middle
-          210, 160, 70, 210, 160, 70, 210, 160, 70, 210, 160, 70, 210, 160, 70,
-          210, 160, 70,
-
-          // top of middle rung
-          70, 180, 210, 70, 180, 210, 70, 180, 210, 70, 180, 210, 70, 180, 210,
-          70, 180, 210,
-
-          // right of middle rung
-          100, 70, 210, 100, 70, 210, 100, 70, 210, 100, 70, 210, 100, 70, 210,
-          100, 70, 210,
-
-          // bottom of middle rung.
-          76, 210, 100, 76, 210, 100, 76, 210, 100, 76, 210, 100, 76, 210, 100,
-          76, 210, 100,
-
-          // right of bottom
-          140, 210, 80, 140, 210, 80, 140, 210, 80, 140, 210, 80, 140, 210, 80,
-          140, 210, 80,
-
-          // bottom
-          90, 130, 110, 90, 130, 110, 90, 130, 110, 90, 130, 110, 90, 130, 110,
-          90, 130, 110,
-
-          // left side
-          160, 160, 220, 160, 160, 220, 160, 160, 220, 160, 160, 220, 160, 160,
-          220, 160, 160, 220
-        ])
-      }
-    });
+    // 1. 创建 buffer 2.绑定buffer  3.向缓冲区写入数据
+    var fBufferInfo = twgl.createBufferInfoFromArrays(gl, FArrays);
 
     // pre-allocate a bunch of arrays
     var projection = new Float32Array(16);
@@ -415,7 +192,7 @@ window.onload = () => {
     // 渲染
     function render(time) {
       time *= 0.001;
-
+      // 设置 canvas 的宽高
       twgl.resizeCanvasToDisplaySize(canvas, pixelRatio);
       const halfHeight = gl.canvas.height / 2;
       const width = gl.canvas.width;
@@ -442,55 +219,134 @@ window.onload = () => {
       f = f * f * f * f;
       f = lerp(1, 179 * 0.9, f);
       f = 1;
+      // 用一个向量乘以一个标量。
       v3.mulScalar(targetToEye, f, v3t0);
+      // *两个向量相加;假设a和b有相同的维数。
       v3.add(v3t0, target, v3t0);
+
+      // 眼镜 相机
       m4.lookAt(
         v3t0, //eyePosition,
         target,
         up,
         view
       );
+
+      //  *计算4 × 4矩阵的逆。
       m4.inverse(view, view);
+
+      // 4x4 矩阵乘法
       m4.multiply(projection, view, viewProjection);
 
-      // Draw scene
+      // Draw scene  绘画场景
       function drawScene(viewProjection, exampleProjection) {
         gl.useProgram(colorProgramInfo.program);
+
+        /*
+       执行set函数 比如  gl.vertexAttrib4iv
+       或者：
+        1.绑定buffer数据  bindBuffer  
+            gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
+
+        2.连接 attrib 变量与分配给他的缓冲区对象
+            gl.enableVertexAttribArray(a_texcoordLocation);
+
+        3.告诉显卡从当前绑定的缓冲区（bindBuffer() 指定的缓冲区）中读取顶点数据。
+        方法绑定当前缓冲区范围到gl.ARRAY_BUFFER,
+        成为当前顶点缓冲区对象的通用顶点属性并指定它的布局 (缓冲区对象中的偏移量)。
+           gl.vertexAttribPointer(a_texcoordLocation, 4, gl.FLOAT, false, 0, 0);
+     */
         twgl.setBuffersAndAttributes(gl, colorProgramInfo, cubeBufferInfo);
+
         var cubeScale = scale * 3;
         for (var ii = -1; ii <= 1; ++ii) {
+          // 变换 偏移
           m4.translation([ii * 10, 0, zPosition], world);
+          // 旋转 Y 轴
           m4.rotateY(world, time + (ii * Math.PI) / 6, world);
+          // 旋转 X 轴
           m4.rotateX(world, Math.PI / 4, world);
+          // 旋转 Z 轴
           m4.rotateZ(world, Math.PI / 4, world);
+          // 放大
           m4.scale(world, [cubeScale, cubeScale, cubeScale], world);
-
+          //  矩阵相乘
           m4.multiply(viewProjection, world, worldViewProjection);
-
+          //  矩阵相乘
           m4.multiply(exampleProjection, world, exampleWorldViewProjection);
-
+          // 设置  Uniform 值 比如 gl.uniform1fv(location, v);
           twgl.setUniforms(colorProgramInfo, sceneCubeUniforms);
+          /*
+            绘画顶点数据
+            *调用' gl.drawElements '或' gl.drawarray '，取合适的
+            *
+            通常你会叫“gl.drawElements '或' gl.drawArrays”自己
+            但是调用这个方法意味着如果你从索引数据切换到非索引数据
+            *数据你不需要记得更新你的draw调用。
+          */
           twgl.drawBufferInfo(gl, cubeBufferInfo);
         }
 
         var rotation = [degToRad(40), degToRad(25), degToRad(325)];
+        // 变换
         m4.translation([45, 150, 0], world);
+        // 旋转X轴
         m4.rotateX(world, rotation[0], world);
+        // 旋转Y轴
         m4.rotateY(world, rotation[1], world);
+        // 旋转Z轴
         m4.rotateZ(world, rotation[2], world);
+        // 矩阵相乘
         m4.multiply(viewProjection, world, worldViewProjection);
-
+        // 矩阵相乘
         m4.multiply(exampleProjection, world, exampleWorldViewProjection);
+        /*
+       执行set函数 比如  gl.vertexAttrib4iv
+       或者：
+        1.绑定buffer数据  bindBuffer  
+            gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
+
+        2.连接 attrib 变量与分配给他的缓冲区对象
+            gl.enableVertexAttribArray(a_texcoordLocation);
+
+        3.告诉显卡从当前绑定的缓冲区（bindBuffer() 指定的缓冲区）中读取顶点数据。
+        方法绑定当前缓冲区范围到gl.ARRAY_BUFFER,
+        成为当前顶点缓冲区对象的通用顶点属性并指定它的布局 (缓冲区对象中的偏移量)。
+           gl.vertexAttribPointer(a_texcoordLocation, 4, gl.FLOAT, false, 0, 0);
+     */
         twgl.setBuffersAndAttributes(gl, colorProgramInfo, fBufferInfo);
+        // 设置  Uniform 值 比如 gl.uniform1fv(location, v);
         twgl.setUniforms(colorProgramInfo, sceneCubeUniforms);
+        /*
+            绘画顶点数据
+            *调用' gl.drawElements '或' gl.drawarray '，取合适的
+            *
+            通常你会叫“gl.drawElements '或' gl.drawArrays”自己
+            但是调用这个方法意味着如果你从索引数据切换到非索引数据
+            *数据你不需要记得更新你的draw调用。
+          */
         twgl.drawBufferInfo(gl, fBufferInfo);
       }
-
+      // Draw scene  绘画场景
       drawScene(viewProjection, exampleProjection);
 
-      // Draw Frustum Cube behind
+      // Draw Frustum Cube behind 把Frustum Cube画在后面
       function drawFrustumCube() {
         gl.useProgram(colorProgramInfo.program);
+        /*
+       执行set函数 比如  gl.vertexAttrib4iv
+       或者：
+        1.绑定buffer数据  bindBuffer  
+            gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
+
+        2.连接 attrib 变量与分配给他的缓冲区对象
+            gl.enableVertexAttribArray(a_texcoordLocation);
+
+        3.告诉显卡从当前绑定的缓冲区（bindBuffer() 指定的缓冲区）中读取顶点数据。
+        方法绑定当前缓冲区范围到gl.ARRAY_BUFFER,
+        成为当前顶点缓冲区对象的通用顶点属性并指定它的布局 (缓冲区对象中的偏移量)。
+           gl.vertexAttribPointer(a_texcoordLocation, 4, gl.FLOAT, false, 0, 0);
+     */
         twgl.setBuffersAndAttributes(gl, colorProgramInfo, cubeBufferInfo);
         // 透视矩阵
         m4.perspective(
@@ -500,19 +356,30 @@ window.onload = () => {
           zFar * scale,
           exampleProjection
         );
+        //  *计算4 × 4矩阵的逆。
         m4.inverse(exampleProjection, exampleInverseProjection);
-
+        // 变换 偏移
         m4.translation([0, 0, 0], world);
         m4.multiply(exampleInverseProjection, world, world);
         m4.scale(world, [scale, scale, scale], world);
         m4.multiply(viewProjection, world, worldViewProjection);
-
+        // 设置  Uniform 值 比如 gl.uniform1fv(location, v);
         twgl.setUniforms(colorProgramInfo, sharedUniforms);
+        // 设置  Uniform 值 比如 gl.uniform1fv(location, v);
         twgl.setUniforms(colorProgramInfo, frustumCubeUniforms);
+        /*
+            绘画顶点数据
+            *调用' gl.drawElements '或' gl.drawarray '，取合适的
+            *
+            通常你会叫“gl.drawElements '或' gl.drawArrays”自己
+            但是调用这个方法意味着如果你从索引数据切换到非索引数据
+            *数据你不需要记得更新你的draw调用。
+          */
         twgl.drawBufferInfo(gl, cubeBufferInfo);
       }
       gl.enable(gl.CULL_FACE);
       gl.cullFace(gl.BACK);
+      // 把Frustum Cube画在后面
       drawFrustumCube();
       gl.disable(gl.CULL_FACE);
 
@@ -524,24 +391,55 @@ window.onload = () => {
       // Draw view cone.
       // 透视矩阵
       m4.perspective(degToRad(fieldOfView), aspect, 1, 5000, exampleProjection);
+      //  *计算4 × 4矩阵的逆。
       m4.inverse(exampleProjection, exampleInverseProjection);
-
+      // 变换 偏移
       m4.translation([0, 0, 0], world);
       m4.multiply(world, exampleInverseProjection, world);
       m4.scale(world, [scale, scale, scale], world);
       m4.multiply(viewProjection, world, worldViewProjection);
 
       gl.useProgram(vertexColorProgramInfo.program);
+      /*
+       执行set函数 比如  gl.vertexAttrib4iv
+       或者：
+        1.绑定buffer数据  bindBuffer  
+            gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
+
+        2.连接 attrib 变量与分配给他的缓冲区对象
+            gl.enableVertexAttribArray(a_texcoordLocation);
+
+        3.告诉显卡从当前绑定的缓冲区（bindBuffer() 指定的缓冲区）中读取顶点数据。
+        方法绑定当前缓冲区范围到gl.ARRAY_BUFFER,
+        成为当前顶点缓冲区对象的通用顶点属性并指定它的布局 (缓冲区对象中的偏移量)。
+           gl.vertexAttribPointer(a_texcoordLocation, 4, gl.FLOAT, false, 0, 0);
+     */
       twgl.setBuffersAndAttributes(
         gl,
         vertexColorProgramInfo,
         cubeRaysBufferInfo
       );
+      // 设置  Uniform 值 比如 gl.uniform1fv(location, v);
       twgl.setUniforms(vertexColorProgramInfo, sharedUniforms);
+      // 设置  Uniform 值 比如 gl.uniform1fv(location, v);
       twgl.setUniforms(vertexColorProgramInfo, cubeRaysUniforms);
+      /*
+            绘画顶点数据
+            *调用' gl.drawElements '或' gl.drawarray '，取合适的
+            *
+            通常你会叫“gl.drawElements '或' gl.drawArrays”自己
+            但是调用这个方法意味着如果你从索引数据切换到非索引数据
+            *数据你不需要记得更新你的draw调用。
+          */
       twgl.drawBufferInfo(gl, cubeRaysBufferInfo, gl.LINES);
 
       {
+        /*
+          *取一个4 × 4矩阵和一个有3个元素的向量，
+          *将向量解释为一个点，用矩阵变换这个点，然后
+          *返回结果为包含3个条目的向量。
+          一个坐标转换，将矩阵坐标化为屏幕坐标
+          */
         const eyePosition = m4.transformPoint(worldViewProjection, [0, 0, 0]);
         const ex = ((eyePosition[0] * 0.5 + 0.5) * width) / pixelRatio;
         const ey = ((eyePosition[1] * -0.5 + 0.5) * halfHeight) / pixelRatio;
@@ -549,7 +447,8 @@ window.onload = () => {
         eyeElem.style.top = px(ey - eyeElem.height / 2 + 50);
       }
 
-      // Draw Frustum Wire
+      // Draw Frustum Wire 画截锥体线
+      // 透视矩阵
       m4.perspective(
         degToRad(fieldOfView),
         aspect,
@@ -557,20 +456,47 @@ window.onload = () => {
         zFar * scale,
         exampleProjection
       );
+      //  *计算4 × 4矩阵的逆。
       m4.inverse(exampleProjection, exampleInverseProjection);
-
+      // 变换 偏移
       m4.translation([0, 0, 0], world);
+      // 矩阵相乘
       m4.multiply(world, exampleInverseProjection, world);
+      // 矩阵缩放
       m4.scale(world, [scale, scale, scale], world);
+      // 矩阵相乘
       m4.multiply(viewProjection, world, worldViewProjection);
+      /*
+       执行set函数 比如  gl.vertexAttrib4iv
+       或者：
+        1.绑定buffer数据  bindBuffer  
+            gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
 
+        2.连接 attrib 变量与分配给他的缓冲区对象
+            gl.enableVertexAttribArray(a_texcoordLocation);
+
+        3.告诉显卡从当前绑定的缓冲区（bindBuffer() 指定的缓冲区）中读取顶点数据。
+        方法绑定当前缓冲区范围到gl.ARRAY_BUFFER,
+        成为当前顶点缓冲区对象的通用顶点属性并指定它的布局 (缓冲区对象中的偏移量)。
+           gl.vertexAttribPointer(a_texcoordLocation, 4, gl.FLOAT, false, 0, 0);
+     */
       twgl.setBuffersAndAttributes(
         gl,
         vertexColorProgramInfo,
         wireCubeBufferInfo
       );
+      // 设置  Uniform 值 比如 gl.uniform1fv(location, v);
       twgl.setUniforms(vertexColorProgramInfo, sharedUniforms);
+      // 设置  Uniform 值 比如 gl.uniform1fv(location, v);
       twgl.setUniforms(vertexColorProgramInfo, wireFrustumUniforms);
+      /*
+            绘画顶点数据
+            *调用' gl.drawElements '或' gl.drawarray '，取合适的
+            *
+            通常你会叫“gl.drawElements '或' gl.drawArrays”自己
+            但是调用这个方法意味着如果你从索引数据切换到非索引数据
+            *数据你不需要记得更新你的draw调用。
+          */
       twgl.drawBufferInfo(gl, wireCubeBufferInfo, gl.LINES);
 
       // Draw 3D view
@@ -579,7 +505,7 @@ window.onload = () => {
       gl.scissor(0, 0, width, halfHeight);
       gl.clearColor(0.5, 0.5, 0.5, 1);
       gl.clear(gl.COLOR_BUFFER_BIT);
-
+      // 透视矩阵
       m4.perspective(
         degToRad(fieldOfView),
         aspect,
@@ -587,22 +513,27 @@ window.onload = () => {
         zFar * scale,
         projection
       );
+      // Draw scene  绘画场景
       drawScene(exampleProjection, zeroMat);
 
+      // 动画定时器
       requestAnimationFrame(render);
     }
-
+    // 动画定时器
     requestAnimationFrame(render);
   }
 
+  // px
   function px(v) {
     return `${v | 0}px`;
   }
 
+  // 角度转弧度    deg *  2 * Math.PI / 360  等于弧度
   function degToRad(deg) {
     return (deg * Math.PI) / 180;
   }
 
+  //
   function lerp(a, b, l) {
     return a + (b - a) * l;
   }

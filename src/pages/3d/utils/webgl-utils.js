@@ -830,11 +830,19 @@
    * @param {module:webgl-utils.BufferInfo} buffers a BufferInfo as returned from `createBufferInfoFromArrays`.
    * @memberOf module:webgl-utils
    */
+
+  // 
   function setBuffersAndAttributes(gl, setters, buffers) {
+
+
     setAttributes(setters, buffers.attribs);
+
     if (buffers.indices) {
+      // 绑定 buffer
       gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, buffers.indices);
     }
+
+    
   }
 
   // Add your prefix here.

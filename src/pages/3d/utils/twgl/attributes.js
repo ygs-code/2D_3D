@@ -85,8 +85,24 @@ function setDefaults(newDefaults) {
   helper.copyExistingProperties(newDefaults, defaults);
 }
 
+//   绑定buffer  向缓冲区写入数据
 function setBufferFromTypedArray(gl, type, buffer, array, drawType) {
+  /*
+   // 2
+  // 将缓冲区对象绑定指定目标
+  gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
+
+  //3
+  // 向缓冲区写入数据
+  gl.bufferData(gl.ARRAY_BUFFER, vertices, gl.STATIC_DRAW);
+ 
+ */
+
+  // 绑定buffer
+
   gl.bindBuffer(type, buffer);
+
+  // 设置buffer 数据   // 向缓冲区写入数据
   gl.bufferData(type, array, drawType || STATIC_DRAW);
 }
 
@@ -101,12 +117,16 @@ function setBufferFromTypedArray(gl, type, buffer, array, drawType) {
  * @return {WebGLBuffer} the created WebGLBuffer
  * @memberOf module:twgl/attributes
  */
+// 1. 创建 buffer 2.绑定buffer  3.向缓冲区写入数据
 function createBufferFromTypedArray(gl, typedArray, type, drawType) {
+  //  Buffer 顶点数据 判断他是否已经 被绑定 Buffer 中
   if (helper.isBuffer(gl, typedArray)) {
     return typedArray;
   }
   type = type || ARRAY_BUFFER;
+  // 创建 buffer
   const buffer = gl.createBuffer();
+  //   绑定buffer  向缓冲区写入数据
   setBufferFromTypedArray(gl, type, buffer, typedArray, drawType);
   return buffer;
 }
@@ -117,6 +137,10 @@ function isIndices(name) {
 
 // This is really just a guess. Though I can't really imagine using
 // anything else? Maybe for some compression?
+/*
+//这只是一个猜测。虽然我真的无法想象使用
+//还有别的吗?也许是为了压缩一下?
+*/
 function getNormalizationForTypedArrayType(typedArrayType) {
   if (typedArrayType === Int8Array) {
     return true;
@@ -127,6 +151,7 @@ function getNormalizationForTypedArrayType(typedArrayType) {
   return false;
 }
 
+// 获取数组数据
 function getArray(array) {
   return array.length ? array : array.data;
 }
@@ -134,14 +159,20 @@ function getArray(array) {
 const texcoordRE = /coord|texture/i;
 const colorRE = /color|colour/i;
 
+/*
+   根据 数据的 key  是否等于 coord|texture 
+   或者 等于 color|colour， 根据不同的name名称
+   求余 2,3,4如果 顶点位置求余 长度超过 0 则报错
+*/
 function guessNumComponentsFromName(name, length) {
   let numComponents;
+  // 如果是
   if (texcoordRE.test(name)) {
     numComponents = 2;
   } else if (colorRE.test(name)) {
     numComponents = 4;
   } else {
-    numComponents = 3; // position, normals, indices ...
+    numComponents = 3; // position, normals 法线, indices ...    indices 指数
   }
 
   if (length % numComponents > 0) {
@@ -153,23 +184,37 @@ function guessNumComponentsFromName(name, length) {
   return numComponents;
 }
 
+/*
+   根据 数据的 key  是否等于 coord|texture 
+   或者 等于 color|colour， 根据不同的name名称
+   求余 2,3,4如果 顶点位置求余 长度超过 0 则报错
+*/
 function getNumComponents(array, arrayName, numValues) {
   return (
     array.numComponents ||
     array.size ||
+    /*
+   根据 数据的 key  是否等于 coord|texture 
+   或者 等于 color|colour， 根据不同的name名称
+   求余 2,3,4如果 顶点位置求余 长度超过 0 则报错
+*/
     guessNumComponentsFromName(arrayName, numValues || getArray(array).length)
   );
 }
 
+// 转换数组数据
 function makeTypedArray(array, name) {
+  // // 如果是 buffer 数组
   if (typedArrays.isArrayBuffer(array)) {
     return array;
   }
 
+  // 如果是点data是    buffer 数组
   if (typedArrays.isArrayBuffer(array.data)) {
     return array.data;
   }
 
+  // 如果是数组
   if (Array.isArray(array)) {
     array = {
       data: array
@@ -227,16 +272,22 @@ function attribBufferFromSize(gl, array /*, arrayName*/) {
   };
 }
 
+//   1. 创建 buffer 2.绑定buffer  3.向缓冲区写入数据 根据数据自动获取webgl的 GLTypeForTyped 类型
 function attribBufferFromArrayLike(gl, array, arrayName) {
+  // 转换数组数据
   const typedArray = makeTypedArray(array, arrayName);
+  console.log("typedArray===========", typedArray);
+
   return {
     arrayType: typedArray.constructor,
+    // 1. 创建 buffer 2.绑定buffer  3.向缓冲区写入数据
     buffer: createBufferFromTypedArray(
       gl,
       typedArray,
       undefined,
       array.drawType
     ),
+    // 根据数据自动获取webgl的 GLTypeForTyped 类型
     type: typedArrays.getGLTypeForTypedArray(typedArray),
     numValues: 0
   };
@@ -449,23 +500,64 @@ var wireCubeArrays = {
 };
 
 */
+//   1. 创建 buffer 2.绑定buffer  3.向缓冲区写入数据 根据数据自动获取webgl的 GLTypeForTyped 类型
 function createAttribsFromArrays(
   gl,
   arrays //参数
 ) {
+  /*
+
+ var wireCubeArrays = {
+  position: [  // 顶点位置
+      -1,  1, -1,
+       1,  1, -1,
+       1, -1, -1,
+      -1, -1, -1,
+
+      -1,  1,  1,
+       1,  1,  1,
+       1, -1,  1,
+      -1, -1,  1,
+  ],
+  color: [  // 颜色
+      1, 1, 1, 1,
+      1, 1, 1, 1,
+      1, 1, 1, 1,
+      1, 1, 1, 1,
+
+      1, 1, 1, 1,
+      1, 1, 1, 1,
+      1, 1, 1, 1,
+      1, 1, 1, 1,
+  ],
+  indices: [ //指数
+      0, 1, 1, 2, 2, 3, 3, 0,
+      4, 5, 5, 6, 6, 7, 7, 4,
+      0, 4, 1, 5, 2, 6, 3, 7,
+  ],
+};
+
+*/
+
   const attribs = {};
 
+  console.log("arrays============", arrays);
+
+  debugger;
   // 循环 参数
   Object.keys(arrays).forEach(function (arrayName) {
     // 如果 name === "indices";
     if (!isIndices(arrayName)) {
       // 获取到数组参数
       const array = arrays[arrayName];
+
+      // arrName = key
       const attribName =
         array.attrib ||
         array.name ||
         array.attribName ||
         defaults.attribPrefix + arrayName;
+
       if (array.value) {
         if (
           !Array.isArray(array.value) &&
@@ -478,6 +570,7 @@ function createAttribsFromArrays(
         };
       } else {
         let fn;
+
         if (array.buffer && array.buffer instanceof WebGLBuffer) {
           fn = attribBufferFromBuffer;
         } else if (
@@ -486,29 +579,42 @@ function createAttribsFromArrays(
         ) {
           fn = attribBufferFromSize;
         } else {
+          //   1. 创建 buffer 2.绑定buffer  3.向缓冲区写入数据 根据数据自动获取webgl的 GLTypeForTyped 类型
           fn = attribBufferFromArrayLike;
         }
-        
+
         const {buffer, type, numValues, arrayType} = fn(gl, array, arrayName);
 
         const normalization =
           array.normalize !== undefined
             ? array.normalize
             : getNormalizationForTypedArrayType(arrayType);
+
+        console.log("getNumComponents=======", numValues);
+        /*
+          根据 数据的 key  是否等于 coord|texture 
+          或者 等于 color|colour， 根据不同的name名称
+          求余 2,3,4如果 顶点位置求余 长度超过 0 则报错
+        */
         const numComponents = getNumComponents(array, arrayName, numValues);
+
         attribs[attribName] = {
+          // buffer
           buffer: buffer,
+          // 组件类型
           numComponents: numComponents,
-          type: type,
+          type: type, // 顶点数据类型
           normalize: normalization,
           stride: array.stride || 0,
           offset: array.offset || 0,
           divisor: array.divisor === undefined ? undefined : array.divisor,
+          // 顶点数据 构造 函数
           drawType: array.drawType
         };
       }
     }
   });
+
   // 绑定  bindBuffer
   gl.bindBuffer(ARRAY_BUFFER, null);
   return attribs;
@@ -551,11 +657,13 @@ function createAttribsFromArrays(
  * @memberOf module:twgl/attributes
  */
 function setAttribInfoBufferFromArray(gl, attribInfo, array, offset) {
+  // 转换数组数据
   array = makeTypedArray(array);
   if (offset !== undefined) {
     gl.bindBuffer(ARRAY_BUFFER, attribInfo.buffer);
     gl.bufferSubData(ARRAY_BUFFER, offset, array);
   } else {
+    //   绑定buffer  向缓冲区写入数据
     setBufferFromTypedArray(
       gl,
       ARRAY_BUFFER,
@@ -566,6 +674,7 @@ function setAttribInfoBufferFromArray(gl, attribInfo, array, offset) {
   }
 }
 
+// 根据类型返回枚举
 function getBytesPerValueForGLType(gl, type) {
   if (type === BYTE) return 1; // eslint-disable-line
   if (type === UNSIGNED_BYTE) return 1; // eslint-disable-line
@@ -605,8 +714,12 @@ function getNumElementsFromNonIndexedArrays(arrays) {
   }
   return numElements;
 }
-
+// 从属性中获取Num元素  绑定buffer
 function getNumElementsFromAttributes(gl, attribs) {
+  /*
+  // Tries to get the number of elements from a set of arrays.
+const positionKeys = ["position", "positions", "a_position"];
+  */
   let key;
   let ii;
   for (ii = 0; ii < positionKeys.length; ++ii) {
@@ -626,13 +739,20 @@ function getNumElementsFromAttributes(gl, attribs) {
   if (!attrib.buffer) {
     return 1; // There's no buffer
   }
-  gl.bindBuffer(ARRAY_BUFFER, attrib.buffer);
-  const numBytes = gl.getBufferParameter(ARRAY_BUFFER, BUFFER_SIZE);
-  gl.bindBuffer(ARRAY_BUFFER, null);
 
+  //绑定 buffer
+  gl.bindBuffer(ARRAY_BUFFER, attrib.buffer);
+
+  // 方法返回关于buffer缓冲区的信息
+  const numBytes = gl.getBufferParameter(ARRAY_BUFFER, BUFFER_SIZE);
+  //绑定 buffer
+  gl.bindBuffer(ARRAY_BUFFER, null);
+  // 根据类型返回枚举
   const bytesPerValue = getBytesPerValueForGLType(gl, attrib.type);
+
   const totalElements = numBytes / bytesPerValue;
   const numComponents = attrib.numComponents || attrib.size;
+
   // TODO: check stride
   const numElements = totalElements / numComponents;
   if (numElements % 1 !== 0) {
@@ -749,32 +869,43 @@ function getNumElementsFromAttributes(gl, attribs) {
  * @memberOf module:twgl/attributes
  */
 
-// 创建buffer
+// 1. 创建 buffer 2.绑定buffer  3.向缓冲区写入数据
 function createBufferInfoFromArrays(gl, arrays, srcBufferInfo) {
+  //   1. 创建 buffer 2.绑定buffer  3.向缓冲区写入数据 根据数据自动获取webgl的 GLTypeForTyped 类型
   const newAttribs = createAttribsFromArrays(gl, arrays);
+
   const bufferInfo = Object.assign({}, srcBufferInfo ? srcBufferInfo : {});
+
   bufferInfo.attribs = Object.assign(
     {},
     srcBufferInfo ? srcBufferInfo.attribs : {},
     newAttribs
   );
   const indices = arrays.indices;
+
+  // 创建  indices 的buffer
   if (indices) {
+    // 转换数组数据
     const newIndices = makeTypedArray(indices, "indices");
+    // 1. 创建 buffer 2.绑定buffer  3.向缓冲区写入数据
     bufferInfo.indices = createBufferFromTypedArray(
       gl,
       newIndices,
       ELEMENT_ARRAY_BUFFER
     );
     bufferInfo.numElements = newIndices.length;
+
+    // 根据数据自动获取webgl的 GLTypeForTyped 类型
     bufferInfo.elementType = typedArrays.getGLTypeForTypedArray(newIndices);
   } else if (!bufferInfo.numElements) {
+    // 从属性中获取Num元素  绑定buffer
     bufferInfo.numElements = getNumElementsFromAttributes(
       gl,
       bufferInfo.attribs
     );
   }
 
+  // 返回 bufferInfo 信息
   return bufferInfo;
 }
 
@@ -804,9 +935,13 @@ function createBufferInfoFromArrays(gl, arrays, srcBufferInfo) {
  * @return {WebGLBuffer} a WebGLBuffer containing the data in array.
  * @memberOf module:twgl/attributes
  */
+
+// 1. 创建 buffer 2.绑定buffer  3.向缓冲区写入数据
 function createBufferFromArray(gl, array, arrayName) {
   const type = arrayName === "indices" ? ELEMENT_ARRAY_BUFFER : ARRAY_BUFFER;
+  // 转换数组数据
   const typedArray = makeTypedArray(array, arrayName);
+  // 1. 创建 buffer 2.绑定buffer  3.向缓冲区写入数据
   return createBufferFromTypedArray(gl, typedArray, type);
 }
 
@@ -837,6 +972,7 @@ function createBufferFromArray(gl, array, arrayName) {
 function createBuffersFromArrays(gl, arrays) {
   const buffers = {};
   Object.keys(arrays).forEach(function (key) {
+    // 1. 创建 buffer 2.绑定buffer  3.向缓冲区写入数据
     buffers[key] = createBufferFromArray(gl, arrays[key], key);
   });
 
@@ -844,6 +980,7 @@ function createBuffersFromArrays(gl, arrays) {
   if (arrays.indices) {
     buffers.numElements = arrays.indices.length;
     buffers.elementType = typedArrays.getGLTypeForTypedArray(
+      // 转换数组数据
       makeTypedArray(arrays.indices),
       "indices"
     );
@@ -857,8 +994,11 @@ function createBuffersFromArrays(gl, arrays) {
 export {
   createAttribsFromArrays,
   createBuffersFromArrays,
+  // 1. 创建 buffer 2.绑定buffer  3.向缓冲区写入数据
   createBufferFromArray,
+  // 1. 创建 buffer 2.绑定buffer  3.向缓冲区写入数据
   createBufferFromTypedArray,
+  // 1. 创建 buffer 2.绑定buffer  3.向缓冲区写入数据
   createBufferInfoFromArrays,
   setAttribInfoBufferFromArray,
   setAttributePrefix,

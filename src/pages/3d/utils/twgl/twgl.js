@@ -377,6 +377,7 @@ function getContext(canvas, opt_attribs) {
  * @return {boolean} true if the canvas was resized.
  * @memberOf module:twgl
  */
+ // 设置 canvas 的宽高
 function resizeCanvasToDisplaySize(canvas, multiplier) {
   multiplier = multiplier || 1;
   multiplier = Math.max(0, multiplier);
@@ -394,6 +395,7 @@ export {
   addExtensionsToContext,
   getContext,
   getWebGLContext,
+   // 设置 canvas 的宽高
   resizeCanvasToDisplaySize,
   setDefaults,
 

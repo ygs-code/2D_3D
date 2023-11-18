@@ -20,10 +20,10 @@
  * DEALINGS IN THE SOFTWARE.
  */
 
-import * as programs from './programs.js';
+import * as programs from "./programs.js";
 
-const TRIANGLES                      = 0x0004;
-const UNSIGNED_SHORT                 = 0x1403;
+const TRIANGLES = 0x0004;
+const UNSIGNED_SHORT = 0x1403;
 
 /**
  * Drawing related functions
@@ -52,6 +52,14 @@ const UNSIGNED_SHORT                 = 0x1403;
  * @param {number} [instanceCount] An optional instanceCount. if set then `drawArraysInstanced` or `drawElementsInstanced` will be called
  * @memberOf module:twgl/draw
  */
+/*
+绘画顶点数据
+*调用' gl.drawElements '或' gl.drawarray '，取合适的
+*
+通常你会叫“gl.drawElements '或' gl.drawArrays”自己
+但是调用这个方法意味着如果你从索引数据切换到非索引数据
+*数据你不需要记得更新你的draw调用。
+*/
 function drawBufferInfo(gl, bufferInfo, type, count, offset, instanceCount) {
   type = type === undefined ? TRIANGLES : type;
   const indices = bufferInfo.indices;
@@ -60,9 +68,20 @@ function drawBufferInfo(gl, bufferInfo, type, count, offset, instanceCount) {
   offset = offset === undefined ? 0 : offset;
   if (elementType || indices) {
     if (instanceCount !== undefined) {
-      gl.drawElementsInstanced(type, numElements, elementType === undefined ? UNSIGNED_SHORT : bufferInfo.elementType, offset, instanceCount);
+      gl.drawElementsInstanced(
+        type,
+        numElements,
+        elementType === undefined ? UNSIGNED_SHORT : bufferInfo.elementType,
+        offset,
+        instanceCount
+      );
     } else {
-      gl.drawElements(type, numElements, elementType === undefined ? UNSIGNED_SHORT : bufferInfo.elementType, offset);
+      gl.drawElements(
+        type,
+        numElements,
+        elementType === undefined ? UNSIGNED_SHORT : bufferInfo.elementType,
+        offset
+      );
     }
   } else {
     if (instanceCount !== undefined) {
@@ -119,7 +138,7 @@ function drawObjectList(gl, objectsToDraw) {
   let lastUsedProgramInfo = null;
   let lastUsedBufferInfo = null;
 
-  objectsToDraw.forEach(function(object) {
+  objectsToDraw.forEach(function (object) {
     if (object.active === false) {
       return;
     }
@@ -142,7 +161,11 @@ function drawObjectList(gl, objectsToDraw) {
 
     // Setup all the needed attributes.
     if (bindBuffers || bufferInfo !== lastUsedBufferInfo) {
-      if (lastUsedBufferInfo && lastUsedBufferInfo.vertexArrayObject && !bufferInfo.vertexArrayObject) {
+      if (
+        lastUsedBufferInfo &&
+        lastUsedBufferInfo.vertexArrayObject &&
+        !bufferInfo.vertexArrayObject
+      ) {
         gl.bindVertexArray(null);
       }
       lastUsedBufferInfo = bufferInfo;
@@ -152,8 +175,22 @@ function drawObjectList(gl, objectsToDraw) {
     // Set the uniforms.
     programs.setUniforms(programInfo, object.uniforms);
 
-    // Draw
-    drawBufferInfo(gl, bufferInfo, type, object.count, object.offset, object.instanceCount);
+    /*
+绘画顶点数据
+*调用' gl.drawElements '或' gl.drawarray '，取合适的
+*
+通常你会叫“gl.drawElements '或' gl.drawArrays”自己
+但是调用这个方法意味着如果你从索引数据切换到非索引数据
+*数据你不需要记得更新你的draw调用。
+*/
+    drawBufferInfo(
+      gl,
+      bufferInfo,
+      type,
+      object.count,
+      object.offset,
+      object.instanceCount
+    );
   });
 
   if (lastUsedBufferInfo && lastUsedBufferInfo.vertexArrayObject) {
@@ -162,7 +199,14 @@ function drawObjectList(gl, objectsToDraw) {
 }
 
 export {
+  /*
+绘画顶点数据
+*调用' gl.drawElements '或' gl.drawarray '，取合适的
+*
+通常你会叫“gl.drawElements '或' gl.drawArrays”自己
+但是调用这个方法意味着如果你从索引数据切换到非索引数据
+*数据你不需要记得更新你的draw调用。
+*/
   drawBufferInfo,
-  drawObjectList,
+  drawObjectList
 };
-

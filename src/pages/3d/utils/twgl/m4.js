@@ -249,6 +249,7 @@ function identity(dst) {
  * @return {module:twgl/m4.Mat4} The inverse of m.
  * @memberOf module:twgl/m4
  */
+//  *计算4 × 4矩阵的逆。
 function inverse(m, dst) {
   dst = dst || new MatType(16);
 
@@ -1201,6 +1202,14 @@ function scale(m, v, dst) {
  * @return {module:twgl/v3.Vec3} The transformed point.
  * @memberOf module:twgl/m4
  */
+
+/*
+
+*取一个4 × 4矩阵和一个有3个元素的向量，
+*将向量解释为一个点，用矩阵变换这个点，然后
+*返回结果为包含3个条目的向量。
+ 一个坐标转换，将矩阵坐标化为屏幕坐标
+*/
 function transformPoint(m, v, dst) {
   dst = dst || v3.create();
   const v0 = v[0];
@@ -1299,6 +1308,13 @@ export {
   setTranslation,
   transformDirection,
   transformNormal,
+  /*
+
+*取一个4 × 4矩阵和一个有3个元素的向量，
+*将向量解释为一个点，用矩阵变换这个点，然后
+*返回结果为包含3个条目的向量。
+ 一个坐标转换，将矩阵坐标化为屏幕坐标
+*/
   transformPoint,
   translate,
   translation,

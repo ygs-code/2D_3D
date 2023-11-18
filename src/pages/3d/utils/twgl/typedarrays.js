@@ -84,6 +84,8 @@ const glTypeToTypedArray = {};
  *   be returned. Pass in a `Uint32Array` and `gl.UNSIGNED_INT` will be returned
  * @memberOf module:twgl/typedArray
  */
+
+// 根据数据自动获取webgl的 GLTypeForTyped 类型
 function getGLTypeForTypedArray(typedArray) {
   if (typedArray instanceof Int8Array)         { return BYTE; }           // eslint-disable-line
   if (typedArray instanceof Uint8Array)        { return UNSIGNED_BYTE; }  // eslint-disable-line
@@ -103,6 +105,7 @@ function getGLTypeForTypedArray(typedArray) {
  *   be returned. Pass in `Uint32Array` and `gl.UNSIGNED_INT` will be returned
  * @memberOf module:twgl/typedArray
  */
+// 根据数据自动获取webgl的 GLTypeForTyped 类型
 function getGLTypeForTypedArrayType(typedArrayType) {
   if (typedArrayType === Int8Array)         { return BYTE; }           // eslint-disable-line
   if (typedArrayType === Uint8Array)        { return UNSIGNED_BYTE; }  // eslint-disable-line
@@ -129,8 +132,11 @@ function getTypedArrayTypeForGLType(type) {
   return CTOR;
 }
 
+
+// 如果是 buffer 数组
 const isArrayBuffer = typeof SharedArrayBuffer !== 'undefined'
   ? function isArrayBufferOrSharedArrayBuffer(a) {
+
     return a && a.buffer && (a.buffer instanceof ArrayBuffer || a.buffer instanceof SharedArrayBuffer);
   }
   : function isArrayBuffer(a) {
@@ -138,7 +144,9 @@ const isArrayBuffer = typeof SharedArrayBuffer !== 'undefined'
   };
 
 export {
+  // 根据数据自动获取webgl的 GLTypeForTyped 类型
   getGLTypeForTypedArray,
+  // 根据数据自动获取webgl的 GLTypeForTyped 类型
   getGLTypeForTypedArrayType,
   getTypedArrayTypeForGLType,
   isArrayBuffer,

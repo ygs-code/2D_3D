@@ -96,6 +96,7 @@ function create(x, y, z) {
  * @return {module:twgl/v3.Vec3} A vector tha tis the sum of a and b.
  * @memberOf module:twgl/v3
  */
+// *两个向量相加;假设a和b有相同的维数。
 function add(a, b, dst) {
   dst = dst || new VecType(3);
 
@@ -214,6 +215,7 @@ function min(a, b, dst) {
  * @return {module:twgl/v3.Vec3} The scaled vector.
  * @memberOf module:twgl/v3
  */
+// 用一个向量乘以一个标量。
 function mulScalar(v, k, dst) {
   dst = dst || new VecType(3);
 
@@ -423,6 +425,7 @@ function divide(a, b, dst) {
 }
 
 export {
+  // *两个向量相加;假设a和b有相同的维数。
   add,
   copy,
   create,
@@ -438,6 +441,7 @@ export {
   lengthSq,
   max,
   min,
+  // 用一个向量乘以一个标量。
   mulScalar,
   multiply,
   negate,
