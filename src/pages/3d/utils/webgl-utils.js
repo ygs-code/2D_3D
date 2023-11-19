@@ -96,21 +96,29 @@
    * @param {module:webgl-utils.ErrorCallback} opt_errorCallback callback for errors.
    * @return {WebGLShader} The created shader.
    */
+  // 加载 和创建 Shader
   function loadShader(gl, shaderSource, shaderType, opt_errorCallback) {
     const errFn = opt_errorCallback || error;
     // Create the shader object
+    // 创建 Shader
     const shader = gl.createShader(shaderType);
 
     // Load the shader source
+    // 向着色器对象中填充着色器程序的源代码 //加载着色器源
     gl.shaderSource(shader, shaderSource);
 
     // Compile the shader
+    //编译着色器
     gl.compileShader(shader);
 
     // Check the compile status
+    // Check the result of compilation
+    //检查编译结果
     const compiled = gl.getShaderParameter(shader, gl.COMPILE_STATUS);
     if (!compiled) {
       // Something went wrong during compilation; get the error
+      // 编译过程中出错;获取错误
+      // 检查如果有报错
       const lastError = gl.getShaderInfoLog(shader);
       errFn(
         "*** Error compiling shader '" +
@@ -123,6 +131,7 @@
             .map((l, i) => `${i + 1}: ${l}`)
             .join("\n")
       );
+      // 删除shader 防止内存溢出
       gl.deleteShader(shader);
       return null;
     }
@@ -148,10 +157,15 @@
     opt_errorCallback
   ) {
     const errFn = opt_errorCallback || error;
+    // 将两个Shader连接合在一起
+    // 创建程序对象
     const program = gl.createProgram();
+
+    // 为程序对象分配着色器
     shaders.forEach(function (shader) {
       gl.attachShader(program, shader);
     });
+
     if (opt_attribs) {
       opt_attribs.forEach(function (attrib, ndx) {
         gl.bindAttribLocation(
@@ -161,15 +175,18 @@
         );
       });
     }
+    // Link the program object
+    // 链接程序对象
     gl.linkProgram(program);
 
     // Check the link status
+    //检查链路状态
     const linked = gl.getProgramParameter(program, gl.LINK_STATUS);
     if (!linked) {
       // something went wrong with the link
       const lastError = gl.getProgramInfoLog(program);
       errFn("Error in program linking:" + lastError);
-
+      // 删除program
       gl.deleteProgram(program);
       return null;
     }
@@ -211,7 +228,7 @@
         throw "*** Error: unknown shader type";
       }
     }
-
+    // 加载 和创建 Shader
     return loadShader(
       gl,
       shaderSource,
@@ -266,7 +283,7 @@
 
   /**
    * Creates a program from 2 sources.
-   *
+   * 从两个源创建一个程序。
    * @param {WebGLRenderingContext} gl The WebGLRenderingContext
    *        to use.
    * @param {string[]} shaderSourcess Array of sources for the
@@ -289,6 +306,7 @@
     const shaders = [];
     for (let ii = 0; ii < shaderSources.length; ++ii) {
       shaders.push(
+        // 加载 和创建 Shader
         loadShader(
           gl,
           shaderSources[ii],
@@ -771,10 +789,12 @@
     opt_locations,
     opt_errorCallback
   ) {
+    // 从script 脚本获取 shader
     shaderSources = shaderSources.map(function (source) {
       const script = document.getElementById(source);
       return script ? script.text : source;
     });
+
     const program = createProgramFromSources(
       gl,
       shaderSources,
@@ -831,18 +851,14 @@
    * @memberOf module:webgl-utils
    */
 
-  // 
+  //
   function setBuffersAndAttributes(gl, setters, buffers) {
-
-
     setAttributes(setters, buffers.attribs);
 
     if (buffers.indices) {
       // 绑定 buffer
       gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, buffers.indices);
     }
-
-    
   }
 
   // Add your prefix here.
@@ -950,10 +966,14 @@
     );
   }
 
+  // 1. 创建 buffer 2.绑定buffer  3.向缓冲区写入数据
   function createBufferFromTypedArray(gl, array, type, drawType) {
     type = type || gl.ARRAY_BUFFER;
+    // 创建buffer
     const buffer = gl.createBuffer();
+    // 绑定buffer
     gl.bindBuffer(type, buffer);
+    // 向缓冲区写入数据
     gl.bufferData(type, array, drawType || gl.STATIC_DRAW);
     return buffer;
   }
@@ -962,8 +982,10 @@
     return name !== "indices";
   }
 
+  // 如果key 不是 indices的 增加 a_ 前缀
   function createMapping(obj) {
     const mapping = {};
+    // 如果key 不是 indices的 增加 a_ 前缀
     Object.keys(obj)
       .filter(allButIndices)
       .forEach(function (key) {
@@ -971,7 +993,7 @@
       });
     return mapping;
   }
-
+  // 根据数据自动获取webgl的 GLTypeForTyped 类型
   function getGLTypeForTypedArray(gl, typedArray) {
     if (typedArray instanceof Int8Array) {
       return gl.BYTE;
@@ -999,6 +1021,8 @@
 
   // This is really just a guess. Though I can't really imagine using
   // anything else? Maybe for some compression?
+  //这只是一个猜测。虽然我真的无法想象使用
+  //还有别的吗?也许是为了压缩一下?
   function getNormalizationForTypedArray(typedArray) {
     if (typedArray instanceof Int8Array) {
       return true;
@@ -1013,6 +1037,11 @@
     return a.buffer && a.buffer instanceof ArrayBuffer;
   }
 
+  /*
+   根据 数据的 key  是否等于 coord|texture 
+   或者 等于 color|colour， 根据不同的name名称
+   求余 2,3,4如果 顶点位置求余 长度超过 0 则报错
+*/
   function guessNumComponentsFromName(name, length) {
     let numComponents;
     if (name.indexOf("coord") >= 0) {
@@ -1030,6 +1059,7 @@
     return numComponents;
   }
 
+  // 转换数组数据
   function makeTypedArray(array, name) {
     if (isArrayBuffer(array)) {
       return array;
@@ -1046,6 +1076,11 @@
     }
 
     if (!array.numComponents) {
+      /*
+   根据 数据的 key  是否等于 coord|texture 
+   或者 等于 color|colour， 根据不同的name名称
+   求余 2,3,4如果 顶点位置求余 长度超过 0 则报错
+*/
       array.numComponents = guessNumComponentsFromName(name, array.length);
     }
 
@@ -1077,6 +1112,7 @@
    */
 
   /**
+   * 从一组数组创建一组属性数据和webglbuffer
    * Creates a set of attribute data and WebGLBuffers from set of arrays
    *
    * Given
@@ -1092,9 +1128,13 @@
    * returns something like
    *
    *      let attribs = {
+   *        顶点坐标
    *        a_position: { numComponents: 3, type: gl.FLOAT,         normalize: false, buffer: WebGLBuffer, },
+   *        纹理坐标
    *        a_texcoord: { numComponents: 2, type: gl.FLOAT,         normalize: false, buffer: WebGLBuffer, },
+   *        法线
    *        a_normal:   { numComponents: 3, type: gl.FLOAT,         normalize: false, buffer: WebGLBuffer, },
+   *        颜色
    *        a_color:    { numComponents: 4, type: gl.UNSIGNED_BYTE, normalize: true,  buffer: WebGLBuffer, },
    *      };
    *
@@ -1105,9 +1145,12 @@
    * @return {Object.<string, module:webgl-utils.AttribInfo>} the attribs
    * @memberOf module:webgl-utils
    */
+  // 1. 创建 buffer 2.绑定buffer  3.向缓冲区写入数据
   function createAttribsFromArrays(gl, arrays, opt_mapping) {
+    // 如果key 不是 indices的 增加 a_ 前缀
     const mapping = opt_mapping || createMapping(arrays);
     const attribs = {};
+
     Object.keys(mapping).forEach(function (attribName) {
       const bufferName = mapping[attribName];
       const origArray = arrays[bufferName];
@@ -1116,14 +1159,25 @@
           value: origArray.value
         };
       } else {
+        // 转换数组数据
         const array = makeTypedArray(origArray, bufferName);
+
         attribs[attribName] = {
+          // 1. 创建 buffer 2.绑定buffer  3.向缓冲区写入数据
           buffer: createBufferFromTypedArray(gl, array),
           numComponents:
             origArray.numComponents ||
             array.numComponents ||
+            /*
+                根据 数据的 key  是否等于 coord|texture 
+                或者 等于 color|colour， 根据不同的name名称
+                求余 2,3,4如果 顶点位置求余 长度超过 0 则报错
+              */
             guessNumComponentsFromName(bufferName),
+          // 根据数据自动获取webgl的 GLTypeForTyped 类型
           type: getGLTypeForTypedArray(gl, array),
+          //这只是一个猜测。虽然我真的无法想象使用
+          //还有别的吗?也许是为了压缩一下?
           normalize: getNormalizationForTypedArray(array)
         };
       }
@@ -1131,13 +1185,18 @@
     return attribs;
   }
 
+  // 获取数组数据
   function getArray(array) {
     return array.length ? array : array.data;
   }
 
   const texcoordRE = /coord|texture/i;
   const colorRE = /color|colour/i;
-
+  /*
+   根据 数据的 key  是否等于 coord|texture 
+   或者 等于 color|colour， 根据不同的name名称
+   求余 2,3,4如果 顶点位置求余 长度超过 0 则报错
+*/
   function guessNumComponentsFromName(name, length) {
     let numComponents;
     if (texcoordRE.test(name)) {
@@ -1157,10 +1216,20 @@
     return numComponents;
   }
 
+  /*
+   根据 数据的 key  是否等于 coord|texture 
+   或者 等于 color|colour， 根据不同的name名称
+   求余 2,3,4如果 顶点位置求余 长度超过 0 则报错
+*/
   function getNumComponents(array, arrayName) {
     return (
       array.numComponents ||
       array.size ||
+      /*
+   根据 数据的 key  是否等于 coord|texture 
+   或者 等于 color|colour， 根据不同的name名称
+   求余 2,3,4如果 顶点位置求余 长度超过 0 则报错
+*/ // 获取数组数据
       guessNumComponentsFromName(arrayName, getArray(array).length)
     );
   }
@@ -1168,7 +1237,9 @@
   /**
    * tries to get the number of elements from a set of arrays.
    */
+  // 尝试从一组数组中获取元素的个数。
   const positionKeys = ["position", "positions", "a_position"];
+  // 从非索引数组中获取Num元素
   function getNumElementsFromNonIndexedArrays(arrays) {
     let key;
     for (const k of positionKeys) {
@@ -1179,8 +1250,15 @@
     }
     key = key || Object.keys(arrays)[0];
     const array = arrays[key];
+    // 获取数组数据
     const length = getArray(array).length;
+    /*
+   根据 数据的 key  是否等于 coord|texture 
+   或者 等于 color|colour， 根据不同的name名称
+   求余 2,3,4如果 顶点位置求余 长度超过 0 则报错
+*/
     const numComponents = getNumComponents(array, key);
+
     const numElements = length / numComponents;
     if (length % numComponents > 0) {
       throw new Error(
@@ -1319,13 +1397,19 @@
    * @return {module:webgl-utils.BufferInfo} A BufferInfo
    * @memberOf module:webgl-utils
    */
+
+  // 1. 创建 buffer 2.绑定buffer  3.向缓冲区写入数据
   function createBufferInfoFromArrays(gl, arrays, opt_mapping) {
     const bufferInfo = {
+      // 1. 创建 buffer 2.绑定buffer  3.向缓冲区写入数据
       attribs: createAttribsFromArrays(gl, arrays, opt_mapping)
     };
+
     let indices = arrays.indices;
     if (indices) {
+      // 转换数组数据
       indices = makeTypedArray(indices, "indices");
+      // 1. 创建 buffer 2.绑定buffer  3.向缓冲区写入数据
       bufferInfo.indices = createBufferFromTypedArray(
         gl,
         indices,
@@ -1333,6 +1417,7 @@
       );
       bufferInfo.numElements = indices.length;
     } else {
+      // 从非索引数组中获取Num元素
       bufferInfo.numElements = getNumElementsFromNonIndexedArrays(arrays);
     }
 
@@ -1483,8 +1568,10 @@
 
   return {
     createAugmentedTypedArray: createAugmentedTypedArray,
+    // 1. 创建 buffer 2.绑定buffer  3.向缓冲区写入数据
     createAttribsFromArrays: createAttribsFromArrays,
     createBuffersFromArrays: createBuffersFromArrays,
+    // 1. 创建 buffer 2.绑定buffer  3.向缓冲区写入数据
     createBufferInfoFromArrays: createBufferInfoFromArrays,
     createAttributeSetters: createAttributeSetters,
     createProgram: createProgram,

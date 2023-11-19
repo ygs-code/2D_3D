@@ -1,6 +1,6 @@
 import * as twgl from "@/pages/3d/utils/twgl";
 import eyeIcon from "static/image/eye-icon.png";
-import initShader from "./initShader";
+import initShader from "@/pages/3d/utils/initShader";
 import FSHADER_SOURCE from "./index.frag";
 import VSHADER_SOURCE from "./index.vert";
 
@@ -18,6 +18,7 @@ import {
 
 import "@/pages/index.less";
 import "./index.less";
+import controller from "@/pages/3d/utils/controller.js";
 window.onload = () => {
   const v3 = twgl.v3;
   const m4 = twgl.m4;
@@ -162,32 +163,68 @@ window.onload = () => {
       u_worldViewProjection: worldViewProjection
     };
 
-    var zNear = 10;
-    var zFar = 50;
-    var fieldOfView = 30;
-    var zPosition = -25;
+    let parmas = {
+      zNear: 10,
+      zFar: 50,
+      fieldOfView: 30,
+      zPosition: -25
+    };
 
-    // Setup a ui.
-    function updateFieldOfView(event, ui) {
-      fieldOfView = ui.value;
-    }
-
-    function updateZNear(event, ui) {
-      zNear = ui.value;
-    }
-
-    function updateZFar(event, ui) {
-      zFar = ui.value;
-    }
-
-    function updateZPosition(event, ui) {
-      zPosition = ui.value;
-    }
-
-    // webglLessonsUI.setupSlider("#fieldOfView", {value: fieldOfView, slide: updateFieldOfView, max: 179});
-    // webglLessonsUI.setupSlider("#zNear", {value: zNear, slide: updateZNear, min: 1, max: 50});
-    // webglLessonsUI.setupSlider("#zFar", {value: zFar, slide: updateZFar, min: 1, max: 50});
-    // webglLessonsUI.setupSlider("#zPosition", {value: zPosition, slide: updateZPosition, min: -60, max: 0});
+    // 控制 参数改变
+    controller({
+      onChange: () => {},
+      parmas: parmas,
+      options: [
+        {
+          min: 0,
+          max: 179,
+          step: 0.001,
+          key: "fieldOfView",
+          name: "fieldOfView",
+          // onChange: (value) => {},
+          onFinishChange: (value) => {
+            // 完全修改停下来的时候触发这个事件
+            console.log("onFinishChange value==", value);
+          }
+        },
+        {
+          min: 0,
+          max: 50,
+          step: 0.001,
+          key: "zNear",
+          name: "zNear",
+          // onChange: (value) => {},
+          onFinishChange: (value) => {
+            // 完全修改停下来的时候触发这个事件
+            console.log("onFinishChange value==", value);
+          }
+        },
+        {
+          min: 0,
+          max: 100,
+          step: 0.01,
+          key: "zFar",
+          name: "zFar",
+          onChange: (value) => {},
+          onFinishChange: (value) => {
+            // 完全修改停下来的时候触发这个事件
+            console.log("onFinishChange value==", value);
+          }
+        },
+        {
+          min: -120,
+          max: 0,
+          step: 0.01,
+          key: "zPosition",
+          name: "zPosition",
+          onChange: (value) => {},
+          onFinishChange: (value) => {
+            // 完全修改停下来的时候触发这个事件
+            console.log("onFinishChange value==", value);
+          }
+        }
+      ]
+    });
 
     // 渲染
     function render(time) {
@@ -198,29 +235,63 @@ window.onload = () => {
       const width = gl.canvas.width;
 
       // clear the screen.
+      // 启用剪裁测试
+      /*
+      片断测试其实就是测试每一个像素，
+      只有通过测试的像素才会被绘制，
+      没有通过测试的像素则不进行绘制。
+      之前用的深度测试就是一种片段测试，还有裁剪，也是一种片段测试。
+      OpenGL提供了深度测试、剪裁测试、Alpha测试和模板测试这4中片段测试。
+       剪裁测试
+       剪裁测试用于限制绘制区域。我们可以指定一个矩形的剪裁窗口，当启用剪裁测试后，
+       只有在这个窗口之内的像素才能被绘制，其它像素则会被丢弃。
+      */
       gl.disable(gl.SCISSOR_TEST);
+      // 关闭颜色缓冲的所有通道
       gl.colorMask(true, true, true, true);
+      // 方法指定清除颜色缓冲区时使用的颜色值。这指定了调用clear()方法时使用的颜色值。这些值被限制在0和1之间。
       gl.clearColor(0, 0, 0, 0);
+      /*
+          WebGL API的WebGLRenderingContext.clear()方法将缓冲区清除为预设值。
+          预设值可以通过clearColor()， clearDepth()或clearStencil()来设置。
+          剪刀盒、抖动和缓冲区写掩码会影响clear()方法。
+      */
       gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
 
+      /*
+      WebGL API的WebGLRenderingContext.viewport()
+      方法设置viewport，
+      它指定x和y从标准化设备坐标到窗口坐标的仿射变换。
+      */
       gl.viewport(0, halfHeight, width, halfHeight);
 
+      // 激活深度比较并更新深度缓冲区。看到
       gl.enable(gl.DEPTH_TEST);
+      // 激活计算片段颜色值的混合。看到
       gl.enable(gl.BLEND);
+      // WebGL API的WebGLRenderingContext.blendFunc()方法定义了用于混合像素算法的函数。
       gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
 
+      // 宽高比例
       var aspect = gl.canvas.clientWidth / (gl.canvas.clientHeight / 2);
 
       // 透视矩阵
-      m4.perspective(degToRad(60), aspect, 1, 5000, projection);
+      m4.perspective(
+        degToRad(60), // 这个是相机弧度
+        aspect, // 宽高比
+        1, //近截面
+        5000, //远截面
+        projection // 矩阵
+      );
 
-      var f = Math.max(30, fieldOfView) - 30;
+      var f = Math.max(30, parmas.fieldOfView) - 30;
       f = f / (179 - 30);
       f = f * f * f * f;
       f = lerp(1, 179 * 0.9, f);
       f = 1;
       // 用一个向量乘以一个标量。
       v3.mulScalar(targetToEye, f, v3t0);
+      
       // *两个向量相加;假设a和b有相同的维数。
       v3.add(v3t0, target, v3t0);
 
@@ -261,7 +332,7 @@ window.onload = () => {
         var cubeScale = scale * 3;
         for (var ii = -1; ii <= 1; ++ii) {
           // 变换 偏移
-          m4.translation([ii * 10, 0, zPosition], world);
+          m4.translation([ii * 10, 0, parmas.zPosition], world);
           // 旋转 Y 轴
           m4.rotateY(world, time + (ii * Math.PI) / 6, world);
           // 旋转 X 轴
@@ -350,10 +421,10 @@ window.onload = () => {
         twgl.setBuffersAndAttributes(gl, colorProgramInfo, cubeBufferInfo);
         // 透视矩阵
         m4.perspective(
-          degToRad(fieldOfView),
+          degToRad(parmas.fieldOfView),
           aspect,
-          zNear,
-          zFar * scale,
+          parmas.zNear,
+          parmas.zFar * scale,
           exampleProjection
         );
         //  *计算4 × 4矩阵的逆。
@@ -390,7 +461,13 @@ window.onload = () => {
 
       // Draw view cone.
       // 透视矩阵
-      m4.perspective(degToRad(fieldOfView), aspect, 1, 5000, exampleProjection);
+      m4.perspective(
+        degToRad(parmas.fieldOfView),
+        aspect,
+        1,
+        5000,
+        exampleProjection
+      );
       //  *计算4 × 4矩阵的逆。
       m4.inverse(exampleProjection, exampleInverseProjection);
       // 变换 偏移
@@ -450,10 +527,10 @@ window.onload = () => {
       // Draw Frustum Wire 画截锥体线
       // 透视矩阵
       m4.perspective(
-        degToRad(fieldOfView),
+        degToRad(parmas.fieldOfView),
         aspect,
-        zNear,
-        zFar * scale,
+        parmas.zNear,
+        parmas.zFar * scale,
         exampleProjection
       );
       //  *计算4 × 4矩阵的逆。
@@ -507,10 +584,10 @@ window.onload = () => {
       gl.clear(gl.COLOR_BUFFER_BIT);
       // 透视矩阵
       m4.perspective(
-        degToRad(fieldOfView),
+        degToRad(parmas.fieldOfView),
         aspect,
-        zNear,
-        zFar * scale,
+        parmas.zNear,
+        parmas.zFar * scale,
         projection
       );
       // Draw scene  绘画场景

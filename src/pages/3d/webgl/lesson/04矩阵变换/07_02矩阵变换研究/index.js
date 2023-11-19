@@ -29,7 +29,7 @@ window.onload = function () {
           gl_FragColor=vec4(1.0, 0.0, 0.0, 1.0);
      }
    `;
-  initShader(gl, vertexShader, fragmentShader);
+   const program = initShader(gl, vertexShader, fragmentShader);
 
   // 清空画布
   gl.clearColor(0.0, 0.0, 0.0, 1.0);
@@ -85,7 +85,7 @@ window.onload = function () {
   gl.enableVertexAttribArray(a_Position);
 
   //获取矩阵uniform变了缓存的地址
-  const u_Matrix = gl.getUniformLocation(gl.program, "u_Matrix");
+  const u_Matrix = gl.getUniformLocation(program, "u_Matrix");
 
   /*放大*/
   // let sx = 1;

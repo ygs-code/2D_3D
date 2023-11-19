@@ -66,7 +66,7 @@ window.onload = function () {
   //  }
   // `;
   // 初始化shader
-  initShader(gl, vertexShader, fragmentShader);
+ const program = initShader(gl, vertexShader, fragmentShader);
 
   let x = 0.0;
   let y = 0.0;
@@ -105,7 +105,7 @@ window.onload = function () {
 
     // 4: 把带有数据的buffer给arrribute
     // 将缓冲区对象分配给a_Position变量
-    const a_Position = gl.getAttribLocation(gl.program, "a_Position");
+    const a_Position = gl.getAttribLocation(program, "a_Position");
 
     // console.log('a_Position==', a_Position);
     gl.vertexAttribPointer(
@@ -119,7 +119,7 @@ window.onload = function () {
     // 连接a_Position变量与分配给他的缓冲区对象
     gl.enableVertexAttribArray(a_Position);
 
-    let u_translate = gl.getUniformLocation(gl.program, "u_translate");
+    let u_translate = gl.getUniformLocation(program, "u_translate");
     gl.uniform4f(u_translate, x, y, 0.0, 0.0);
 
     let n = 3;

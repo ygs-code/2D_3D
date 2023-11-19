@@ -1,6 +1,5 @@
 import * as twgl from "@/pages/3d/utils/twgl";
 import eyeIcon from "static/image/eye-icon.png";
-// import initShader from "./initShader";
 import FSHADER_SOURCE from "./index.frag";
 import VSHADER_SOURCE from "./index.vert";
 

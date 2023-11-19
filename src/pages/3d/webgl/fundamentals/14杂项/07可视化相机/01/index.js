@@ -1,14 +1,25 @@
 // import WebGLDebugUtils from "@/pages/3d/utils/lib/webgl-debug.js";
 // import WebGLUtils from "@/pages/3d/utils/lib/webgl-utils";
 import {getWebGLContext} from "@/pages/3d/utils/lib/cuon-utils";
-import initShaders from "./initShader";
+import initShaders from "@/pages/3d/utils/initShader";
 import {
+     // 1. 创建 buffer 2.绑定buffer  3.向缓冲区写入数据
   createBufferInfoFromArrays,
+  // setBuffersAndAttributes,
+  // setUniforms,
+  // drawBufferInfo,
+  // createProgramInfo
+} from "@/pages/3d/utils/webgl-utils"; 
+
+
+import  {
+  // createBufferInfoFromArrays,
   setBuffersAndAttributes,
   setUniforms,
   drawBufferInfo,
   createProgramInfo
-} from "@/pages/3d/utils/webgl-utils";
+} from "@/pages/3d/utils/twgl";
+
 import m4 from "@/pages/3d/utils/m4.js";
 import primitives from "@/pages/3d/utils/primitives.js";
 import controller from "@/pages/3d/utils/controller.js";
@@ -16,6 +27,7 @@ import VSHADER_SOURCE from "./index.vert";
 import FSHADER_SOURCE from "./index.frag";
 import VSHADER_SOURCE_3D from "./3d.vert";
 import FSHADER_SOURCE_3D from "./3d.frag";
+import {cubeArrays} from "./data";
 import "./index.less";
 
 window.onload = function () {
@@ -23,7 +35,7 @@ window.onload = function () {
   canvas.width = 398;
   canvas.height = 298;
 
-  getWebGLContext(canvas);
+  // getWebGLContext(canvas);
 
   document.body.appendChild(canvas);
 
@@ -52,26 +64,10 @@ window.onload = function () {
     // a cone in front of this cube opening
     // toward -Z
 
-    const positions = new Function(`
-                     return    [
-                          -1, -1,  1,  // cube vertices
-                           1, -1,  1,
-                          -1,  1,  1,
-                          1,  1,  1,
-                          -1, -1,  3,
-                          1, -1,  3,
-                          -1,  1,  3,
-                          1,  1,  3,
-                          0,  0,  1,  // cone tip
-                      ];`)();
+     // 顶点
+    const positions = cubeArrays.positions;
 
-    const indices = new Function(`
-                    return  [
-                      0, 1, 1, 3, 3, 2, 2, 0, // cube indices
-                      4, 5, 5, 7, 7, 6, 6, 4,
-                      0, 4, 1, 5, 3, 7, 2, 6,
-                    ];
-    `)();
+    const indices = cubeArrays.indices;
 
     // add cone segments 添加锥段
     const numSegments = 6;
@@ -95,7 +91,11 @@ window.onload = function () {
       positions[ndx] *= scale;
     });
 
-    //
+
+    console.log('positions==',positions);
+    console.log('indices==',indices);
+
+     // 1. 创建 buffer 2.绑定buffer  3.向缓冲区写入数据
     return createBufferInfoFromArrays(gl, {
       position: positions,
       indices

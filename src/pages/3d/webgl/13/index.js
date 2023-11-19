@@ -59,7 +59,7 @@ window.onload = function () {
      }
     `;
   // 初始化shader
-  initShader(gl, vertexShader, fragmentShader);
+ const program = initShader(gl, vertexShader, fragmentShader);
 
   // 清除画布
   gl.clearColor(0.0, 0.0, 0.0, 1.0);
@@ -105,7 +105,7 @@ window.onload = function () {
 
   // 4: 把带有数据的buffer给arrribute
   // 将缓冲区对象分配给a_Position变量
-  const a_Position = gl.getAttribLocation(gl.program, "a_Position");
+  const a_Position = gl.getAttribLocation(program, "a_Position");
 
   // WebGL系统会根据stride和offset参数从缓冲区中正确地抽取出数据，依次赋值给着色器中的各个attribute变量并进行绘制
   // stride（第5个参数）为FSIZE*5意味着verticesColors数据中5个数为一组是属于一个顶点的所有数据(包括顶点坐标和颜色大小等)，
@@ -150,7 +150,7 @@ pointer：当前指针指向的vertex内部的偏离字节数，可以唯一的�
   // 连接a_Position变量与分配给他的缓冲区对象
   gl.enableVertexAttribArray(a_Position);
 
-  const a_Color = gl.getAttribLocation(gl.program, "a_Color");
+  const a_Color = gl.getAttribLocation(program, "a_Color");
   console.log("a_Color==", a_Color);
 
   gl.vertexAttribPointer(

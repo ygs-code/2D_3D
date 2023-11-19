@@ -507,7 +507,13 @@ function setAxis(a, v, axis, dst) {
  * @return {module:twgl/m4.Mat4} The perspective matrix.
  * @memberOf module:twgl/m4
  */
-function perspective(fieldOfViewYInRadians, aspect, zNear, zFar, dst) {
+function perspective(
+      fieldOfViewYInRadians,  // 弧度
+      aspect, // 宽/高的纵横比。
+      zNear,  // 近裁剪平面的。
+      zFar,  // 远裁剪平面的*。
+      dst  // 矩阵保存结果。
+   ) {
   dst = dst || new MatType(16);
 
   const f = Math.tan(Math.PI * 0.5 - 0.5 * fieldOfViewYInRadians);
