@@ -23,10 +23,10 @@ window.onload = function () {
     return;
   }
 
-  let u_w = gl.getUniformLocation(gl.program, "u_w");
-  let u_h = gl.getUniformLocation(gl.program, "u_h");
-  gl.uniform1f(u_w, canvas_w);
-  gl.uniform1f(u_h, canvas_h);
+  // let u_w = gl.getUniformLocation(gl.program, "u_w");
+  // let u_h = gl.getUniformLocation(gl.program, "u_h");
+  // gl.uniform1f(u_w, canvas_w);
+  // gl.uniform1f(u_h, canvas_h);
 
   //三角形顶点位置
 

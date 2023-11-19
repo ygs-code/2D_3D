@@ -1218,7 +1218,7 @@
   }
 
   /**
-   * Computes the inverse of a matrix.
+   * Computes the inverse of a matrix. *计算矩阵的逆。
    * @param {Matrix4} m matrix to compute inverse of
    * @param {Matrix4} [dst] optional matrix to store result
    * @return {Matrix4} dst or a new matrix if none provided

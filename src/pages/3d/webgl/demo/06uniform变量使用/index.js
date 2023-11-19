@@ -5,8 +5,8 @@ import "./index.less";
 window.onload = function () {
   const canvas = document.createElement("canvas");
   document.body.appendChild(canvas);
-  canvas.width = 1000;
-  canvas.height = 1000;
+  canvas.width = 500;
+  canvas.height = 500;
 
   if (!canvas.getContext) return;
   let gl = canvas.getContext("webgl");
@@ -32,8 +32,8 @@ window.onload = function () {
 
   // 片元着色器程序
   let fragmentShader = `
-      precision mediump float;
-      uniform vec4 u_FragColor;
+      precision mediump float;  // 定义浮点变量
+      uniform vec4 u_FragColor;  // 定义u_FragColor变量
       void main(){
           // gl_FragColor = vec4(1.0, 1.0, 0.0 , 1.0);    // 颜色rgba
           gl_FragColor = u_FragColor;    // 颜色rgba
@@ -41,31 +41,43 @@ window.onload = function () {
     `;
 
   // 初始化initShader
-const program=  initShader(gl, vertexShader, fragmentShader);
+ const program = initShader(gl, vertexShader, fragmentShader);
 
   // 设置动态变量
-  //获取arrtibute变量
+  // 获取 Attrib 存储地址
   const a_Position = gl.getAttribLocation(program, "a_Position");
 
+  // 获取 Attrib 存储地址
   if (a_Position < 0) {
     console.log("Failed to get the storage loacation of a_Position");
     return false;
   }
-
+  // 获取 Attrib 存储地址
   const a_PointSize = gl.getAttribLocation(program, "a_PointSize");
   if (a_PointSize < 0) {
     console.log("Failed to get the storage loacation of a_PointSize");
     return false;
   }
-
+  // 获取Uniform 存储地址
   const u_FragColor = gl.getUniformLocation(program, "u_FragColor");
-  if (a_PointSize < 0) {
+  if (!u_FragColor) {
     console.log("Failed to get the storage loacation of u_FragColor");
     return false;
   }
 
+  let PointSize = 10.0;
+  let Position = [0.0, 0.0, 0.0, 1.0];
+  let rgba = [0.0, 0.0, 1.0, 1.0];
+
+  // 将顶点位置输入给 attribute变量
+  gl.vertexAttrib1f(a_PointSize, PointSize);
+  // // 数组传递
+  gl.vertexAttrib3fv(a_Position, new Float32Array(Position));
+  gl.uniform4fv(u_FragColor, new Float32Array(rgba));
+
   // 第一步清空这个画布
   gl.clearColor(0.5, 0.5, 0.5, 1.0); // rgba()
+
   // 真正清空颜色 并填充为黑色
 
   //gl.COLOR_BUFFER_BIT  webgl 常量api
@@ -74,53 +86,10 @@ const program=  initShader(gl, vertexShader, fragmentShader);
     gl.COLOR_BUFFER_BIT
   );
 
-  let PointSize = 10.0;
-  let Position = [-5.0, 5.0, 0.0, 10.0];
-  let linType = "top";
-
-  let i = 0;
-
-  //  画一个圆
-  let angle = 0;
-  let r = 0.1;
-  Position = [-5.0, 1.0, 0.0, 10.0];
-  // 这里的rgb 最大值是1 而不是 255
-  let rgba = [Math.random(), Math.random(), Math.random(), Math.random()];
-  let x = -5.0;
-  while (i <= 10000) {
-    angle += 1;
-
-    // 画多个圆
-    if (angle >= 360) {
-      angle = 0;
-      r += 0.02;
-      x -= 1.0;
-      Position = [x, 1.0, 0.0, 10.0];
-
-      // 这里的rgb 最大值是1 而不是 255
-      rgba = [Math.random(), Math.random(), Math.random(), Math.random()];
-      console.log("rgba==", rgba);
-    }
-
-    Position[0] = Position[0] + Math.sin((angle * 2 * Math.PI) / 360) * r;
-    Position[1] = Position[1] + Math.cos((angle * 2 * Math.PI) / 360) * r;
-
-    // console.log('Position==', Position);
-    // 将顶点位置输入给 attribute变量
-    gl.vertexAttrib1f(a_PointSize, PointSize);
-    // // 数组传递
-    gl.vertexAttrib4fv(a_Position, new Float32Array(Position));
-    
-    gl.uniform4fv(u_FragColor, new Float32Array(rgba));
-    // 画一个点
-    gl.drawArrays(
-      gl.POINTS, // 画点参数
-      0,
-      1
-    );
-
-    i++;
-  }
-
-  // varying 是将vertex shader传递到fragment shader中
+  // 画一个点
+  gl.drawArrays(
+    gl.POINTS, // 画点参数
+    0,
+    1
+  );
 };
