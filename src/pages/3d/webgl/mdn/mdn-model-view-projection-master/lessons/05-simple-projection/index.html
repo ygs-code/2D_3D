@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset='utf-8'>
+  <title>Simple Projection</title>
+  <link type='text/css' rel='stylesheet' href='../../shared/style.css' />
+  <style>
+    svg {
+      opacity: 0.5;
+    }
+  </style>
+</head>
+<body>
+  
+  <!-- The vertex shader operates on individual vertices in our model data by setting gl_Position -->
+  <script id="vertex-shader" type="x-shader/x-vertex">
+    //Each point has a position and color
+    attribute vec3 position;
+    attribute vec4 color;
+
+    // The transformation matrices
+    uniform mat4 model;
+    uniform mat4 projection;
+
+    // Pass the color attribute down to the fragment shader
+    varying vec4 vColor;
+
+    void main() {
+      
+      // Pass the color down to the fragment shader
+      vColor = color;
+      
+      // Read the multiplication in reverse order, the original point is moved
+      // into clip space, and then projected into a perspective view by filling
+      // in the W component
+      gl_Position = projection * model * vec4( position, 1.0 );
+    }
+  </script>
+
+  <!-- The fragment shader determines the color of the final pixel by setting gl_FragColor -->
+  <script id="fragment-shader" type="x-shader/x-fragment">
+    precision mediump float;
+    varying vec4 vColor;
+    
+    void main() {
+      gl_FragColor = vColor;
+      // gl_FragColor = vec4(1.0, 0.0, 0.0, 1.0);
+    }
+  </script>
+    
+  <canvas id="canvas"></canvas>
+    
+  <h1 class='lesson-title'>
+    <a href='../04-divide-by-w'>&larr;</a>
+    Simple Projection
+    <a href='../06-perspective-matrix'>&rarr;</a>
+  </h1>
+  
+  <script type='text/javascript' src='../../shared/cube.js'></script>
+  <script type='text/javascript' src='../../shared/matrices.js'></script>
+  <script type='text/javascript' src='../../shared/shaders.js'></script>
+  <script type="text/javascript">
+    // Double check that the shared files are being pulled in.
+    if( !MDN ) {
+      alert(
+        "Could not find the shared script files. Make sure this page has "+
+        "access to '../../shared'. If you are serving files with a local "+
+        "web server make sure and share the files from the base content "+
+        "kit directory."
+      );
+    }
+  </script>
+  <script type='text/javascript' src='script.js'></script>
+    
+</body>
+</html>

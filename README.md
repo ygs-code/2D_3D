@@ -14,9 +14,9 @@ webgl 3d api 文档 https://en.wikipedia.org/wiki/List_of_3D_graphics_libraries
 
 webgl 3d api 教程文档 https://webglfundamentals.org/
 
-
 webgl  mdn web doc 操作api ：https://developer.mozilla.org/en-US/docs/Web/API/WebGLRenderingContext/getActiveUniform
 
+https://developer.mozilla.org/zh-CN/docs/Web/API/WebGL_API
 
 
 
