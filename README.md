@@ -18,14 +18,15 @@ webgl  mdn web doc 操作api ：https://developer.mozilla.org/en-US/docs/Web/API
 
 https://developer.mozilla.org/zh-CN/docs/Web/API/WebGL_API
 
-
-
 shadertoy 网站
 https://www.shadertoy.com/browse
 
 https://learnopengl-cn.readthedocs.io/zh/latest/05%20Advanced%20Lighting/07%20Bloom/
 
 https://blog.csdn.net/AHcola233/article/details/117825091
+
+
+齐次坐标 https://zh.wikipedia.org/wiki/%E9%BD%90%E6%AC%A1%E5%9D%90%E6%A0%87
 
 https://learnwebgl.brown37.net/#
 

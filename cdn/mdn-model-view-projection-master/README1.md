@@ -1,7 +1,12 @@
+欧氏平面 ，笛卡儿坐标 ，变换坐标，齐次坐标，数学投影，投影几何，对偶性  https://zh.wikipedia.org/wiki/%E9%BD%90%E6%AC%A1%E5%9D%90%E6%A0%87#%E9%BD%8A%E6%AC%A1%E6%80%A7
+
+
+
+https://developer.mozilla.org/zh-CN/docs/Web/API/WebGL_API/WebGL_model_view_projection
+
 [在]()[OpenGL](https://so.csdn.net/so/search?q=OpenGL&spm=1001.2101.3001.7020)和WebGL中，默认情况下，正面是指逆时针绘制的面，背面是指顺时针绘制的面。通过开启多边形面剔除，我们可以剔除掉背面多边形，只绘制正面多边形，从而减少不必要的绘制开销。
 
 WebGL中的三角形有正反面的概念，正面三角形的顶点顺序是逆时针方向， 反面三角形是顺时针方向。
-
 
 # WebGL model view projection
 
@@ -32,8 +37,6 @@ WebGL 空间中的点和多边形的个体转化由基本的转换矩阵（例�
 本示例将创建一个自定义 WebGL 对象，该对象将在屏幕上绘制一个 2D 框。
 
 **备注：** 每一个 WebGL 示例代码在此 [github repo](https://github.com/TatumCreative/mdn-model-view-projection/tree/master/lessons) 中可找到，并按章节组织。此外，每个章节底部都有一个 JSFiddle 链接。
-
-
 
 #### WebGLBox Constructor
 

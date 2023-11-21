@@ -88,14 +88,18 @@ homogeneousToCartesian([10,4,5,0]);
 function WebGLBox() {
   
   // Setup the canvas and WebGL context
+  // 获取canvas el对象
   this.canvas = document.getElementById("canvas");
+  // 设置canvas 宽高
   this.canvas.width = window.innerWidth;
   this.canvas.height = window.innerHeight;
+  // 创建 Context canvas.getContext
   this.gl = MDN.createContext(this.canvas);
   
   var gl = this.gl; 
 
   // Setup a WebGL program
+  // 创建  program
   this.webglProgram = MDN.createWebGLProgramFromIds(gl, "vertex-shader", "fragment-shader");
   gl.useProgram(this.webglProgram);
   
@@ -105,6 +109,7 @@ function WebGLBox() {
   
   // Tell WebGL to test the depth when drawing, so if a square is behind
   // another square it won't be drawn
+  // 深度测试
   gl.enable(gl.DEPTH_TEST);
 }
 
@@ -117,7 +122,8 @@ WebGLBox.prototype.draw = function(settings) {
   
   var data = new Float32Array([
    
-    //Triangle 1
+    //Triangle 1 
+    // x                y                z             w
     settings.left,  settings.bottom, settings.depth, settings.w,
     settings.right, settings.bottom, settings.depth, settings.w,
     settings.left,  settings.top,    settings.depth, settings.w,
@@ -182,12 +188,15 @@ box.draw({
 
 // This box previously didn't drawn to the screen because it was outside of clip space. Setting
 // The W to 1.5 will bring it back into clip space.
+//这个方框之前没有被拖动到屏幕上，因为它在剪辑空间之外。设置
+//将W调到1.5将把它带回到剪辑空间。
 box.draw({
 
   top    : 1,               // x
   bottom : -1,              // x
   left   : -1,              // y
   right  : 1,               // y
+
   w      : 1.5,             // w - Bring this box into range
 
   depth  : -1.5,             // z

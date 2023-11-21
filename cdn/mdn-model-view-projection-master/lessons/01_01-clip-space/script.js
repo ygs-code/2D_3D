@@ -62,10 +62,12 @@ WebGLBox.prototype.draw = function(settings) {
   
   var data = new Float32Array([
    
+    // x                  y                  z
     //Triangle 1
     settings.left,  settings.bottom, settings.depth,
     settings.right, settings.bottom, settings.depth,
     settings.left,  settings.top,    settings.depth,
+
     //Triangle 2
     settings.left,  settings.top,    settings.depth,
     settings.right, settings.bottom, settings.depth,
@@ -103,6 +105,7 @@ box.draw({
   
   top    : 0.5,             // x
   bottom : -0.5,            // x
+
   left   : -0.5,            // y
   right  : 0.5,             // y
                             
