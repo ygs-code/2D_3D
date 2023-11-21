@@ -5,7 +5,7 @@ import FSHADER_SOURCE from "./index.frag";
 import VSHADER_SOURCE from "./index.vert";
 import controller from "@/pages/3d/utils/controller.js";
 import {colors, fData} from "./data";
-// import {createHtmlMatrix} from "@/pages/3d/utils/matrix.js";
+ 
 import {createHtmlMatrix, multiply} from "@/pages/3d/utils/matrix.js";
 import * as glMatrix from "gl-matrix";
 import "./index.less";
