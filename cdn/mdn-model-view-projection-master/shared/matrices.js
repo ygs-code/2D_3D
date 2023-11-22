@@ -73,6 +73,7 @@ MDN.multiplyArrayOfMatrices = function (matrices) {
   return inputMatrix;
 }
 
+// x 轴旋转矩阵
 MDN.rotateXMatrix = function (a) {
   
   var cos = Math.cos;
@@ -85,7 +86,7 @@ MDN.rotateXMatrix = function (a) {
        0,       0,        0,     1
   ];
 }
-
+// y 轴旋转矩阵
 MDN.rotateYMatrix = function (a) {
 
   var cos = Math.cos;
@@ -98,7 +99,7 @@ MDN.rotateYMatrix = function (a) {
           0,   0,      0,   1
   ];
 }
-
+// z 轴旋转矩阵
 MDN.rotateZMatrix = function (a) {
 
   var cos = Math.cos;
@@ -112,6 +113,7 @@ MDN.rotateZMatrix = function (a) {
   ];
 }
 
+// 偏移矩阵
 MDN.translateMatrix = function (x, y, z) {
 	return [
 	    1,    0,    0,   0,
@@ -121,6 +123,7 @@ MDN.translateMatrix = function (x, y, z) {
 	];
 }
 
+// 缩放矩阵
 MDN.scaleMatrix = function (w, h, d) {
 	return [
 	    w,    0,    0,   0,

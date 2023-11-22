@@ -41,17 +41,20 @@
 function CubeDemo () {
   
   // Prep the canvas
+  // 获取canvas dom
   this.canvas = document.getElementById("canvas");
   this.canvas.width = window.innerWidth;
   this.canvas.height = window.innerHeight;
   
   // Grab a context
+  // 获取gl Context
   this.gl = MDN.createContext(this.canvas);
 
   this.transforms = {}; // All of the matrix transforms
   this.locations = {}; //All of the shader locations
   
   // MDN.createBuffersForCube and MDN.createCubeData are located in /shared/cube.js
+  // 创建buffer
   this.buffers = MDN.createBuffersForCube(this.gl, MDN.createCubeData() );
   
   this.webglProgram = this.setupProgram();
@@ -63,15 +66,20 @@ CubeDemo.prototype.setupProgram = function() {
   var gl = this.gl;
     
   // Setup a WebGL program
+
   var webglProgram = MDN.createWebGLProgramFromIds(gl, "vertex-shader", "fragment-shader");
   gl.useProgram(webglProgram);
   
   // Save the attribute and uniform locations
+  // 获取 Uniform 变量 model 地址
   this.locations.model = gl.getUniformLocation(webglProgram, "model");
+   // 获取 Attrib 变量 position 地址
   this.locations.position = gl.getAttribLocation(webglProgram, "position");
+    // 获取 Attrib 变量 color 地址 
   this.locations.color = gl.getAttribLocation(webglProgram, "color");
   
   // Tell WebGL to test the depth when drawing
+  //告诉WebGL在绘制时测试深度
   gl.enable(gl.DEPTH_TEST);
   
   return webglProgram;
@@ -82,6 +90,7 @@ CubeDemo.prototype.computeModelMatrix = function( now ) {
   //See /shared/matrices.js for the definitions of these matrix functions
 
   //Scale down by 50%
+  // 缩放 缩小
   var scale = MDN.scaleMatrix(0.5, 0.5, 0.5);
   
   // Rotate a slight tilt

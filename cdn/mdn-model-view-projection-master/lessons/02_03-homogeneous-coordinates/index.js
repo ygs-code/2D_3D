@@ -54,21 +54,15 @@ window.onload = function () {
   let gl = canvas.getContext("webgl");
   // vertexShader, fragmentShader
 
-  console.log("VSHADER_SOURCE=====", VSHADER_SOURCE);
-  console.log("FSHADER_SOURCE=====", FSHADER_SOURCE);
+ 
   const program = initShaders(gl, VSHADER_SOURCE, FSHADER_SOURCE);
   if (!program) {
     console.log("failed to initialize shaders");
     return;
   }
 
-  // let u_w = gl.getUniformLocation(gl.program, "u_w");
-  // let u_h = gl.getUniformLocation(gl.program, "u_h");
-  // gl.uniform1f(u_w, canvas_w);
-  // gl.uniform1f(u_h, canvas_h);
-
-  //三角形顶点位置
-
+ 
+ 
     // 4个点的坐标信息
     let vertices = new Float32Array([
       //x       y     z    w

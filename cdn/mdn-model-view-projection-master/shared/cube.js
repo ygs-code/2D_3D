@@ -2,8 +2,10 @@
 var MDN = window.MDN || {};
 
 // Define the data that is needed to make a 3d cube
+//定义制作3d立方体所需的数据
 MDN.createCubeData = function() {
   
+  // 顶点位置
   var positions = [
     // Front face
     -1.0, -1.0,  1.0,
@@ -42,6 +44,7 @@ MDN.createCubeData = function() {
     -1.0,  1.0, -1.0
   ];
   
+  // 颜色
   var colorsOfFaces = [
     [0.3,  1.0,  1.0,  1.0],    // Front face: cyan
     [1.0,  0.3,  0.3,  1.0],    // Back face: red
@@ -79,18 +82,30 @@ MDN.createCubeData = function() {
 
 // Take the data for a cube and bind the buffers for it.
 // Return an object collection of the buffers
+//获取立方体的数据并为其绑定缓冲区。
+//返回缓冲区的对象集合
 MDN.createBuffersForCube = function( gl, cube ) {
   
+  // 创建顶点Buffer
   var positions = gl.createBuffer();
+  // 绑定顶点Buffer
   gl.bindBuffer(gl.ARRAY_BUFFER, positions);
+  // 向缓冲区写入数据
   gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(cube.positions), gl.STATIC_DRAW);
   
+  // 创建顶点Buffer
   var colors = gl.createBuffer();
+  // 绑定顶点Buffer
   gl.bindBuffer(gl.ARRAY_BUFFER, colors);
+  // 向缓冲区写入数据
   gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(cube.colors), gl.STATIC_DRAW);
   
+
+  // 创建顶点Buffer
   var elements = gl.createBuffer();
+   // 绑定顶点Buffer
   gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, elements);
+  // 向缓冲区写入数据
   gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, new Uint16Array(cube.elements), gl.STATIC_DRAW);
   
   return {
