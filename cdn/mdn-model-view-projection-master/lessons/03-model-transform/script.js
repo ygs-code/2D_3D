@@ -57,16 +57,17 @@ function CubeDemo () {
   // 创建buffer
   this.buffers = MDN.createBuffersForCube(this.gl, MDN.createCubeData() );
   
+  // 创建program
   this.webglProgram = this.setupProgram();
   
 }
-
+  // 创建program
 CubeDemo.prototype.setupProgram = function() {
   
   var gl = this.gl;
     
   // Setup a WebGL program
-
+  // 创建program
   var webglProgram = MDN.createWebGLProgramFromIds(gl, "vertex-shader", "fragment-shader");
   gl.useProgram(webglProgram);
   
@@ -84,7 +85,7 @@ CubeDemo.prototype.setupProgram = function() {
   
   return webglProgram;
 };
-
+// 计算模型矩阵
 CubeDemo.prototype.computeModelMatrix = function( now ) {
 
   //See /shared/matrices.js for the definitions of these matrix functions
@@ -93,16 +94,17 @@ CubeDemo.prototype.computeModelMatrix = function( now ) {
   // 缩放 缩小
   var scale = MDN.scaleMatrix(0.5, 0.5, 0.5);
   
-  // Rotate a slight tilt
+  // Rotate a slight tilt 轻微倾斜旋转
   var rotateX = MDN.rotateXMatrix( now * 0.0003 );
-  
-  // Rotate according to time
+   
+  // Rotate according to time  根据时间旋转
   var rotateY = MDN.rotateYMatrix( now * 0.0005 );
 
-  // Move slightly down
+  // Move slightly down //稍微向下移动
   var position = MDN.translateMatrix(0, -0.1, 0);
   
   // Multiply together, make sure and read them in opposite order
+  // 乘在一起，确保按相反的顺序读
   this.transforms.model = MDN.multiplyArrayOfMatrices([
     position, // step 4
     rotateY,  // step 3
