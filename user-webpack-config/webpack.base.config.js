@@ -8,7 +8,7 @@ const HtmllinterWebpackPlugin = require("htmllinter-webpack-plugin");
 const MyExampleWebpackPlugin = require("./definePlugin/MyExampleWebpackPlugin");
 const os = require("os");
 const HappyPack = require("happypack");
-const happyThreadPool = HappyPack.ThreadPool({size: os.cpus().length - 1});
+const happyThreadPool = HappyPack.ThreadPool({ size: os.cpus().length - 1 });
 const path = require("path");
 
 let htmllinterConfig = {};
@@ -19,7 +19,7 @@ if (fs.existsSync(path.join(process.cwd(), "./htmllinter.config.js"))) {
   ));
 }
 
-const {resolve} = path;
+const { resolve } = path;
 let {
   NODE_ENV, // 环境参数
   WEB_ENV, // 环境参数
@@ -33,10 +33,10 @@ const isEnvDevelopment = NODE_ENV === "development";
 const cacheLoader = (happypackId) => {
   return isEnvDevelopment
     ? [
-        `happypack/loader?id=${happypackId}&cacheDirectory=true`,
-        "thread-loader",
-        "cache-loader"
-      ]
+      `happypack/loader?id=${happypackId}&cacheDirectory=true`,
+      "thread-loader",
+      "cache-loader"
+    ]
     : ["thread-loader", `happypack/loader?id=${happypackId}`];
 };
 
@@ -45,36 +45,33 @@ module.exports = {
     // 路径配置
     alias: {
       // '@': path.join(process.cwd(), '/src'),
-     '@': path.join(process.cwd(), '/src'),
-     'static': path.join(process.cwd(), '/static'),
+      '@': path.join(process.cwd(), '/src'),
+      'static': path.join(process.cwd(), '/static'),
     }
   },
   module: {
     // loader
     rules: [
-      {
-        test: /\.(vert|frag|glsl)?$/,
-        enforce: "pre",
-        // 排除文件,因为这些包已经编译过，无需再次编译
-        exclude: /(node_modules|bower_components)/,
-        use: {
-          loader: path.join(__dirname, "./defineLoader/glsl-loader/index.js"),
-          options: {}
-        }
-      },
-
-
-      {
-        test: /\.json?$/,
-        enforce: "pre",
-        // 排除文件,因为这些包已经编译过，无需再次编译
-        exclude: /(node_modules|bower_components)/,
-        use: {
-          loader: path.join(__dirname, "./defineLoader/json-loader/index.js"),
-          options: {}
-        }
-      },
-
+      // {
+      //   test: /\.(vert|frag|glsl)?$/,
+      //   enforce: "pre",
+      //   // 排除文件,因为这些包已经编译过，无需再次编译
+      //   exclude: /(node_modules|bower_components)/,
+      //   use: {
+      //     loader: path.join(__dirname, "./defineLoader/glsl-loader/index.js"),
+      //     options: {}
+      //   }
+      // },
+      // {
+      //   test: /\.json?$/,
+      //   enforce: "pre",
+      //   // 排除文件,因为这些包已经编译过，无需再次编译
+      //   exclude: /(node_modules|bower_components)/,
+      //   use: {
+      //     loader: path.join(__dirname, "./defineLoader/json-loader/index.js"),
+      //     options: {}
+      //   }
+      // },
       //配置 https://github.com/robbiedigital/htmllint-loader
       // {
       //     test: /\.(htm|html|xhtml|hbs|handlebars|php|ejs)$/,
@@ -180,7 +177,7 @@ module.exports = {
       outputPath: path.join(process.cwd(), "/app")
     }),
 
-  
+
     // 注入全局常量
     new ExtendedDefinePlugin({
       APP_CONFIG: {

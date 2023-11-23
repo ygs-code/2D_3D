@@ -505,9 +505,9 @@ module.exports = {
                 //   },
                 // },
             },
-
+         
             {
-                test: /\.(graphql|gql|sql)$/,
+                test: /\.(graphql|gql|sql|vert|frag|glsl|json)$/,
                 // 排除文件,因为这些包已经编译过，无需再次编译
                 exclude: /(node_modules|bower_components)/,
                 use: [].concat(cacheLoader('rawLoader')),
