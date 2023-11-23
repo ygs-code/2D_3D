@@ -71,7 +71,7 @@ let getEntryPlugins = (dir, entryHtml, entryJs) => {
 
     let conf = {
       // 生成出来的html文件名
-      filename: filename.split(dir + "/").pop(),
+      filename:  filename.split(dir + "/").pop(),
       // 每个html的模版，这里多个页面使用同一个模版
       template: filename,
       // 自动将引用插入html

@@ -1,0 +1,74 @@
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+  <title>WebGL - Frustum Diagram</title>
+
+</head>
+
+<body>
+
+
+
+
+  <!-- Vertex顶点 -->
+  <script id="vertexColorVertexShader" type="text/something-not-javascript">
+  attribute vec4 position;
+  attribute vec4 color;
+  uniform mat4 u_worldViewProjection;
+  varying vec4 v_color;
+  void main() {
+  gl_Position = u_worldViewProjection * position;
+  v_color = color;
+  }
+  
+  </script>
+  <!-- Fragment -->
+  <script id="vertexColorFragmentShader" type="text/something-not-javascript">
+  precision mediump float;
+  uniform vec4 u_color;
+  varying vec4 v_color;
+  void main() {
+  gl_FragColor = u_color * v_color;
+  }
+  </script>
+
+  <!-- Vertex顶点 -->
+  <script id="baseVertexShader" type="text/something-not-javascript">
+  attribute vec4 position;
+  attribute vec4 color;
+  uniform mat4 u_worldViewProjection;
+  uniform mat4 u_exampleWorldViewProjection;
+  varying vec4 v_color;
+  varying vec4 v_position;
+  void main() {
+  gl_Position = u_worldViewProjection * position;
+  v_position = u_exampleWorldViewProjection * position;
+  v_position = v_position / v_position.w;
+  v_color = color;
+  }
+  
+  </script>
+  <!-- Fragment -->
+  <script id="colorFragmentShader" type="text/something-not-javascript">
+  precision mediump float;
+  varying vec4 v_color;
+  varying vec4 v_position;
+  uniform vec4 u_color;
+  void main() {
+  bool blend = (v_position.x < -1.0 || v_position.x > 1.0 ||
+                v_position.y < -1.0 || v_position.y > 1.0 ||
+                v_position.z < -1.0 || v_position.z > 1.0);
+  vec4 blendColor = blend ? vec4(0.35, 0.35, 0.35, 1.0) : vec4(1, 1, 1, 1);
+  gl_FragColor = v_color * u_color * blendColor;
+  }
+  </script>
+ 
+
+
+
+ 
+</body>
+
+</html>

@@ -20,7 +20,8 @@ window.onload = function () {
 
   console.log("VSHADER_SOURCE=====", VSHADER_SOURCE);
   console.log("FSHADER_SOURCE=====", FSHADER_SOURCE);
-  if (!initShaders(gl, VSHADER_SOURCE, FSHADER_SOURCE)) {
+  const program =initShaders(gl, VSHADER_SOURCE, FSHADER_SOURCE);
+  if (!program) {
     console.log("failed to initialize shaders");
     return;
   }
@@ -41,7 +42,7 @@ window.onload = function () {
   //3.向缓冲区对象中写入数据
   gl.bufferData(gl.ARRAY_BUFFER, vereices, gl.STATIC_DRAW);
   //4.将缓冲区对象分配给a_Position变量
-  const a_PointSize = gl.getAttribLocation(gl.program, "a_Position");
+  const a_PointSize = gl.getAttribLocation(program, "a_Position");
   // WebGL系统会根据stride和offset参数从缓冲区中正确地抽取出数据，依次赋值给着色器中的各个attribute变量并进行绘制
   // stride（第5个参数）为FSIZE*5意味着verticesColors数据中5个数为一组是属于一个顶点的所有数据(包括顶点坐标和颜色大小等)，
   // offset（第6个参数）为0意味着从5个数一组的单元中的第0个数开始取值（offset代表当前考虑的数据项距离首个元素的距离，即偏移参数）

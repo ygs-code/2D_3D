@@ -45,24 +45,24 @@ window.onload = function () {
     `;
 
   // 初始化initShader
-  initShader(gl, vertexShader, fragmentShader);
+ const program = initShader(gl, vertexShader, fragmentShader);
 
   // 设置动态变量
   //获取arrtibute变量
-  const a_Position = gl.getAttribLocation(gl.program, "a_Position");
+  const a_Position = gl.getAttribLocation(program, "a_Position");
 
   if (a_Position < 0) {
     console.log("Failed to get the storage loacation of a_Position");
     return false;
   }
 
-  const a_PointSize = gl.getAttribLocation(gl.program, "a_PointSize");
+  const a_PointSize = gl.getAttribLocation(program, "a_PointSize");
   if (a_PointSize < 0) {
     console.log("Failed to get the storage loacation of a_PointSize");
     return false;
   }
 
-  const u_FragColor = gl.getUniformLocation(gl.program, "u_FragColor");
+  const u_FragColor = gl.getUniformLocation(program, "u_FragColor");
   if (a_PointSize < 0) {
     console.log("Failed to get the storage loacation of u_FragColor");
     return false;

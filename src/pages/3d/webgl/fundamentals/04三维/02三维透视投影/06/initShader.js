@@ -11,7 +11,7 @@ function loadShader(gl, type, source) {
   }
 
   // Set the shader program
-  // 向着色器对象中填充着色器程序的源代码
+  // 向着色器对象中填充着色器程序的源代码 
   gl.shaderSource(shader, source);
 
   // Compile the shader
@@ -86,7 +86,7 @@ function createProgram(gl, vshader, fshader) {
   gl.linkProgram(program);
 
   // Check the result of linking
-  // 检查链接结果
+  // 检查链接结果 
   var linked = gl.getProgramParameter(program, gl.LINK_STATUS);
   if (!linked) {
     // 如果有编译错误
@@ -107,6 +107,7 @@ function createProgram(gl, vshader, fshader) {
 function initShaders(gl, vshader, fshader) {
   // gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
   // 创建Program
+  
   var program = createProgram(gl, vshader, fshader);
   if (!program) {
     console.error("Failed to create program");
@@ -116,7 +117,7 @@ function initShaders(gl, vshader, fshader) {
   // 使用程序对象
   gl.useProgram(program);
   // 挂着对象属性
-  // gl.program = program;
+  gl.program = program;
 
   return program;
 }

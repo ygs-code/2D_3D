@@ -23,10 +23,10 @@ window.onload = function () {
     return;
   }
 
-  let u_w = gl.getUniformLocation(gl.program, "u_w");
-  let u_h = gl.getUniformLocation(gl.program, "u_h");
-  gl.uniform1f(u_w, canvas_w);
-  gl.uniform1f(u_h, canvas_h);
+  // let u_w = gl.getUniformLocation(gl.program, "u_w");
+  // let u_h = gl.getUniformLocation(gl.program, "u_h");
+  // gl.uniform1f(u_w, canvas_w);
+  // gl.uniform1f(u_h, canvas_h);
 
   //三角形顶点位置
 
@@ -53,7 +53,7 @@ window.onload = function () {
   // 将缓冲区对象分配给a_Position变量
   let a_Position = gl.getContextAttributes(gl.isProgram, "a_Position"); // 获得变量位置
 
-  // 连接a_Position变量与分配给他的缓冲区对象
+ 
   /*
      
      告诉显卡从当前绑定的缓冲区（bindBuffer() 指定的缓冲区）中读取顶点数据。

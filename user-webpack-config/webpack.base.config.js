@@ -109,29 +109,29 @@ module.exports = {
 
   plugins: [
     // // html
-    new HtmllinterWebpackPlugin({
-      config: htmllinterConfig
-      // config: {
-      //     extend: require('@htmllinter/basic-config'),
-      //     rules: {
-      //         'no-empty-tag': 'on',
-      //         'no-duplicate-id': 'on',
-      //         'no-duplicate-tag': 'on',
-      //         'no-bool-true-explicit-define': 'on',
-      //         'doctype-top': [
-      //             'on',
-      //             {
-      //                 startingLineNumber: 1,
-      //             },
-      //         ],
-      //         'long-line-content': 'on',
-      //         'no-missing-alt': 'on',
-      //         'newline-multiline-comments': 'on',
-      //         'trailing-singleline-comments': 'on',
-      //         'newline-eof': 'on',
-      //     },
-      // },
-    }),
+    // new HtmllinterWebpackPlugin({
+    //   config: htmllinterConfig
+    //   // config: {
+    //   //     extend: require('@htmllinter/basic-config'),
+    //   //     rules: {
+    //   //         'no-empty-tag': 'on',
+    //   //         'no-duplicate-id': 'on',
+    //   //         'no-duplicate-tag': 'on',
+    //   //         'no-bool-true-explicit-define': 'on',
+    //   //         'doctype-top': [
+    //   //             'on',
+    //   //             {
+    //   //                 startingLineNumber: 1,
+    //   //             },
+    //   //         ],
+    //   //         'long-line-content': 'on',
+    //   //         'no-missing-alt': 'on',
+    //   //         'newline-multiline-comments': 'on',
+    //   //         'trailing-singleline-comments': 'on',
+    //   //         'newline-eof': 'on',
+    //   //     },
+    //   // },
+    // }),
     // stylelint 插件
     // new StylelintPlugin({
     //     emitError: true, //发现的错误将始终被触发，将禁用设置为false。

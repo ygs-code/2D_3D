@@ -96,21 +96,29 @@
    * @param {module:webgl-utils.ErrorCallback} opt_errorCallback callback for errors.
    * @return {WebGLShader} The created shader.
    */
+  // 加载 和创建 Shader
   function loadShader(gl, shaderSource, shaderType, opt_errorCallback) {
     const errFn = opt_errorCallback || error;
     // Create the shader object
+    // 创建 Shader
     const shader = gl.createShader(shaderType);
 
     // Load the shader source
+    // 向着色器对象中填充着色器程序的源代码 //加载着色器源
     gl.shaderSource(shader, shaderSource);
 
     // Compile the shader
+    //编译着色器
     gl.compileShader(shader);
 
     // Check the compile status
+    // Check the result of compilation
+    //检查编译结果
     const compiled = gl.getShaderParameter(shader, gl.COMPILE_STATUS);
     if (!compiled) {
       // Something went wrong during compilation; get the error
+      // 编译过程中出错;获取错误
+      // 检查如果有报错
       const lastError = gl.getShaderInfoLog(shader);
       errFn(
         "*** Error compiling shader '" +
@@ -123,6 +131,7 @@
             .map((l, i) => `${i + 1}: ${l}`)
             .join("\n")
       );
+      // 删除shader 防止内存溢出
       gl.deleteShader(shader);
       return null;
     }
@@ -140,6 +149,8 @@
    *        on error. If you want something else pass an callback. It's passed an error message.
    * @memberOf module:webgl-utils
    */
+
+  // 创建 Program
   function createProgram(
     gl,
     shaders,
@@ -148,10 +159,15 @@
     opt_errorCallback
   ) {
     const errFn = opt_errorCallback || error;
+    // 将两个Shader连接合在一起
+    // 创建程序对象
     const program = gl.createProgram();
+
+    // 为程序对象分配着色器
     shaders.forEach(function (shader) {
       gl.attachShader(program, shader);
     });
+
     if (opt_attribs) {
       opt_attribs.forEach(function (attrib, ndx) {
         gl.bindAttribLocation(
@@ -161,15 +177,18 @@
         );
       });
     }
+    // Link the program object
+    // 链接程序对象
     gl.linkProgram(program);
 
     // Check the link status
+    //检查链路状态
     const linked = gl.getProgramParameter(program, gl.LINK_STATUS);
     if (!linked) {
       // something went wrong with the link
       const lastError = gl.getProgramInfoLog(program);
       errFn("Error in program linking:" + lastError);
-
+      // 删除program
       gl.deleteProgram(program);
       return null;
     }
@@ -211,7 +230,7 @@
         throw "*** Error: unknown shader type";
       }
     }
-
+    // 加载 和创建 Shader
     return loadShader(
       gl,
       shaderSource,
@@ -255,6 +274,7 @@
         )
       );
     }
+    // 创建 Program
     return createProgram(
       gl,
       shaders,
@@ -266,7 +286,7 @@
 
   /**
    * Creates a program from 2 sources.
-   *
+   * 从两个源创建一个程序。
    * @param {WebGLRenderingContext} gl The WebGLRenderingContext
    *        to use.
    * @param {string[]} shaderSourcess Array of sources for the
@@ -279,6 +299,7 @@
    * @return {WebGLProgram} The created program.
    * @memberOf module:webgl-utils
    */
+  //  // 加载 和创建 Shader 创建 Program
   function createProgramFromSources(
     gl,
     shaderSources,
@@ -289,6 +310,7 @@
     const shaders = [];
     for (let ii = 0; ii < shaderSources.length; ++ii) {
       shaders.push(
+        // 加载 和创建 Shader
         loadShader(
           gl,
           shaderSources[ii],
@@ -297,6 +319,7 @@
         )
       );
     }
+    // 创建 Program
     return createProgram(
       gl,
       shaders,
@@ -329,6 +352,7 @@
    * @returns {Object.<string, function>} an object with a setter by name for each uniform
    * @memberOf module:webgl-utils
    */
+  //  自动获取到 webgl中的 // vertex    uniform 变量 并且根据 uniform变量数据格式返回一个 可以设置uniform 变量值的函数
   function createUniformSetters(gl, program) {
     let textureUnit = 0;
 
@@ -339,12 +363,17 @@
      * @param {WebGLUniformInfo} uniformInfo
      * @returns {function} the created setter.
      */
+    // 为给定程序的统一对象创建一个setter方法
+    // *位置嵌入setter中。
+    // 根据type 获取到  一个set 方法 uniform1fv 比如
+    // 自动获取到 webgl中的 // vertex    uniform 变量 并且根据 uniform变量数据格式返回一个 可以设置uniform 变量值的函数
     function createUniformSetter(program, uniformInfo) {
       const location = gl.getUniformLocation(program, uniformInfo.name);
       const type = uniformInfo.type;
       // Check if this uniform is an array
       const isArray =
         uniformInfo.size > 1 && uniformInfo.name.substr(-3) === "[0]";
+
       if (type === gl.FLOAT && isArray) {
         return function (v) {
           gl.uniform1fv(location, v);
@@ -458,9 +487,11 @@
     }
 
     const uniformSetters = {};
+    // 获取Uniform 数字
     const numUniforms = gl.getProgramParameter(program, gl.ACTIVE_UNIFORMS);
 
     for (let ii = 0; ii < numUniforms; ++ii) {
+      // 获取Uniform 信息
       const uniformInfo = gl.getActiveUniform(program, ii);
       if (!uniformInfo) {
         break;
@@ -470,6 +501,7 @@
       if (name.substr(-3) === "[0]") {
         name = name.substr(0, name.length - 3);
       }
+      // 根据type 获取到  一个set 方法 uniform1fv 比如
       const setter = createUniformSetter(program, uniformInfo);
       uniformSetters[name] = setter;
     }
@@ -554,6 +586,7 @@
    *        uniforms.
    * @memberOf module:webgl-utils
    */
+  // 设置  Uniform 值 比如 gl.uniform1fv(location, v);
   function setUniforms(setters, ...values) {
     setters = setters.uniformSetters || setters;
     for (const uniforms of values) {
@@ -575,10 +608,17 @@
    * @return {Object.<string, function>} an object with a setter for each attribute by name.
    * @memberOf module:webgl-utils
    */
+  /*
+    根据不同的顶点数据类型获取设置方法
+  */
   function createAttributeSetters(gl, program) {
     const attribSetters = {};
 
     function createAttribSetter(index) {
+      /*
+      根据b的类型数据 返回可以  vertexAttrib1f 设置方法
+       这个是设置一个顶点的方法
+      */
       return function (b) {
         if (b.value) {
           gl.disableVertexAttribArray(index);
@@ -601,8 +641,22 @@
               );
           }
         } else {
+          /*
+      根据b的类型数据 返回可以  vertexAttrib1f 设置方法
+       这个是设置多个顶点的方法
+      */
+          // 绑定buffer
           gl.bindBuffer(gl.ARRAY_BUFFER, b.buffer);
+          // 确认 // 启用数据
+          // 连接顶点变量与分配给他的缓冲区对象
           gl.enableVertexAttribArray(index);
+          /*
+     
+     告诉显卡从当前绑定的缓冲区（bindBuffer() 指定的缓冲区）中读取顶点数据。
+     方法绑定当前缓冲区范围到gl.ARRAY_BUFFER,
+     成为当前顶点缓冲区对象的通用顶点属性并指定它的布局 (缓冲区对象中的偏移量)。
+
+     */
           gl.vertexAttribPointer(
             index,
             b.numComponents || b.size,
@@ -615,13 +669,18 @@
       };
     }
 
+    // 获取 vertex  Attrib 属性信息
     const numAttribs = gl.getProgramParameter(program, gl.ACTIVE_ATTRIBUTES);
+
     for (let ii = 0; ii < numAttribs; ++ii) {
+      // 获取Attrib 属性信息
       const attribInfo = gl.getActiveAttrib(program, ii);
       if (!attribInfo) {
         break;
       }
       const index = gl.getAttribLocation(program, attribInfo.name);
+
+      // 获取顶点设置方法
       attribSetters[attribInfo.name] = createAttribSetter(index);
     }
 
@@ -681,8 +740,10 @@
    * @memberOf module:webgl-utils
    * @deprecated use {@link module:webgl-utils.setBuffersAndAttributes}
    */
+
   function setAttributes(setters, attribs) {
     setters = setters.attribSetters || setters;
+
     Object.keys(attribs).forEach(function (name) {
       const setter = setters[name];
       if (setter) {
@@ -704,6 +765,7 @@
   function createVAOAndSetAttributes(gl, setters, attribs, indices) {
     const vao = gl.createVertexArray();
     gl.bindVertexArray(vao);
+
     setAttributes(setters, attribs);
     if (indices) {
       gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, indices);
@@ -764,6 +826,12 @@
    * @return {module:webgl-utils.ProgramInfo} The created program.
    * @memberOf module:webgl-utils
    */
+  /*
+  返回一个对象 对象包含
+  program
+  uniformSetters    uniform中有uniform变量设置函数
+  attribSetters attrib中有attrib变量设置函数
+*/
   function createProgramInfo(
     gl,
     shaderSources,
@@ -771,10 +839,13 @@
     opt_locations,
     opt_errorCallback
   ) {
+    // 从script 脚本获取 shader
     shaderSources = shaderSources.map(function (source) {
       const script = document.getElementById(source);
       return script ? script.text : source;
     });
+
+    //  // 加载 和创建 Shader 创建 Program
     const program = createProgramFromSources(
       gl,
       shaderSources,
@@ -785,8 +856,14 @@
     if (!program) {
       return null;
     }
+
+    //  自动获取到 webgl中的 // vertex    uniform 变量 并且根据 uniform变量数据格式返回一个 可以设置uniform 变量值的函数
     const uniformSetters = createUniformSetters(gl, program);
+    /*
+    根据不同的顶点数据类型获取设置方法
+  */
     const attribSetters = createAttributeSetters(gl, program);
+
     return {
       program: program,
       uniformSetters: uniformSetters,
@@ -830,9 +907,28 @@
    * @param {module:webgl-utils.BufferInfo} buffers a BufferInfo as returned from `createBufferInfoFromArrays`.
    * @memberOf module:webgl-utils
    */
+
+  //
+
+  /*
+       执行set函数 比如  gl.vertexAttrib4iv
+       或者：
+        1.绑定buffer数据  bindBuffer  
+            gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
+
+        2.连接 attrib 变量与分配给他的缓冲区对象
+            gl.enableVertexAttribArray(a_texcoordLocation);
+
+        3.告诉显卡从当前绑定的缓冲区（bindBuffer() 指定的缓冲区）中读取顶点数据。
+        方法绑定当前缓冲区范围到gl.ARRAY_BUFFER,
+        成为当前顶点缓冲区对象的通用顶点属性并指定它的布局 (缓冲区对象中的偏移量)。
+           gl.vertexAttribPointer(a_texcoordLocation, 4, gl.FLOAT, false, 0, 0);
+     */
   function setBuffersAndAttributes(gl, setters, buffers) {
     setAttributes(setters, buffers.attribs);
+
     if (buffers.indices) {
+      // 绑定 buffer
       gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, buffers.indices);
     }
   }
@@ -942,10 +1038,14 @@
     );
   }
 
+  // 1. 创建 buffer 2.绑定buffer  3.向缓冲区写入数据
   function createBufferFromTypedArray(gl, array, type, drawType) {
     type = type || gl.ARRAY_BUFFER;
+    // 创建buffer
     const buffer = gl.createBuffer();
+    // 绑定buffer
     gl.bindBuffer(type, buffer);
+    // 向缓冲区写入数据
     gl.bufferData(type, array, drawType || gl.STATIC_DRAW);
     return buffer;
   }
@@ -954,8 +1054,10 @@
     return name !== "indices";
   }
 
+  // 如果key 不是 indices的 增加 a_ 前缀
   function createMapping(obj) {
     const mapping = {};
+    // 如果key 不是 indices的 增加 a_ 前缀
     Object.keys(obj)
       .filter(allButIndices)
       .forEach(function (key) {
@@ -963,7 +1065,7 @@
       });
     return mapping;
   }
-
+  // 根据数据自动获取webgl的 GLTypeForTyped 类型
   function getGLTypeForTypedArray(gl, typedArray) {
     if (typedArray instanceof Int8Array) {
       return gl.BYTE;
@@ -991,6 +1093,8 @@
 
   // This is really just a guess. Though I can't really imagine using
   // anything else? Maybe for some compression?
+  //这只是一个猜测。虽然我真的无法想象使用
+  //还有别的吗?也许是为了压缩一下?
   function getNormalizationForTypedArray(typedArray) {
     if (typedArray instanceof Int8Array) {
       return true;
@@ -1005,6 +1109,11 @@
     return a.buffer && a.buffer instanceof ArrayBuffer;
   }
 
+  /*
+   根据 数据的 key  是否等于 coord|texture 
+   或者 等于 color|colour， 根据不同的name名称
+   求余 2,3,4如果 顶点位置求余 长度超过 0 则报错
+*/
   function guessNumComponentsFromName(name, length) {
     let numComponents;
     if (name.indexOf("coord") >= 0) {
@@ -1022,6 +1131,7 @@
     return numComponents;
   }
 
+  // 转换数组数据
   function makeTypedArray(array, name) {
     if (isArrayBuffer(array)) {
       return array;
@@ -1038,6 +1148,11 @@
     }
 
     if (!array.numComponents) {
+      /*
+   根据 数据的 key  是否等于 coord|texture 
+   或者 等于 color|colour， 根据不同的name名称
+   求余 2,3,4如果 顶点位置求余 长度超过 0 则报错
+*/
       array.numComponents = guessNumComponentsFromName(name, array.length);
     }
 
@@ -1069,6 +1184,7 @@
    */
 
   /**
+   * 从一组数组创建一组属性数据和webglbuffer
    * Creates a set of attribute data and WebGLBuffers from set of arrays
    *
    * Given
@@ -1084,9 +1200,13 @@
    * returns something like
    *
    *      let attribs = {
+   *        顶点坐标
    *        a_position: { numComponents: 3, type: gl.FLOAT,         normalize: false, buffer: WebGLBuffer, },
+   *        纹理坐标
    *        a_texcoord: { numComponents: 2, type: gl.FLOAT,         normalize: false, buffer: WebGLBuffer, },
+   *        法线
    *        a_normal:   { numComponents: 3, type: gl.FLOAT,         normalize: false, buffer: WebGLBuffer, },
+   *        颜色
    *        a_color:    { numComponents: 4, type: gl.UNSIGNED_BYTE, normalize: true,  buffer: WebGLBuffer, },
    *      };
    *
@@ -1097,9 +1217,12 @@
    * @return {Object.<string, module:webgl-utils.AttribInfo>} the attribs
    * @memberOf module:webgl-utils
    */
+  // 1. 创建 buffer 2.绑定buffer  3.向缓冲区写入数据
   function createAttribsFromArrays(gl, arrays, opt_mapping) {
+    // 如果key 不是 indices的 增加 a_ 前缀
     const mapping = opt_mapping || createMapping(arrays);
     const attribs = {};
+
     Object.keys(mapping).forEach(function (attribName) {
       const bufferName = mapping[attribName];
       const origArray = arrays[bufferName];
@@ -1108,14 +1231,25 @@
           value: origArray.value
         };
       } else {
+        // 转换数组数据
         const array = makeTypedArray(origArray, bufferName);
+
         attribs[attribName] = {
+          // 1. 创建 buffer 2.绑定buffer  3.向缓冲区写入数据
           buffer: createBufferFromTypedArray(gl, array),
           numComponents:
             origArray.numComponents ||
             array.numComponents ||
+            /*
+                根据 数据的 key  是否等于 coord|texture 
+                或者 等于 color|colour， 根据不同的name名称
+                求余 2,3,4如果 顶点位置求余 长度超过 0 则报错
+              */
             guessNumComponentsFromName(bufferName),
+          // 根据数据自动获取webgl的 GLTypeForTyped 类型
           type: getGLTypeForTypedArray(gl, array),
+          //这只是一个猜测。虽然我真的无法想象使用
+          //还有别的吗?也许是为了压缩一下?
           normalize: getNormalizationForTypedArray(array)
         };
       }
@@ -1123,13 +1257,18 @@
     return attribs;
   }
 
+  // 获取数组数据
   function getArray(array) {
     return array.length ? array : array.data;
   }
 
   const texcoordRE = /coord|texture/i;
   const colorRE = /color|colour/i;
-
+  /*
+   根据 数据的 key  是否等于 coord|texture 
+   或者 等于 color|colour， 根据不同的name名称
+   求余 2,3,4如果 顶点位置求余 长度超过 0 则报错
+*/
   function guessNumComponentsFromName(name, length) {
     let numComponents;
     if (texcoordRE.test(name)) {
@@ -1149,10 +1288,20 @@
     return numComponents;
   }
 
+  /*
+   根据 数据的 key  是否等于 coord|texture 
+   或者 等于 color|colour， 根据不同的name名称
+   求余 2,3,4如果 顶点位置求余 长度超过 0 则报错
+*/
   function getNumComponents(array, arrayName) {
     return (
       array.numComponents ||
       array.size ||
+      /*
+   根据 数据的 key  是否等于 coord|texture 
+   或者 等于 color|colour， 根据不同的name名称
+   求余 2,3,4如果 顶点位置求余 长度超过 0 则报错
+*/ // 获取数组数据
       guessNumComponentsFromName(arrayName, getArray(array).length)
     );
   }
@@ -1160,7 +1309,9 @@
   /**
    * tries to get the number of elements from a set of arrays.
    */
+  // 尝试从一组数组中获取元素的个数。
   const positionKeys = ["position", "positions", "a_position"];
+  // 从非索引数组中获取Num元素
   function getNumElementsFromNonIndexedArrays(arrays) {
     let key;
     for (const k of positionKeys) {
@@ -1171,8 +1322,15 @@
     }
     key = key || Object.keys(arrays)[0];
     const array = arrays[key];
+    // 获取数组数据
     const length = getArray(array).length;
+    /*
+   根据 数据的 key  是否等于 coord|texture 
+   或者 等于 color|colour， 根据不同的name名称
+   求余 2,3,4如果 顶点位置求余 长度超过 0 则报错
+*/
     const numComponents = getNumComponents(array, key);
+
     const numElements = length / numComponents;
     if (length % numComponents > 0) {
       throw new Error(
@@ -1311,13 +1469,19 @@
    * @return {module:webgl-utils.BufferInfo} A BufferInfo
    * @memberOf module:webgl-utils
    */
+
+  // 1. 创建 buffer 2.绑定buffer  3.向缓冲区写入数据
   function createBufferInfoFromArrays(gl, arrays, opt_mapping) {
     const bufferInfo = {
+      // 1. 创建 buffer 2.绑定buffer  3.向缓冲区写入数据
       attribs: createAttribsFromArrays(gl, arrays, opt_mapping)
     };
+
     let indices = arrays.indices;
     if (indices) {
+      // 转换数组数据
       indices = makeTypedArray(indices, "indices");
+      // 1. 创建 buffer 2.绑定buffer  3.向缓冲区写入数据
       bufferInfo.indices = createBufferFromTypedArray(
         gl,
         indices,
@@ -1325,6 +1489,7 @@
       );
       bufferInfo.numElements = indices.length;
     } else {
+      // 从非索引数组中获取Num元素
       bufferInfo.numElements = getNumElementsFromNonIndexedArrays(arrays);
     }
 
@@ -1388,6 +1553,14 @@
    * @param {number} [offset] An optional offset. Defaults to 0.
    * @memberOf module:webgl-utils
    */
+  /*
+绘画顶点数据
+*调用' gl.drawElements '或' gl.drawarray '，取合适的
+*
+通常你会叫“gl.drawElements '或' gl.drawArrays”自己
+但是调用这个方法意味着如果你从索引数据切换到非索引数据
+*数据你不需要记得更新你的draw调用。
+*/
   function drawBufferInfo(gl, bufferInfo, primitiveType, count, offset) {
     const indices = bufferInfo.indices;
     primitiveType = primitiveType === undefined ? gl.TRIANGLES : primitiveType;
@@ -1436,9 +1609,18 @@
       }
 
       // Set the uniforms.
+      // 设置  Uniform 值 比如 gl.uniform1fv(location, v);
       setUniforms(programInfo.uniformSetters, object.uniforms);
 
       // Draw
+      /*
+绘画顶点数据
+*调用' gl.drawElements '或' gl.drawarray '，取合适的
+*
+通常你会叫“gl.drawElements '或' gl.drawArrays”自己
+但是调用这个方法意味着如果你从索引数据切换到非索引数据
+*数据你不需要记得更新你的draw调用。
+*/
       drawBufferInfo(gl, bufferInfo);
     });
   }
@@ -1475,14 +1657,24 @@
 
   return {
     createAugmentedTypedArray: createAugmentedTypedArray,
+    // 1. 创建 buffer 2.绑定buffer  3.向缓冲区写入数据
     createAttribsFromArrays: createAttribsFromArrays,
     createBuffersFromArrays: createBuffersFromArrays,
+    // 1. 创建 buffer 2.绑定buffer  3.向缓冲区写入数据
     createBufferInfoFromArrays: createBufferInfoFromArrays,
     createAttributeSetters: createAttributeSetters,
     createProgram: createProgram,
     createProgramFromScripts: createProgramFromScripts,
+    //  加载 和创建 Shader 创建 Program
     createProgramFromSources: createProgramFromSources,
+    /*
+  返回一个对象 对象包含
+  program
+  uniformSetters    uniform中有uniform变量设置函数
+  attribSetters attrib中有attrib变量设置函数
+*/
     createProgramInfo: createProgramInfo,
+    //  自动获取到 webgl中的 // vertex    uniform 变量 并且根据 uniform变量数据格式返回一个 可以设置uniform 变量值的函数
     createUniformSetters: createUniformSetters,
     createVAOAndSetAttributes: createVAOAndSetAttributes,
     createVAOFromBufferInfo: createVAOFromBufferInfo,
@@ -1492,7 +1684,22 @@
     getExtensionWithKnownPrefixes: getExtensionWithKnownPrefixes,
     resizeCanvasToDisplaySize: resizeCanvasToDisplaySize,
     setAttributes: setAttributes,
+    /*
+       执行set函数 比如  gl.vertexAttrib4iv
+       或者：
+        1.绑定buffer数据  bindBuffer  
+            gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
+
+        2.连接 attrib 变量与分配给他的缓冲区对象
+            gl.enableVertexAttribArray(a_texcoordLocation);
+
+        3.告诉显卡从当前绑定的缓冲区（bindBuffer() 指定的缓冲区）中读取顶点数据。
+        方法绑定当前缓冲区范围到gl.ARRAY_BUFFER,
+        成为当前顶点缓冲区对象的通用顶点属性并指定它的布局 (缓冲区对象中的偏移量)。
+           gl.vertexAttribPointer(a_texcoordLocation, 4, gl.FLOAT, false, 0, 0);
+     */
     setBuffersAndAttributes: setBuffersAndAttributes,
+    // 设置  Uniform 值 比如 gl.uniform1fv(location, v);
     setUniforms: setUniforms
   };
 });
