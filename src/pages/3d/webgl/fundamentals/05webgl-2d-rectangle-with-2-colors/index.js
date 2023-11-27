@@ -89,6 +89,9 @@ function drawScene({
   // 缩放
   matrix = m3.scale(matrix, scale[0], scale[1]);
 
+
+  // 平移 * 旋转 * 缩放 * 顶点
+
   // Set the matrix.
   gl.uniformMatrix3fv(matrixLocation, false, matrix);
 

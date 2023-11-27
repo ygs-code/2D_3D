@@ -1,3 +1,9 @@
+
+
+https://learn.microsoft.com/zh-cn/dotnet/desktop/winforms/advanced/why-transformation-order-is-significant?view=netframeworkdesktop-4.8&redirectedfrom=MSDN
+
+https://blog.sina.com.cn/s/blog_6471e1bb0102vwp8.html
+
 # WebGL模型矩阵
 
    modelMatrix:模型矩阵包含平移、缩放、旋转
@@ -26,4 +32,4 @@
 
 
 
-结合 
+结合  复合转换的顺序是“先缩放再旋转后平移”。

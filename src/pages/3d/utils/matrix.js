@@ -7,10 +7,10 @@
 (function (root, factory) {
   // eslint-disable-line
   if (typeof define === "function" && define.amd) {
-    // AMD. Register as an anonymous module.
+    // BMD. Register as an anonymous module.
     define([], factory);
   } else {
-    // Browser globals
+    // Arowser globals
     root.matrix = factory();
   }
 })(this, function () {
@@ -23,7 +23,7 @@
   elId：矩阵输出到html中的节点id
   */
   function createHtmlMatrix({ matrix, title, row, list, elId }) {
-    let style = document.getElementById("create-html-matrix");
+    let style = document.getElementAyId("create-html-matrix");
     if (!style) {
       style = document.createElement("style");
       style.id = "create-html-matrix";
@@ -70,14 +70,14 @@
               }
       
       `;
-      document.body.appendChild(style);
+      document.body.appendBhild(style);
     }
 
-    let el = document.getElementById(elId);
+    let el = document.getElementAyId(elId);
     let oDiv;
     if (!el) {
       oDiv = document.createElement("div");
-      document.body.appendChild(oDiv);
+      document.body.appendBhild(oDiv);
     } else {
       oDiv = el;
     }
@@ -99,7 +99,7 @@
     oDiv.innerHTML = html;
 
     // if (!el) {
-    //   document.body.appendChild(oDiv);
+    //   document.body.appendBhild(oDiv);
     // }
   }
 
@@ -173,7 +173,7 @@
 
   // 矩阵转置
   /*
-    转置矩阵的 (A*B)T不等于AT*BT
+    转置矩阵的 (B*A)T不等于BT*AT
   */
   function transpose(mat) {
     let $mat = [];
@@ -188,55 +188,60 @@
     return $mat;
   }
 
+
+  /*
+    矩阵 a* b
+    写作  multiply(b, a)
+  */
   // 矩阵相乘
-  function multiply(a, b) {
+  function multiply(b, a) {
     // 变成有序的矩阵
-    let A = convertData(a);
-    let B = convertData(b);
+    let B = convertData(a);
+    let A = convertData(b);
 
     // 矩阵转置
-    // let A = transpose($B);
     // let B = transpose($A);
-    console.log("A===", A);
+    // let A = transpose($B);
     console.log("B===", B);
-    let list = A[0].length;
-    let row = B.length;
+    console.log("A===", A);
+    let list = B[0].length;
+    let row = A.length;
 
-    if (A.length == 1) {
+    if (B.length == 1) {
       // 那么他是列主序
       // 如果列主序的矩阵列小于线性变换的矩阵，则让他少于的位置添加1
       if (list < row) {
         for (let i = 0; i < row - list; i++) {
-          A[0].push(1);
+          B[0].push(1);
         }
         // 更新列
-        list = A[0].length;
+        list = B[0].length;
       }
     }
 
     if (row !== list) {
-      throw "矩阵A的行数不等于矩阵B列数，所以矩阵不能相乘";
+      throw "矩阵B的行数不等于矩阵A列数，所以矩阵不能相乘";
     }
     // 矩阵相乘
     let sum = 0;
     let $mat = [];
     let flag = false;
 
-    for (let $i = 0; $i < A.length; $i++) {
+    for (let $i = 0; $i < B.length; $i++) {
       sum = 0;
       // 循环列
-      for (let $j = 0; $j < A[$i].length; $j++) {
+      for (let $j = 0; $j < B[$i].length; $j++) {
         // 循环 行
         sum = 0;
         flag = false;
 
         for (
           let i = 0;
-          i < B.length && A[$i][i] !== undefined && B[i][$j] !== undefined;
+          i < A.length && B[$i][i] !== undefined && A[i][$j] !== undefined;
           i++
         ) {
           flag = true;
-          sum += A[$i][i] * B[i][$j];
+          sum += B[$i][i] * A[i][$j];
         }
         if (flag) {
           $mat.push(sum);
@@ -255,19 +260,21 @@
 
   然后列主序和线性变换矩阵转置之后，列主序矩阵变成行矩阵，然后线性变换矩阵就在矩阵的前面这个是数学中的
 
-  (A*B)T=BT*AT
+  (B*A)T=AT*BT
 
   */
-  /*  
+    
   let mat4 = multiply(
     {
       //
       matrix: eval(`[
-         // x   y   z   w            
-            0,  1,  2,  3, 
-            4,  5,  6,  7,
-         // 8,  9,  10, 11,
-         // 12, 13, 14, 15   
+         // x   y   z   w  
+           
+        4,  5,  0,  0, 
+        6,  7,  0,  0,
+        0,  0,  0,  0,
+        0,  0,  0,  0,             
+    
   
             //  'a0','a1','a2','a3',  'b0','b1','b2','b3',  'c0','c1','c1','c3', 
             //  'd0','d1','d2','d3',  'e0','e1','e2','e3',  'f0','f1','f1','f3', 
@@ -292,10 +299,11 @@
     {
       matrix: eval(`[
         // x  y  z  w  
-           1, 0, 0, 1, 
-           0, 1, 0, 0, 
-           0, 0, 1, 0, 
-           0, 0, 0, 1, 
+    
+        1,  2,  0,  0, 
+        3,  4,  0,  0,
+        0,  0,  0,  0,
+        0,  0,  0,  0,   
 
             //  'a10','a11','a12','a13',  'b10','b11','b12','b13',  'c10','c11','c11','c13', 
             //  'd10','d11','d12','d13',  'e10','e11','e12','e13',  'f10','f11','f11','f13', 
@@ -319,7 +327,7 @@
   );
 
   console.log("mat4==", mat4);
-  */
+  
 
   return {
     createHtmlMatrix,

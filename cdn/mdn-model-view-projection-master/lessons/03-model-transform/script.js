@@ -38,6 +38,36 @@
     
 */
 
+
+/*
+ 矩阵 A * B
+
+ 写作  
+ [
+  B,
+  A
+ ]
+*/
+
+console.log(MDN.multiplyArrayOfMatrices([
+  [
+    5,6,0,0,
+    7,8,0,0,
+    0,0,0,0,
+    0,0,0,0,
+  ],
+  [
+    1,2,0,0,
+    3,4,0,0,
+    0,0,0,0,
+    0,0,0,0,
+  ],
+
+])
+)
+
+
+
 function CubeDemo () {
   
   // Prep the canvas
@@ -85,6 +115,12 @@ CubeDemo.prototype.setupProgram = function() {
   
   return webglProgram;
 };
+
+
+
+
+
+
 // 计算模型矩阵
 CubeDemo.prototype.computeModelMatrix = function( now ) {
 
@@ -105,6 +141,11 @@ CubeDemo.prototype.computeModelMatrix = function( now ) {
   
   // Multiply together, make sure and read them in opposite order
   // 乘在一起，确保按相反的顺序读
+
+  /*
+  模型矩阵可以把模型的局部坐标变换为世界坐标。
+  需要对模型进行缩放、绕xyz轴旋转、平移（注意：三个操作的先后顺序不能变） 。
+  */
   this.transforms.model = MDN.multiplyArrayOfMatrices([
     position, // step 4
     rotateY,  // step 3
