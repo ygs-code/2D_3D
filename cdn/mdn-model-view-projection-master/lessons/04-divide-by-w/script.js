@@ -19,6 +19,25 @@
 
     Modify the scaleFactor in the vertex shader in index.html and observe the changes.
     Move the cube around by changing the model matrix.
+
+
+      开始获得多维数据集模型的透视图的一个简单方法是
+      把Z坐标复制到W坐标上。
+      通常，当将笛卡尔点转换为齐次点时，它变成(x,y,z,1)，
+      但我们要把它设为(x,y,z,z)之类的。在现实中，我们想要
+      确保z对于视点大于0，所以我们稍微修改一下
+      通过将值更改为(1.0 + (z * scaleFactor))。这需要一个点
+      通常在剪辑空间(-1到1)中，并将其移动到更像(0到2)的空间中。
+      比例因子将最终w值更改为更高或更低。
+      如果这听起来有点抽象，打开顶点着色器并进行操作
+      比例因子和观察它是如何收缩的更趋向于表面。完全
+      改变w分量的值来表示空间。
+      在下一课中，我们将采取这个步骤，将Z复制到W槽中并转向
+      它变成一个矩阵。
+      练习:
+      在index.html中修改顶点着色器中的scaleFactor并观察变化。
+      通过更改模型矩阵来移动立方体。
+
 */
 
 function CubeDemo () {
@@ -61,16 +80,16 @@ CubeDemo.prototype.setupProgram = function() {
 
 CubeDemo.prototype.computeModelMatrix = function( now ) {
 
-  //Scale down by 20%
+  //Scale down by 20% 缩小
   var scale = MDN.scaleMatrix(0.2, 0.2, 0.2);
   
-  // Rotate a slight tilt
+  // Rotate a slight tilt 旋转 x
   var rotateX = MDN.rotateXMatrix( now * 0.0003 );
   
-  // Rotate according to time
+  // Rotate according to time 旋转 y
   var rotateY = MDN.rotateYMatrix( now * 0.0005 );
 
-  // Move slightly down
+  // Move slightly down  // 平移     x   y    z
   var position = MDN.translateMatrix(0, -0.1, 0);
   
   // Multiply together, make sure and read them in opposite order

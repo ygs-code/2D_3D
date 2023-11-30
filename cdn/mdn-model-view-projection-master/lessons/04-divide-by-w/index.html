@@ -12,6 +12,11 @@
 </head>
 <body>
   
+   <!--
+     可以看这里文档一起理解
+     https://webglfundamentals.org/webgl/lessons/zh_cn/webgl-3d-perspective.html
+  
+   -->
   <!-- The fragment shader determines the color of the final pixel by setting gl_FragColor -->
   <script id="vertex-shader" type="x-shader/x-vertex">
     // Each point has a position and color
@@ -30,17 +35,62 @@
       vColor = color;
       
       // First transform the point      
+      //首先变换点
       vec4 transformedPosition = model * vec4( position, 1.0 );
       
       // How much affect does the perspective have?
-      float scaleFactor = 0.5;
+      //视角的影响有多大?
+      float scaleFactor = 2.0;
       
       // Set w by taking the Z value which is typically ranged -1 to 1, then scale
       // it to be from 0 to some number, in this case 0-1.
+      //通过取Z值来设置w, Z值通常在-1到1之间，然后缩放
+      //从0到某个数字，在本例中为0-1。
+
       float w = (1.0 + transformedPosition.z) * scaleFactor;
       
       // Save the new gl_Position with the custom w component
-      gl_Position = vec4( transformedPosition.xyz, w );
+      //用自定义w组件保存新的gl_Position
+
+     //  第一种写法
+      // gl_Position = vec4( transformedPosition.xyz, w );
+
+     
+    // 第二种写法
+    /*
+    gl_Position = vec4( 
+      transformedPosition.x, 
+      transformedPosition.y, 
+      transformedPosition.z, 
+      w 
+      );  
+     */
+    
+     
+     /*
+     第三种写法,这种写法与上面不同的是w
+     上面取得是w值下面而是
+     transformedPosition.z
+     transformedPosition.w
+     */
+     gl_Position = vec4( 
+     transformedPosition.x/w, 
+     transformedPosition.y/w, 
+     transformedPosition.zw
+     );
+
+     /*
+     第四种写法 更像第三种写法展开而已
+     */ 
+     /*
+
+      gl_Position = vec4( 
+      transformedPosition.x/w, 
+      transformedPosition.y/w, 
+      transformedPosition.z/w,
+      transformedPosition.w
+      );
+      */
     }
   </script>
 
