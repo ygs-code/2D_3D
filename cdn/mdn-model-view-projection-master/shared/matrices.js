@@ -9,11 +9,51 @@ MDN.multiplyPoint = function (matrix, point) {
   
   var x = point[0], y = point[1], z = point[2], w = point[3];
   
+  // 行变成列了
+  /*
+  [
+      a, b, c, d,
+      e, f, g, h,
+      i, j, k, l,
+      n, m, o, p,
+    ] 变成 
+     [
+      a, e, i, n,
+      b, f, j, m,
+      c, g, k, o,
+      d, h, l, p,
+    ]
+  
+  */
   var c1r1 = matrix[ 0], c2r1 = matrix[ 1], c3r1 = matrix[ 2], c4r1 = matrix[ 3],
       c1r2 = matrix[ 4], c2r2 = matrix[ 5], c3r2 = matrix[ 6], c4r2 = matrix[ 7],
       c1r3 = matrix[ 8], c2r3 = matrix[ 9], c3r3 = matrix[10], c4r3 = matrix[11],
       c1r4 = matrix[12], c2r4 = matrix[13], c3r4 = matrix[14], c4r4 = matrix[15];
   
+
+      //  point 等于 =[x,y,z,w]
+
+   /*
+    相当于 x 和 y z w 分别缩放吧
+       x   y    z    w
+    [
+      a, e, i, n,
+      b, f, j, m,
+      c, g, k, o,
+      d, h, l, p,
+    ] * [
+         x,
+         y,
+         z,
+         w
+       ]=[
+      x    y    z    w  
+      x*a, y*e, z*i, w*n,
+      x*b, y*f, z*j, w*m,
+      x*c, y*g, z*k, w*o,
+      x*d, y*h, z*l, w*p,
+    ] 
+   */     
   return [
     x*c1r1 + y*c1r2 + z*c1r3 + w*c1r4,
     x*c2r1 + y*c2r2 + z*c2r3 + w*c2r4,

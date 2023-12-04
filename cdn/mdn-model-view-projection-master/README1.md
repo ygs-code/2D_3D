@@ -1,8 +1,6 @@
 欧氏平面 ，笛卡儿坐标 ，变换坐标，齐次坐标，数学投影，投影几何，对偶性  https://zh.wikipedia.org/wiki/%E9%BD%90%E6%AC%A1%E5%9D%90%E6%A0%87#%E9%BD%8A%E6%AC%A1%E6%80%A7
 
-
-
-https://developer.mozilla.org/zh-CN/docs/Web/API/WebGL_API/WebGL_model_view_projection
+学习文档 ： https://developer.mozilla.org/zh-CN/docs/Web/API/WebGL_API/WebGL_model_view_projection
 
 [在]()[OpenGL](https://so.csdn.net/so/search?q=OpenGL&spm=1001.2101.3001.7020)和WebGL中，默认情况下，正面是指逆时针绘制的面，背面是指顺时针绘制的面。通过开启多边形面剔除，我们可以剔除掉背面多边形，只绘制正面多边形，从而减少不必要的绘制开销。
 

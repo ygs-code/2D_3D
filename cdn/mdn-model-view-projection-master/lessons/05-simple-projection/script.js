@@ -3,6 +3,7 @@
   a simple matrix. Start with the identity matrix:
 */
 
+// 单位阵
   var identity = [
 	1, 0, 0, 0,
 	0, 1, 0, 0,
@@ -32,17 +33,38 @@
   var scaleFactor = 0.5;
 
   var simpleProjection = [
+//x  y  w  z
 	1, 0, 0, 0,
 	0, 1, 0, 0,
 	0, 0, 1, scaleFactor,
 	0, 0, 0, scaleFactor,
   ];
 
+  /*
+  [
+//   
+自动转置   
+[                              
+x	1, 0, 0, 0,                               x
+y	0, 1, 0, 0,                               y
+z	0, 0, 1, 0,                           *   z 
+w	0, 0, scaleFactor, scaleFactor,           w  
+  ];
+  
+  
+  
+  */
+
   MDN.multiplyPoint( simpleProjection, [2,3,4,1] );
   //> [2, 3, 4, 2.5]
 
 
 // Breaking this out a little further we can see how the works
+
+/*
+   再深入一点，我们可以看到它是如何工作的
+
+*/
   
   var x = (2*1) + (3*0) + (4*0) + (1*0) 
   var y = (2*0) + (3*1) + (4*0) + (1*0) 
@@ -113,6 +135,8 @@ CubeDemo.prototype.computeSimpleProjectionMatrix = function( scaleFactor ) {
 		0, 0, 1, scaleFactor, // Note the extra scale factor here
 		0, 0, 0, scaleFactor
 	];
+
+
 	
 	// This matrix copies the point and sets the W component to 1 + (z * scaleFactor)
 	
