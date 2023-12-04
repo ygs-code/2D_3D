@@ -25,7 +25,6 @@ https://learnopengl-cn.readthedocs.io/zh/latest/05%20Advanced%20Lighting/07%20Bl
 
 https://blog.csdn.net/AHcola233/article/details/117825091
 
-
 齐次坐标 https://zh.wikipedia.org/wiki/%E9%BD%90%E6%AC%A1%E5%9D%90%E6%A0%87
 
 https://learnwebgl.brown37.net/#
@@ -58,7 +57,8 @@ https://thebookofshaders.com/
 
 opengl 教程 http://www.opengl-tutorial.org/cn/beginners-tutorials/tutorial-1-opening-a-window/
 
- opengl 教程  https://learnopengl-cn.readthedocs.io/zh/latest/01%20Getting%20started/08%20Coordinate%20Systems/
+ opengl 教程  https://learnopengl-cn.readthedocs.io/zh/latest/
+
 
 webgl专区： https://codepen.io/search/pens/?limit=all&page=5&q=webgl
 
