@@ -82,14 +82,14 @@ WebGLBox.prototype.draw = function(settings) {
    
     // x                  y                  z
     //Triangle 1
-    settings.left,  settings.top, settings.depth,
-    settings.left, settings.bottom, settings.depth,
-    settings.right,  settings.bottom,    settings.depth,
+    settings.left,   settings.top,      settings.depth,
+    settings.left,   settings.bottom,   settings.depth,
+    settings.right,  settings.bottom,   settings.depth,
 
     //Triangle 2
     settings.right,  settings.bottom,    settings.depth,
-    settings.right, settings.top,    settings.depth,
-    settings.left,  settings.top, settings.depth,
+    settings.right,  settings.top,       settings.depth,
+    settings.left,   settings.top,       settings.depth,
   ]);
 
 

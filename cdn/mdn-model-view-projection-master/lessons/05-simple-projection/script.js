@@ -45,11 +45,11 @@
 //   
 自动转置   
 [                              
-x	1, 0, 0, 0,                               x
-y	0, 1, 0, 0,                               y
-z	0, 0, 1, 0,                           *   z 
-w	0, 0, scaleFactor, scaleFactor,           w  
-  ];
+    x	1, 0, 0, 0,                               x
+    y	0, 1, 0, 0,                               y
+    z	0, 0, 1, 0,                           *   z 
+    w	0, 0, scaleFactor, scaleFactor,           w  
+];
   
   
   
@@ -59,9 +59,10 @@ w	0, 0, scaleFactor, scaleFactor,           w
   //> [2, 3, 4, 2.5]
 
 
-// Breaking this out a little further we can see how the works
+ 
 
 /*
+Breaking this out a little further we can see how the works
    再深入一点，我们可以看到它是如何工作的
 
 */
@@ -72,20 +73,30 @@ w	0, 0, scaleFactor, scaleFactor,           w
   var w = (2*0) + (3*0) + (4*scaleFactor) + (1*scaleFactor) 
   
 
-// The last line could be simplified to:
+/*
+  The last line could be simplified to:
+  最后一行可以简化为:
+*/
 
   w = (4 * scaleFactor) + (1 * scaleFactor)
 
-// Then factoring out the scaleFactor
+/*
+ Then factoring out the scaleFactor
+ 然后分解scaleFactor
+*/
 
   w = (4 + 1) * scaleFactor
 
 /*
   Which is exactly (z + 1) * scaleFactor that we used in the previous example.
-
   In the code below there is an additional .computeSimpleProjectionMatrix() method.
   This is called in the .draw() method and is passed the scale factor. Adjust this
   scale factor to verify that it works the same as the previous example.
+
+  也就是(z + 1) * scaleFactor我们在前面的例子中使用的。
+  在下面的代码中，有一个额外的. computesimpleprojectionmatrix()方法。
+  这在.draw()方法中调用，并传递比例因子。调整该
+  缩放因子，以验证它是否与前面的示例相同。
 */
 
 function CubeDemo () {
