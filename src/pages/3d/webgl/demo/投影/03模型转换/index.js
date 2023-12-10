@@ -1,3 +1,14 @@
+import initShader from "@/pages/3d/utils/initShader.js";
+import m4 from "@/pages/3d/utils/comments/m4.js";
+import {createHtmlMatrix} from "@/pages/3d/utils/matrix";
+import vertexShader from "./index.vert";
+import fragmentShader from "./index.frag";
+import  {createCubeData, createBuffersForCube} from "./cube";
+import "./index.less";
+
+window.onload = function () {
+
+
 /*
   Placing points directly into clip space is of limited use. What's better is
   to take model data and transform it into clip space. The cube is an easy example
@@ -49,43 +60,57 @@
  ]
 */
 
-console.log(MDN.multiplyArrayOfMatrices([
-  [
-    5,6,0,0,
-    7,8,0,0,
-    0,0,0,0,
-    0,0,0,0,
-  ],
-  [
-    1,2,0,0,
-    3,4,0,0,
-    0,0,0,0,
-    0,0,0,0,
-  ],
+// console.log(MDN.multiplyArrayOfMatrices([
+//   [
+//     5,6,0,0,
+//     7,8,0,0,
+//     0,0,0,0,
+//     0,0,0,0,
+//   ],
+//   [
+//     1,2,0,0,
+//     3,4,0,0,
+//     0,0,0,0,
+//     0,0,0,0,
+//   ],
 
-])
-)
+// ])
+// )
 
 
 
 function CubeDemo () {
+
+  //   // Setup the canvas and WebGL context
+  this.canvas =document.createElement("canvas");
+  document.body.appendChild(this.canvas);
+  this.canvas.width = window.innerWidth;
+  this.canvas.height = window.innerHeight;
+
+  if (!this.canvas.getContext) return;
+  let gl = this.canvas.getContext("webgl");
+
+  // this.canvas.height = window.innerHeight;
+
+  this.gl=gl; 
+
   
   // Prep the canvas
   // 获取canvas dom
-  this.canvas = document.getElementById("canvas");
-  this.canvas.width = window.innerWidth;
-  this.canvas.height = window.innerHeight;
+  // this.canvas = document.getElementById("canvas");
+  // this.canvas.width = window.innerWidth;
+  // this.canvas.height = window.innerHeight;
   
   // Grab a context
   // 获取gl Context
-  this.gl = MDN.createContext(this.canvas);
+  // this.gl = MDN.createContext(this.canvas);
 
   this.transforms = {}; // All of the matrix transforms
   this.locations = {}; //All of the shader locations
   
   // MDN.createBuffersForCube and MDN.createCubeData are located in /shared/cube.js
   // 创建buffer
-  this.buffers = MDN.createBuffersForCube(this.gl, MDN.createCubeData() );
+  this.buffers = createBuffersForCube(this.gl, createCubeData() );
   
   // 创建program
   this.webglProgram = this.setupProgram();
@@ -98,7 +123,12 @@ CubeDemo.prototype.setupProgram = function() {
     
   // Setup a WebGL program
   // 创建program
-  var webglProgram = MDN.createWebGLProgramFromIds(gl, "vertex-shader", "fragment-shader");
+  // var webglProgram = MDN.createWebGLProgramFromIds(gl, "vertex-shader", "fragment-shader");
+  var webglProgram = initShader(gl, vertexShader, fragmentShader);
+
+ 
+
+  // initShader
   gl.useProgram(webglProgram);
   
   // Save the attribute and uniform locations
@@ -120,6 +150,29 @@ CubeDemo.prototype.setupProgram = function() {
 
 
 
+console.log(
+  'aaaaaaaaa',
+  m4.multiply(
+    [
+      5,6,0,0,
+      7,8,0,0,
+      0,0,0,0,
+      0,0,0,0,
+    ] ,
+  
+    [
+      1,2,0,0,
+      3,4,0,0,
+      0,0,0,0,
+      0,0,0,0,
+    ]
+   
+  )
+
+);
+
+
+
 
 // 计算模型矩阵
 CubeDemo.prototype.computeModelMatrix = function( now ) {
@@ -128,16 +181,21 @@ CubeDemo.prototype.computeModelMatrix = function( now ) {
 
   //Scale down by 50%
   // 缩放 缩小
-  var scale = MDN.scaleMatrix(0.5, 0.5, 0.5);
+  var scale = m4.scaling(0.5, 0.5, 0.5);
   
   // Rotate a slight tilt 轻微倾斜旋转
-  var rotateX = MDN.rotateXMatrix( now * 0.0005 );
+  var rotateX = m4.xRotation( now * 0.0005);
+
+
    
   // Rotate according to time  根据时间旋转
-  var rotateY = MDN.rotateYMatrix( now * 0.0005 );
+  var rotateY = m4.yRotation( now * 0.0005);
+
+  var rotateZ = m4.zRotation( now * 0.0005);
+
 
   // Move slightly down //稍微向下移动
-  var position = MDN.translateMatrix(0, -0.1, 0);
+  var position = m4.translation(0, -0.1, 0);
   
   // Multiply together, make sure and read them in opposite order
   // 乘在一起，确保按相反的顺序读
@@ -146,16 +204,35 @@ CubeDemo.prototype.computeModelMatrix = function( now ) {
   模型矩阵可以把模型的局部坐标变换为世界坐标。
   需要对模型进行缩放、绕xyz轴旋转、平移（注意：三个操作的先后顺序不能变） 。
   */
-  this.transforms.model = MDN.multiplyArrayOfMatrices([
-    position, // step 4
-    rotateY,  // step 3
-    rotateX,  // step 2
-    scale     // step 1
- 
-  ]);
+
   
-  matrix.createHtmlMatrix({matrix:this.transforms.model, title: "model矩阵", row: 4, list: 4, elId: "model"});
+  // console.log('  scale ==', scale );
+  // console.log('rotateX',  rotateX );
+  
+  // console.log(' rotateY ==',  rotateY );
+  
+
+
+  // vectorMultiply
+  this.transforms.model = m4.multiply(rotateX ,scale);
+  this.transforms.model = m4.multiply(rotateY, this.transforms.model);
+  this.transforms.model = m4.multiply(position, this.transforms.model);
  
+
+  createHtmlMatrix({matrix:this.transforms.model, title: "model矩阵", row: 4, list: 4, elId: "model"});
+
+  // debugger;
+
+
+  // this.transforms.model = m4.multiply(rotateY, this.transforms.model);
+  // this.transforms.model = m4.multiply(position,this.transforms.model);
+
+  // this.transforms.model = MDN.multiplyArrayOfMatrices([
+  //   position, // step 4
+  //   rotateY,  // step 3
+  //   rotateX,  // step 2
+  //   scale     // step 1
+  // ]);
   
   
   // Performance caveat: in real production code it's best not to create
@@ -177,6 +254,7 @@ CubeDemo.prototype.draw = function() {
   // Perform the actual draw
   gl.drawElements(gl.TRIANGLES, 36, gl.UNSIGNED_SHORT, 0);
   
+  // this.draw();
   // Run the draw as a loop
   requestAnimationFrame( this.draw.bind(this) );
 };
@@ -184,6 +262,8 @@ CubeDemo.prototype.draw = function() {
 CubeDemo.prototype.updateAttributesAndUniforms = function() {
 
   var gl = this.gl;
+
+ 
   
   // Setup the color uniform that will be shared across all triangles
   gl.uniformMatrix4fv(this.locations.model, false, new Float32Array(this.transforms.model));
@@ -205,3 +285,6 @@ CubeDemo.prototype.updateAttributesAndUniforms = function() {
 var cube = new CubeDemo();
 
 cube.draw();
+
+
+};

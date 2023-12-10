@@ -1,8 +1,8 @@
-    // The individual position vertex
-    attribute vec3 position;
+   // The individual position vertex
+    attribute vec4 position;
 
     void main() {
-      
-      // the gl_Position is the final position in clip space after the vertex shader modifies it
-      gl_Position = vec4(position, 1.0);
+    
+      // the gl_Position is the final position after the vertex shader modifies it
+      gl_Position = position;
     }

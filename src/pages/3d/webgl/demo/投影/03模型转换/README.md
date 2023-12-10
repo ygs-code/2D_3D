@@ -211,4 +211,90 @@ box.draw({
 
 [在 JSFiddle 中查看](https://jsfiddle.net/2x03hdc8)
 
-![1702123286641](image/README/1702123286641.png)
+![1702123341917](image/README/1702123341917.png)
+
+### [练习](https://developer.mozilla.org/zh-CN/docs/Web/API/WebGL_API/WebGL_model_view_projection#%E7%BB%83%E4%B9%A0_2)
+
+* 尝试使用这些值，看看它们如何影响屏幕上渲染的内容。请注意如何通过设置其 w 分量将先前裁剪的蓝色框带回带范围内。
+* 尝试创建一个在裁剪空间之外的新框，然后将其除以 w，将其返回裁剪空间。
+
+## [模型转换](https://developer.mozilla.org/zh-CN/docs/Web/API/WebGL_API/WebGL_model_view_projection#%E6%A8%A1%E5%9E%8B%E8%BD%AC%E6%8D%A2)
+
+将点直接放入裁剪空间的用途有限。在现实世界的应用程序中，你拥有的源坐标不全部在裁剪空间中。因此大多数时候，你需要将模型数据和其他坐标转换到裁剪空间中。简单的立方体就是一个如何执行此操作的简单示例。立方体数据由顶点位置，立方体表面颜色和构成单个多边形的顶点位置的顺序组成（以 3 个顶点为一组，以构成立方体表面的三角形）。这些位置和颜色存储在 GL 缓冲区中，作为属性发到着色器，然后分别进行操作。
+
+最后，计算并设置单个模型矩阵。该矩阵表示要在组成模型的每个点上执行的转换，以将其移到正确的空间，并在模型中的每个点上执行任何其他所需的转换。这不仅适用于每一个顶点，而且还适用于模型每个表面的每个点。
+
+在这种情况下，对于动画的每一帧，一系列缩放，旋转和平移矩阵会将数据移动到裁剪空间中所需的位置。这个立方体是裁剪空间 (-1, -1, -1) 到 (1, 1, 1) 的大小，因此需要缩小以不填满整个裁剪空间。该矩阵事先已经在 JavaScript 中进行了乘法运算，直接发到着色器。
+
+以下代码示例在 `CubeDemo` 对象上定义了一个创建模型矩阵的方法。它使用了自定义函数来创建和乘以 [MDN WebGL](https://github.com/TatumCreative/mdn-webgl) 共享代码中定义的矩阵。新的函数如下：
+
+**JS**Copy to Clipboard
+
+```
+CubeDemo.prototype.computeModelMatrix = function (now) {
+  // 缩小 50%
+  var scale = MDN.scaleMatrix(0.5, 0.5, 0.5);
+
+  // 轻微旋转
+  var rotateX = MDN.rotateXMatrix(now * 0.0003);
+
+  // 根据时间旋转
+  var rotateY = MDN.rotateYMatrix(now * 0.0005);
+
+  // 稍微向下移动
+  var position = MDN.translateMatrix(0, -0.1, 0);
+
+  // 相乘，确定以相反的顺序读取它们
+  this.transforms.model = MDN.multiplyArrayOfMatrices([
+    position, // step 4
+    rotateY, // step 3
+    rotateX, // step 2
+    scale, // step 1
+  ]);
+};
+```
+
+为了在着色器中使用它，必须将其设置在 uniforms 的位置。uniforms 的位置保存在 `locations` 对象中，如下所示：
+
+**JS**Copy to Clipboard
+
+```
+this.locations.model = gl.getUniformLocation(webglProgram, "model");
+```
+
+最后，将 uniforms 设置在那个位置，这就把矩阵交给了 GPU。
+
+**JS**Copy to Clipboard
+
+```
+gl.uniformMatrix4fv(
+  this.locations.model,
+  false,
+  new Float32Array(this.transforms.model),
+);
+```
+
+在着色器中，每个位置顶点首先被转换为齐次坐标（vec4 对象），然后与模型矩阵相乘。
+
+**GLSL**Copy to Clipboard
+
+```
+gl_Position = model * vec4(position, 1.0);
+```
+
+**备注：** 在 JavaScript 中，矩阵乘法需要自定义函数，而在着色器中，它使用了内置在语言中的简单的 * 运算。
+
+### [结果](https://developer.mozilla.org/zh-CN/docs/Web/API/WebGL_API/WebGL_model_view_projection#%E7%BB%93%E6%9E%9C_3)
+
+[在 JSFiddle 中查看](https://jsfiddle.net/5jofzgsh)
+
+![Using a model matrix](https://developer.mozilla.org/zh-CN/docs/Web/API/WebGL_API/WebGL_model_view_projection/part3.png)
+
+此时，变换点的 w 值仍为 1.0。立方体仍然没有什么角度。下一节将进行此设置并修改 w 值以提供一些透视效果。
+
+### [练习](https://developer.mozilla.org/zh-CN/docs/Web/API/WebGL_API/WebGL_model_view_projection#%E7%BB%83%E4%B9%A0_3)
+
+* 使用缩放矩阵缩小立方体，并将其放置在裁剪空间中不同位置。
+* 尝试将其移到裁剪空间之外。
+* 调整窗口大小，然后观察盒子的变形情况。
+* 添加一个 `rotateZ` 。

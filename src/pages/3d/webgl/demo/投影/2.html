@@ -1,0 +1,802 @@
+<html xmlns="http://www.w3.org/1999/xhtml"><head><script src="https://pagead2.googlesyndication.com/pagead/managed/js/adsense/m202312060101/show_ads_impl_fy2021.js?bust=31080064" id="google_shimpl"></script><meta http-equiv="Content-Type" content="text/html; charset=utf-8"><meta content="360doc" name="classification"><link rel="canonical" href="http://www.360doc.com/content/14/0909/11/358381_408120608.shtml"><link rel="alternate" media="only screen and (max-width: 640px)" href="https://www.360doc.cn/article/358381_408120608.html"><meta content="矩阵,向量,正交" name="keywords"><meta content="旋转矩阵" name="description"><meta name="mobile-agent" content="format=html5;url=https://www.360doc.cn/article/358381_408120608.html"><meta content="旋转矩阵旋转矩阵  旋转矩阵（Rotation matrix）是在乘以一个向量的时候有改变向量的方向但不改变大小的效果的矩阵。两个向量的点积在它们都被一个旋转矩阵操作之后保持不变: 从而得出旋转矩阵的逆矩阵是它的转置矩阵: 这里的 是单位矩阵。旋转矩阵是正交矩阵，如果它的列向量形成 的一个正交基，就是说在任何两个列向量之间的标量积是零(正交性)而每个列向量的大小是单位一(单位向量)。3 维旋转矩阵的生成元是三维斜对称矩阵。" name="360docabstract"><meta content="www.360doc.com" name="author"><meta name="Referrer" content="origin"><title>
+	旋转矩阵
+</title><link rel="stylesheet" type="text/css" href="//css.360doc.com/newArticle20200630.css?t=2023111401"><link href="//css.360doc.com/index7/newheader2022.css?t=2023032001" rel="stylesheet" type="text/css">
+    <script src="//hm.baidu.com/hm.js?d86954201130d615136257dde062a503"></script><script src="/js/360query18.js?t=2020091001" type="text/javascript" charset="utf-8"></script>
+    <script type="text/javascript">
+     function setDragEnd() { };
+     function NewHighlight() { };
+     function delAllDiv() { };
+     if (window.location.toString().indexOf("shtml?") > 0) {
+         self.location = window.location.toString().replace(window.location.search.toString(), "");
+     }
+     function doccheckart(json) {
+         if (json[0].result == "1") {
+             if ( 408120608 !=  408120608) {
+                 if (getCookie("360doc1") != null) {
+                     $.ajax({
+                         url: "http://www.360doc.com/ajax/getuserid.ashx",
+                         async: false,
+                         cache: false,
+                         dataType: "json",
+                         success: function (result) {
+
+                             if (358381 != result.userid) {
+                                 self.location = "http://www.360doc.com/noarticle.aspx";
+                             }
+                         },
+                         error:function(){
+                            self.location = "http://www.360doc.com/noarticle.aspx";
+                        }
+                     });
+                 }
+                 else {
+                     self.location = "http://www.360doc.com/noarticle.aspx";
+                 }
+             }
+             else {
+                 self.location = "http://www.360doc.com/noarticle.aspx";
+             }
+         }
+     }
+    </script>
+    <script src="/js/Statistics/addStatistics.js?t=2023010401" type="text/javascript"></script>
+
+    <script type="text/javascript">
+        function getCookie(name) //获取cookie值
+        {
+            var arr = document.cookie.match(new RegExp("(^| )" + name + "=([^;]*)(;|$)"));
+            if (arr != null)
+                return unescape(arr[2]);
+            return null;
+        }
+        var patt1 = new RegExp("[0-9]*_[0-9]*");
+        var url = patt1.exec(location.href);
+        if (navigator.userAgent.toLowerCase().indexOf("micromessenger") > -1) {
+            window.location.href = "http://www.360doc6.net/wxarticlenew/" + url.toString().split("_")[1] + ".html";
+
+        }
+        else if (navigator.userAgent.indexOf("iPhone") > 0 || navigator.userAgent.indexOf("Android") > 0 || navigator.userAgent.indexOf("iPod") > 0) {  //手机端跳转
+
+            if (url != "") {
+                self.location = "https://www.360doc.cn/article/" + url + ".html";
+            }
+        }
+
+        if ( 408120608 !=  408120608) {
+            if (getCookie("360doc1") != null) {
+                $.ajax({
+                    url: "http://www.360doc.com/ajax/getuserid.ashx",
+                    async: false,
+                    cache: false,
+                    dataType: "json",
+                    success: function (result) {
+
+                        if (358381 != result.userid) {
+
+                            self.location = "http://www.360doc.com/content/14/0909/11/358381_408120608.shtml";
+                        }
+                    }
+                });
+            }
+            else {
+                self.location = "http://www.360doc.com/content/14/0909/11/358381_408120608.shtml";
+            }
+        }
+
+
+        if ( 0 !=  408120608&&"0" != "" &&"0" != "0" &&"0" != 1) {
+            $.ajax({
+                url: "http://www.360doc.com/ajax/getuserid.ashx",
+                cache: false,
+                dataType: "json",
+                success: function (result) {
+                    if (result.userid != 358381) {
+                        location = "";
+                    }
+                }
+            });
+        }
+    </script>
+    <script src="/js/showarticlefollow20160329.js?t=2023101901" type="text/javascript" charset="utf-8"></script>
+
+    <script src="/js/jQuery.md5.min.js?t=2016041501" type="text/javascript" charset="utf-8"></script>
+    <script src="/js/common/docgjio.js?t=2018012801" type="text/javascript" charset="utf-8"></script>
+
+    <script type="text/javascript">
+        var _hmt = _hmt || [];
+        (function () {
+            var hm = document.createElement("script");
+            hm.src = "//hm.baidu.com/hm.js?d86954201130d615136257dde062a503";
+            var s = document.getElementsByTagName("script")[0];
+            s.parentNode.insertBefore(hm, s);
+        })();
+    </script>
+    <script src="/js/article/report.js?t=2023120501" type="text/javascript" charset="utf-8"></script>
+
+<meta http-equiv="origin-trial" content="As0hBNJ8h++fNYlkq8cTye2qDLyom8NddByiVytXGGD0YVE+2CEuTCpqXMDxdhOMILKoaiaYifwEvCRlJ/9GcQ8AAAB8eyJvcmlnaW4iOiJodHRwczovL2RvdWJsZWNsaWNrLm5ldDo0NDMiLCJmZWF0dXJlIjoiV2ViVmlld1hSZXF1ZXN0ZWRXaXRoRGVwcmVjYXRpb24iLCJleHBpcnkiOjE3MTk1MzI3OTksImlzU3ViZG9tYWluIjp0cnVlfQ=="><meta http-equiv="origin-trial" content="AgRYsXo24ypxC89CJanC+JgEmraCCBebKl8ZmG7Tj5oJNx0cmH0NtNRZs3NB5ubhpbX/bIt7l2zJOSyO64NGmwMAAACCeyJvcmlnaW4iOiJodHRwczovL2dvb2dsZXN5bmRpY2F0aW9uLmNvbTo0NDMiLCJmZWF0dXJlIjoiV2ViVmlld1hSZXF1ZXN0ZWRXaXRoRGVwcmVjYXRpb24iLCJleHBpcnkiOjE3MTk1MzI3OTksImlzU3ViZG9tYWluIjp0cnVlfQ=="><meta http-equiv="origin-trial" content="A/ERL66fN363FkXxgDc6F1+ucRUkAhjEca9W3la6xaLnD2Y1lABsqmdaJmPNaUKPKVBRpyMKEhXYl7rSvrQw+AkAAACNeyJvcmlnaW4iOiJodHRwczovL2RvdWJsZWNsaWNrLm5ldDo0NDMiLCJmZWF0dXJlIjoiRmxlZGdlQmlkZGluZ0FuZEF1Y3Rpb25TZXJ2ZXIiLCJleHBpcnkiOjE3MTkzNTk5OTksImlzU3ViZG9tYWluIjp0cnVlLCJpc1RoaXJkUGFydHkiOnRydWV9"><meta http-equiv="origin-trial" content="A6OdGH3fVf4eKRDbXb4thXA4InNqDJDRhZ8U533U/roYjp4Yau0T3YSuc63vmAs/8ga1cD0E3A7LEq6AXk1uXgsAAACTeyJvcmlnaW4iOiJodHRwczovL2dvb2dsZXN5bmRpY2F0aW9uLmNvbTo0NDMiLCJmZWF0dXJlIjoiRmxlZGdlQmlkZGluZ0FuZEF1Y3Rpb25TZXJ2ZXIiLCJleHBpcnkiOjE3MTkzNTk5OTksImlzU3ViZG9tYWluIjp0cnVlLCJpc1RoaXJkUGFydHkiOnRydWV9"><meta http-equiv="origin-trial" content="As0hBNJ8h++fNYlkq8cTye2qDLyom8NddByiVytXGGD0YVE+2CEuTCpqXMDxdhOMILKoaiaYifwEvCRlJ/9GcQ8AAAB8eyJvcmlnaW4iOiJodHRwczovL2RvdWJsZWNsaWNrLm5ldDo0NDMiLCJmZWF0dXJlIjoiV2ViVmlld1hSZXF1ZXN0ZWRXaXRoRGVwcmVjYXRpb24iLCJleHBpcnkiOjE3MTk1MzI3OTksImlzU3ViZG9tYWluIjp0cnVlfQ=="><meta http-equiv="origin-trial" content="AgRYsXo24ypxC89CJanC+JgEmraCCBebKl8ZmG7Tj5oJNx0cmH0NtNRZs3NB5ubhpbX/bIt7l2zJOSyO64NGmwMAAACCeyJvcmlnaW4iOiJodHRwczovL2dvb2dsZXN5bmRpY2F0aW9uLmNvbTo0NDMiLCJmZWF0dXJlIjoiV2ViVmlld1hSZXF1ZXN0ZWRXaXRoRGVwcmVjYXRpb24iLCJleHBpcnkiOjE3MTk1MzI3OTksImlzU3ViZG9tYWluIjp0cnVlfQ=="><meta http-equiv="origin-trial" content="A/ERL66fN363FkXxgDc6F1+ucRUkAhjEca9W3la6xaLnD2Y1lABsqmdaJmPNaUKPKVBRpyMKEhXYl7rSvrQw+AkAAACNeyJvcmlnaW4iOiJodHRwczovL2RvdWJsZWNsaWNrLm5ldDo0NDMiLCJmZWF0dXJlIjoiRmxlZGdlQmlkZGluZ0FuZEF1Y3Rpb25TZXJ2ZXIiLCJleHBpcnkiOjE3MTkzNTk5OTksImlzU3ViZG9tYWluIjp0cnVlLCJpc1RoaXJkUGFydHkiOnRydWV9"><meta http-equiv="origin-trial" content="A6OdGH3fVf4eKRDbXb4thXA4InNqDJDRhZ8U533U/roYjp4Yau0T3YSuc63vmAs/8ga1cD0E3A7LEq6AXk1uXgsAAACTeyJvcmlnaW4iOiJodHRwczovL2dvb2dsZXN5bmRpY2F0aW9uLmNvbTo0NDMiLCJmZWF0dXJlIjoiRmxlZGdlQmlkZGluZ0FuZEF1Y3Rpb25TZXJ2ZXIiLCJleHBpcnkiOjE3MTkzNTk5OTksImlzU3ViZG9tYWluIjp0cnVlLCJpc1RoaXJkUGFydHkiOnRydWV9"><script type="text/javascript" src="//www.360doc.com/js/EssayforIE120425.js?t=2022051701"></script><script async="" src="https://fundingchoicesmessages.google.com/i/ca-pub-6625678643128649?ers=2"></script></head>
+<body onmouseup="setDragEnd()" onclick="delAllDiv(event)" class="t_max">
+    
+    <div id="LayerLogin" style="display: none;"></div>
+
+
+
+    <div style="position: absolute; width: 100%; z-index: 1000;">
+        <div class="header" style="background-color: #ffffff;">
+            <div class="header_1">
+                <a href="/" aria-label="home">
+                    <img src="http://pubimage.360doc.com/index7/nlogo.jpg" class="f_left" width="435" height="68" alt="logo"></a>
+                <div class="headsearch">
+                    <div class="zcomdiv">
+                        <input type="text" class="headsearch_inp f_left" value="搜文章  找知识">
+                        <span class="headsearch_btn f_right" id="searchlinkid">搜索</span>
+                    </div>
+                </div>
+                <div class="mylibrary">
+                    <a id="userInfoUrl" href="//www.360doc.com/login.aspx?reurl=http://www.360doc.com/content/14/0909/11/358381_408120608.shtml" class="a1">
+                        <div class="h_user">
+                            <img id="divuserinfonew" src="http://pubimage.360doc.com/index7/dingtu.gif">
+                        </div>
+                        我的图书馆
+                    </a>
+                </div>
+                <div class="headmail f_left" style="display: none;">
+                    <p class="h_icon1" id="newMsg"></p>
+                    <span class="h_border"></span>
+                    <ul class="hm_list" id="msgtips">
+                        <li id="msgicon"><a href="/mymsg.aspx?app=2">查看信箱</a></li>
+                        <li id="sysmsgicon"><a href="/mymsg.aspx?app=9">系统消息</a></li>
+                        <li id="sysicon"><a href="/mymsg.aspx?app=4">官方通知</a></li>
+                        <li class="hm_color2" style="background-color: #f4f4f4"><a href="/mymsg.aspx?app=6">设置</a></li>
+                    </ul>
+                </div>
+                <div class="headtalker f_left" style="display: none;">
+                    <p class="h_icon1" id="newDialog"></p>
+                    <span class="h_border"></span>
+                    <ul class="hm_list">
+                        <li id="li1chat"><a href="javascript:void(0)" onclick="initchatnew()">开始对话</a></li>
+                        <li id="li2chat" style="display: none;"><a href="javascript:void(0)" style="color: #141414;">有<span>11</span>人和你对话，<span onclick="initchatnew()" style="color: #4578b4">查看</span>&nbsp;<span onclick="clearinfochat()" style="color: #4578b4">忽略</span></a></li>
+                        <li><a href="http://www.360doc.com/mycontacts.aspx?app=8">历史对话记录</a></li>
+                        <li class="hm_color2" style="background-color: #f4f4f4"><a href="http://www.360doc.com/mycontacts.aspx?app=7">通知设置</a></li>
+                    </ul>
+                </div>
+                <span class="head_bd f_left"></span>
+                <div class="head_pbox f_left">
+                    <i class="indexallbg"></i>
+                    <p>发文章</p>
+                    <div class="d1">
+                        <div class="d1">
+                            <p>发文工具</p>
+                            <div>
+                                <a href="/edit/writeartnew.aspx" target="_blank" class="a1" onclick="imgLog(1, 'code=43-14-1-2')"><i class="indexallbg"></i>
+                                    <p>撰写</p>
+                                </a>
+                                <a href="/helpnew.html" target="_blank" class="a2" onclick="imgLog(1, 'code=43-14-1-3')"><i class="indexallbg"></i>
+                                    <p>网文摘手</p>
+                                </a>
+                                <a href="/edit/docupload.aspx" target="_blank" class="a3" onclick="imgLog(1, 'code=43-14-1-4')"><i class="indexallbg"></i>
+                                    <p>文档</p>
+                                </a>
+                                <a href="javascript:void(0);" class="a10" onclick="imgLog(1, 'code=25-15-1-1')"><i class="indexallbg"></i>
+                                    <p>视频</p>
+                                <span class="new"></span></a>
+                                <a href="/eeg/index.aspx" target="_blank" class="a4" onclick="imgLog(1, 'code=43-14-1-5')"><i class="indexallbg"></i>
+                                    <p>思维导图</p>
+                                </a>
+                                <a href="/myfiles.aspx?app=18" target="_blank" class="a5" onclick="imgLog(1, 'code=43-14-1-6')"><i class="indexallbg"></i>
+                                    <p>随笔</p>
+                                </a>
+                                <a href="/writephoto2.aspx" target="_blank" class="a6" onclick="imgLog(1, 'code=43-14-1-7')"><i class="indexallbg"></i>
+                                    <p>相册</p>
+                                </a>
+                                <a href="/myoriginal.aspx?app=3" target="_blank" class="a7" onclick="imgLog(1, 'code=43-14-1-8')"><i class="indexallbg"></i>
+                                    <p>原创同步助手</p>
+                                </a>
+                                <div class="clearb"></div>
+                            </div>
+                        </div>
+                        <div class="d1">
+                            <p>其他工具</p>
+                            <div>
+                                <a href="/edit/ocrindex.html" target="_blank" class="a8" onclick="ocrImgLog();"><i class="indexallbg"></i>
+                                    <p>图片转文字</p>
+                                    <b></b></a>
+                                <a href="/myfiles.aspx?app=21" target="_blank" class="a9" onclick="imgLog(1, 'code=43-14-1-9')"><i class="indexallbg"></i>
+                                    <p>文件清理</p>
+                                    <b></b></a>
+                                <div class="clearb"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <a href="http://www.360doc.com/advice.html" target="_blank" class="head_talk f_left" onclick="imgLog(1, 'code=43-14-1-10')"><i class="indexallbg"></i>
+                    <p>留言交流</p>
+                </a>
+            </div>
+        </div>
+        <div class="arti_type_shadow"></div>
+    </div>
+    <div class="atfixednav" style="display: block;">
+        <div class="anbg"></div>
+        <div class="d1" onclick="$('#contextmenudivmouseup').hide();" style="left: 0px;">
+            <a class="fxlogo_ atnavicons" href="/"></a>
+            <div class="fxsearch_" id="fxinput">
+                <div>
+                    <input type="text" value="旋转矩阵">
+                </div>
+                <a href="javascript:void(0);">搜索</a>
+            </div>
+
+            <span class="s1 ic5" id="fixedShareArt" title="分享"><a href="javascript:void(0)" onclick="artStatistics('20-8-2')" class="atnavicons"><b>分享</b></a>
+                <div class="sharelist_new bdsharebuttonbox" id="fenxiangLayer3" style="display: none;">
+                    <a class="slbg1" href="javascript:void(0);" data-cmd="qzone" onclick="shareStatic.addStatic('qzone');artStatistics('20-8-6')">QQ空间</a>
+                    <a class="slbg2" href="javascript:void(0);" data-cmd="sqq" onclick="shareStatic.addStatic('qq');artStatistics('20-8-7')">QQ好友</a>
+                    <a class="slbg3" href="javascript:void(0);" data-cmd="tsina" onclick="shareStatic.addStatic('sina');artStatistics('20-8-8')">新浪微博</a>
+                    <a class="slbg0" href="javascript:void(0);" onclick="shareWeixin()" id="fixed_weixin">微信</a>
+                    <iframe width="95" height="95" marginwidth="0" marginheight="0" frameborder="0" scrolling="no" allowtransparency="true" class="qr" rel="408120608" style="display: none;"></iframe>
+
+                </div>
+            </span>
+
+            
+            <span class="s1 ic1" id="fixedLongPic" style="display: none" title="生成长图"><a href="javascript:void(0)" onclick="ArticleLongImgClick(2)" class="atnavicons"><b>生成长图</b></a></span>
+            <span class="s1 ic10" id="fixedWord" style="display: none" title="转Word"><a href="javascript:void(0)" onclick="WordObj.init();addStatisticsNew('20-37-3-131');" class="atnavicons"><b>转Word</b></a></span>
+            <span class="s1 ic7" id="fixedPrint" style="display: none" title="打印"><a href="javascript:void(0)" onclick="PrintObj.init();addStatisticsNew('20-31-1-121');" class="atnavicons"><b>打印</b></a></span>
+            <span class="s1 ic4" id="fixedArtReading" style="" title="朗读"><a href="javascript:void(0)" onclick="ArticleReadingClick(4);" class="atnavicons"><b>朗读</b></a></span>
+            <span class="s1 ic8" id="fixedFullScreen" style="" title="全屏"><a href="javascript:void(0)" onclick="FullScreenObj.init();addStatisticsNew('20-30-1-119');" class="atnavicons"><b>全屏</b></a></span>
+            
+            <span class="s1 ic6" id="fixedEditArt" style="display: none" title="修改"><a href="javascript:void(0)" onclick="document.getElementById('updateartbtnlink').click();artStatistics('20-26-15');" class="atnavicons"><b>修改</b></a></span>
+
+            <span class="s1 ic2" id="fixedResaveArt" style="" title="转藏"><a href="javascript:void(0)" onclick="SaveArt();artStatistics('20-26-6');" class="atnavicons"><b id="resavenum_bar">转藏</b></a><i id="incresave" style="display: none;">+1</i></span>
+        </div>
+    </div>
+    <div style="height: 68px; _height: 0px; width: 100%;"></div>
+
+    <div class="clear360doc"></div>
+
+    <div class="doc360article_content" style="padding-right: 0px; width: 1014px;">
+        <div style="height: 100px; padding-top: 13px;" id="arttopbdad">
+            <script async="" src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6625678643128649" crossorigin="anonymous" data-checked-head="true"></script>
+            <!-- 2023/12/9顶栏广告970*90 -->
+            <ins class="adsbygoogle" style="display: inline-block; width: 970px; height: 90px" data-ad-client="ca-pub-6625678643128649" data-ad-slot="5988319113" data-adsbygoogle-status="done" data-ad-status="unfilled"><div id="aswift_1_host" style="border: none; height: 90px; width: 970px; margin: 0px; padding: 0px; position: relative; visibility: visible; background-color: transparent; display: inline-block;" tabindex="0" title="Advertisement" aria-label="Advertisement"><iframe id="aswift_1" name="aswift_1" browsingtopics="true" style="left:0;position:absolute;top:0;border:0;width:970px;height:90px;" sandbox="allow-forms allow-popups allow-popups-to-escape-sandbox allow-same-origin allow-scripts allow-top-navigation-by-user-activation" width="970" height="90" frameborder="0" marginwidth="0" marginheight="0" vspace="0" hspace="0" allowtransparency="true" scrolling="no" allow="attribution-reporting" src="https://googleads.g.doubleclick.net/pagead/ads?client=ca-pub-6625678643128649&amp;output=html&amp;h=90&amp;slotname=5988319113&amp;adk=3928101278&amp;adf=1029355086&amp;pi=t.ma~as.5988319113&amp;w=970&amp;lmt=1702136384&amp;format=970x90&amp;url=http%3A%2F%2Fwww.360doc.com%2Fcontent%2F14%2F0909%2F11%2F358381_408120608.shtml&amp;ea=0&amp;wgl=1&amp;dt=1702136338136&amp;bpp=1&amp;bdt=452&amp;idt=230&amp;shv=r20231206&amp;mjsv=m202312060101&amp;ptt=9&amp;saldr=aa&amp;abxe=1&amp;cookie=ID%3D08094cf65eef19cb%3AT%3D1697300572%3ART%3D1701705447%3AS%3DALNI_MbkkSU9csAta0qlLFcWKdBgIpjsPg&amp;gpic=UID%3D00000c60fe3e5c8a%3AT%3D1697300572%3ART%3D1701705447%3AS%3DALNI_Ma2JR8vpzhApQqcNizAqKHw2cTEnA&amp;prev_fmts=0x0&amp;nras=1&amp;correlator=802828574006&amp;frm=20&amp;pv=1&amp;ga_vid=1703602574.1702136338&amp;ga_sid=1702136338&amp;ga_hid=362321398&amp;ga_fc=0&amp;u_tz=480&amp;u_his=1&amp;u_h=1080&amp;u_w=1920&amp;u_ah=1040&amp;u_aw=1920&amp;u_cd=24&amp;u_sd=2&amp;adx=185&amp;ady=81&amp;biw=1383&amp;bih=855&amp;scr_x=0&amp;scr_y=0&amp;eid=44759875%2C44759926%2C44759837%2C31079979%2C44795921%2C31080064%2C95320869%2C95320885%2C31078668%2C31078670&amp;oid=2&amp;pvsid=2760225480059759&amp;tmod=1328048338&amp;uas=0&amp;nvt=1&amp;ref=https%3A%2F%2Fwww.baidu.com%2Flink%3Furl%3Dk5e9rUv_EvD8XdIJG3Xwm_uzaNxNoP6jhEy5uc7dZ2fyjTWYBPvN2iEVMSxM9QLUhA8miKzBaJp_uN0TKay0585QP3ebTzzXVtsb6BTxjUO%26wd%3D%26eqid%3Db51b34e8001c72280000000665748a26&amp;fc=1920&amp;brdim=98%2C3%2C98%2C3%2C1920%2C0%2C1413%2C950%2C1400%2C855&amp;vis=1&amp;rsz=od%7C%7CeE%7C&amp;abl=CS&amp;pfx=0&amp;fu=0&amp;bc=23&amp;psd=W251bGwsbnVsbCxudWxsLDNd&amp;nt=1&amp;ifi=2&amp;uci=a!2&amp;fsb=1&amp;dtd=236" data-google-container-id="a!2" data-load-complete="true" data-google-query-id="CIn64ZTYgoMDFQFVDwIddsALHA"></iframe></div></ins>
+            <script>
+     (adsbygoogle = window.adsbygoogle || []).push({});
+            </script>
+        </div>
+        <p class="clearboth"></p>
+        <div class="a_left" style="width: 704px;"><div id="floatqrcode_1" class="floatqrcode" style="display: block;"><a class="closer" onclick="imgLog(1, 'code=20-40-1-5');">×</a><div><img src="http://pubimage.360doc.com/NewArticle/gzh4.jpg"></div><p>微信扫一扫关注<br>查看更多精彩文章</p></div><div id="floatqrcode_2" class="floatqrcode wxart_qr" style="display: block;"><a class="closer">×</a><div class="dy"><img src="//api.360doc.com/weixin/qrcode/408120608_1_358381_1.jpg?image_process=resize,w_138/quality,Q_60"></div><p>微信扫一扫<br>将文章发送给好友</p></div>
+            <div id="bgchange" style="width: 664px;">
+                <div id="printArticle">
+                    <h2 id="titiletext"><span id="GLTitile">旋转矩阵</span><i id="ArticleReadingBtn" title="朗读" class="sound" onclick="ArticleReadingClick(1)" style=""><span></span><span></span><span></span><span></span></i></h2>
+                    
+                    <audio id="audioId" width="100" height="100" ontimeupdate="AudioTimeUpdate()"></audio>
+                    
+                    <div class="art_topdata">
+                        <span class="a_username" id="topnickname">&nbsp;<a href="http://www.360doc.com/userhome/358381" id="savernickname" target="_blank" onclick="artStatistics('20-7-1');">渔翁很快乐</a>
+                        </span>
+                        
+                        2014-09-09
+                        <span id="articleinfo">
+                            <span id="territory"></span><span id="docsource" class="a_from" style="display: none;"></span><span id="360doc_Readnum">&nbsp;&nbsp;|&nbsp;&nbsp;1243阅读</span><span onclick="ShowSaverUser();artStatistics('20-13');" id="360docResaveCount" class="rc__" style="cursor: pointer;">&nbsp;&nbsp;|&nbsp;&nbsp;<span id="360doc_saverNum" style="color: #62a242;">9</span>转藏
+								<span id="360doc_saverUser">
+                                    <div id="sameArtOuter" style="display: none;">
+                                        <div onclick="event.cancelBubble=true;" style="overflow-y: auto; height: 300px; overflow-x: hidden; z-index: 100; right: 0px; margin-top: -10px;" id="sameArt">
+                                        </div>
+                                    </div>
+                                </span>
+                            </span>
+                        </span>
+                    </div>
+                    <div class="bdsharebuttonbox article_data_right">
+                        <div class="fontsize_bgcolor_controler" id="color_div" style="">
+                            <div class="a_bgcolor">
+                                <img src="http://pubimage.360doc.com/NewArticle/bgcolor.jpg">
+                                <div class="a_colorlist">
+                                    <span class="a_color1" onclick="artStatistics('20-11-1');addStatisticsFullScreen(1,null,6)">
+                                        <img src="http://pubimage.360doc.com/NewArticle/yes.gif"></span>
+                                    <span class="a_color2" onclick="artStatistics('20-11-2');addStatisticsFullScreen(1,null,5)">
+                                        <img src="http://pubimage.360doc.com/NewArticle/yes.gif"></span>
+                                    <span class="a_color3" onclick="artStatistics('20-11-3');addStatisticsFullScreen(1,null,4)">
+                                        <img src="http://pubimage.360doc.com/NewArticle/yes.gif"></span>
+                                    <span class="a_color4" onclick="artStatistics('20-11-4');addStatisticsFullScreen(1,null,3)">
+                                        <img src="http://pubimage.360doc.com/NewArticle/yes.gif"></span>
+                                    <span class="a_color5" onclick="artStatistics('20-11-5');addStatisticsFullScreen(1,null,2)">
+                                        <img src="http://pubimage.360doc.com/NewArticle/yes.gif"></span>
+                                    <span class="a_color6 cur" onclick="artStatistics('20-11-6');addStatisticsFullScreen(1,null,1)">
+                                        <img src="http://pubimage.360doc.com/NewArticle/yes.gif"></span>
+                                </div>
+                            </div>
+                            <div class="a_fontsize">
+                                <img src="http://pubimage.360doc.com/NewArticle/fontSize.jpg">
+                                <div class="fschange">
+                                    <label>
+                                        <input type="radio" name="font_Size" id="" value="18" onclick="artStatistics('20-10-1'); addStatisticsFullScreen(1, 1, null)">大
+                                    </label>
+                                    &nbsp;
+					                <label>
+                                        <input type="radio" name="font_Size" id="" value="16" onclick="artStatistics('20-10-2'); addStatisticsFullScreen(1, 2, null)" checked="checked">中
+                                    </label>
+                                    &nbsp;
+					                <label>
+                                        <input type="radio" name="font_Size" id="" value="14" onclick="artStatistics('20-10-3'); addStatisticsFullScreen(1, 3, null)">小
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                        <div id="resavelayer1"><div class="zcommond" id="zcommondID"><span class="newbtn_forward" onclick="SaveArt();artStatistics('20-3-1');" id="top_reave"><i></i><b>转藏</b></span><span class="newbtn_fullscreen" onclick="FullScreenObj.init(); addStatisticsNew('20-30-1-33');"><i></i><b>全屏</b></span><span class="newbtn_listen" onclick="ArticleReadingClick(6);"><i><span></span><span></span><span></span><span></span></i><b>朗读</b></span><span class="newbtn_print" onclick="PrintObj.init();addStatisticsNew('20-31-1-69');" id="up_newbtn_print" style="display:none"><i></i><b>打印</b></span><span class="newbtn_word" id="newbtn_word" onclick="WordObj.init();addStatisticsNew('20-37-3-130')" style="display:none"><i></i><b>转Word</b></span><span class="newbtn_longpic" id="newbtn_longpic" onclick="ArticleLongImgClick(1)" style="display:none"><i></i><b>生成长图</b></span><span class="newbtn_share"><i></i><b>分享</b><a href="javascript:void(0);" onclick="artStatistics('20-8-1');shareclickfun(this)"></a><div class="sharelist_new" id="fenxiangLayer" style="display: none;"><a class="slbg1" href="javascript:void(0);" data-cmd="qzone" onclick="artStatistics('20-8-6');shareStatic.addStatic('qzone');">QQ空间</a><a class="slbg2" href="javascript:void(0);" data-cmd="sqq" onclick="artStatistics('20-8-7');shareStatic.addStatic('qq');">QQ好友</a><a class="slbg3" href="javascript:void(0);" data-cmd="tsina" onclick="artStatistics('20-8-8');shareStatic.addStatic('sina');">新浪微博</a><a class="slbg0" href="javascript:void(0);" onclick="shareWeixin()">微信</a></div></span></div><div style="position:  absolute;display:none;z-index:1;top:25px;left:0;" id="fuzhitishidiv"></div></div>
+                    </div>
+                    
+                    <div id="articlecontent" class="article_container" onmousedown="newhighlight = true;" onmouseup="NewHighlight(event);">
+                        <div class="article_showall">
+                            <div>
+                                <a href="javascript:void(0);" onclick="$('body').removeClass('articleMaxH');" datatype="360doczkqw">展开全文</a>
+                            </div>
+                        </div>
+                        <table style="width: 656px;">
+                            <tbody>
+                                <tr>
+                                    <td id="artContent" style="max-width: 656px;">
+                                        <div style="width: 656px; margin: 0; padding: 0; height: 0;"></div>
+
+                                        
+                                        
+
+                                        <span class="title">旋转矩阵 <span class="sense"></span></span>
+<div id="J-ext-mod-senselist" class="entry-sense-box">
+<div id="sense-list">
+<div class="add-multiple-box">
+<div id="addMultiplebox" class="addMultiplep addEntrySensesBar">&nbsp;
+<div class="addMultipletips">旋转矩阵（Rotation&nbsp;matrix）是在乘以一个向量的时候有改变向量的方向但不改变大小的效果的矩阵。旋转矩阵不包括反演，它可以把右手坐标系改变成左手坐标系或反之。所有旋转加上反演形成了正交矩阵的集合。</div></div></div></div></div>
+<div class="intro_button"></div>
+<div id="content_mtop"></div>
+<div id="J-ext-mod-editRemind">
+<div id="editRemindWrap">
+<div class="entry-card-tips-bottom overfix"><span class="edit-remind-side"><em class="icon-entry-tips icon-reward31x16"></em><em class="icon-entry-tips icon-money20x14"></em><span class="entry-reward-num">10</span> </span>
+<div class="overfix">本词条 <em class="entrycard-info-font">无基本信息模块, </em>欢迎各位 <a href="http://baike.so.com/create/edit/?eid=5422399&amp;sid=5660595">编辑词条</a>，额外获取10个积分。 </div></div></div></div>
+<div class="content_midle"></div>
+<div id="J-ext-mod-topcatalog">
+<div id="topCatalog">
+<div class="hd"><i class="ico"></i>目录</div>
+<div id="topCatalog-catalog" class="bd max_height mCS_destroyed">
+<dl>
+<dd class="sideCatalog-item1" data-anchor="5422399-5660595-1"><span class="index">1</span> <a title="简介" href="http://baike.so.com/doc/5422399.html#5422399-5660595-1" jquery1830023835282733863927="44">简介</a></dd>
+<dd class="sideCatalog-item1" data-anchor="5422399-5660595-2"><span class="index">2</span> <a title="数学家" href="http://baike.so.com/doc/5422399.html#5422399-5660595-2" jquery1830023835282733863927="46">数学家</a></dd>
+<dd class="sideCatalog-item1" data-anchor="5422399-5660595-3"><span class="index">3</span> <a title="性质" href="http://baike.so.com/doc/5422399.html#5422399-5660595-3" jquery1830023835282733863927="47">性质</a></dd>
+<dd class="sideCatalog-item1" data-anchor="5422399-5660595-4"><span class="index">4</span> <a title="二维空间" href="http://baike.so.com/doc/5422399.html#5422399-5660595-4" jquery1830023835282733863927="48">二维空间</a></dd>
+<dd class="sideCatalog-item1" data-anchor="5422399-5660595-5"><span class="index">5</span> <a title="三维空间" href="http://baike.so.com/doc/5422399.html#5422399-5660595-5" jquery1830023835282733863927="49">三维空间</a></dd></dl></div>
+<div class="fd"><span class="switch" jquery1830023835282733863927="50"><i class="ico hide"></i><b class="text">展开</b></span></div></div></div>
+<div id="J-ext-mod-sidetoolbar">
+<div style="VISIBILITY: visible" id="side-tool-bar">
+<div id="sideCatalog" class="sideCatalog">
+<div class="sidebar">
+<div class="sideCatalog-sidebar-top"></div>
+<div class="sideCatalog-sidebar-bottom"></div></div>
+<div id="sideCatalog-updown">
+<div id="sideCatalog-up" class="sideCatalog-up-disable" title="向上翻页"></div>
+<div id="sideCatalog-down" class="sideCatalog-down-enable" title="向下翻页"></div></div>
+<div id="sideCatalog-catalog" class="mCustomScrollbar _mCS_1" jquery1830023835282733863927="66">
+<div style="POSITION: relative; MAX-WIDTH: 100%; HEIGHT: 100%" id="mCSB_1" class="divBorderStyleRelative" jquery1830023835282733863927="64">
+<div style="POSITION: relative; TOP: 0px" class="divBorderStyleRelative">
+<dl>
+<dd class="sideCatalog-item1" data-anchor="5422399-5660595-1"><span class="index">1</span> <a title="简介" href="http://baike.so.com/doc/5422399.html#5422399-5660595-1" jquery1830023835282733863927="57">简介</a> <span class="dot green_dot"></span></dd>
+<dd class="sideCatalog-item1" data-anchor="5422399-5660595-2"><span class="index">2</span> <a title="数学家" href="http://baike.so.com/doc/5422399.html#5422399-5660595-2" jquery1830023835282733863927="59">数学家</a> <span class="dot green_dot"></span></dd>
+<dd class="sideCatalog-item1" data-anchor="5422399-5660595-3"><span class="index">3</span> <a title="性质" href="http://baike.so.com/doc/5422399.html#5422399-5660595-3" jquery1830023835282733863927="60">性质</a> <span class="dot green_dot"></span></dd>
+<dd class="sideCatalog-item1" data-anchor="5422399-5660595-4"><span class="index">4</span> <a title="二维空间" href="http://baike.so.com/doc/5422399.html#5422399-5660595-4" jquery1830023835282733863927="61">二维空间</a> <span class="dot green_dot"></span></dd>
+<dd class="sideCatalog-item1 higthlight" data-anchor="5422399-5660595-5"><span class="index">5</span> <a title="三维空间" href="http://baike.so.com/doc/5422399.html#5422399-5660595-5" jquery1830023835282733863927="62">三维空间</a> <span class="dot"></span></dd></dl></div>
+<div style="POSITION: absolute; DISPLAY: none" class="divBorderStyle">
+<div class="mCSB_draggerContainer">
+<div style="POSITION: absolute; TOP: 0px" class="divBorderStyle" jquery1830023835282733863927="63">
+<div style="POSITION: relative" class="divBorderStyleRelative"></div></div>
+<div class="mCSB_draggerRail"></div></div></div></div></div></div>
+<div class="scrolltop" jquery1830023835282733863927="52"></div>
+<div class="greaticon" jquery1830023835282733863927="54">
+<div class="addnum">+1</div></div><a class="faceicon" href="http://info.so.360.cn/feedback.html?product=baike" target="_blank"></a>
+<div id="shareBtn" class="shareicon" jquery1830023835282733863927="70"></div>
+<div id="shareBox" class="sharearea-wrap" jquery1830023835282733863927="68"><a href="http://baike.so.com/doc/5422399.html###"><i class="qzone"></i>QQ空间</a> <a href="http://baike.so.com/doc/5422399.html###"><i class="weibo"></i>新浪微博</a> <a href="http://baike.so.com/doc/5422399.html###"><i class="tweibo"></i>腾讯微博</a> <a href="http://baike.so.com/doc/5422399.html###"><i class="tieba"></i>百度贴吧</a> <a href="http://baike.so.com/doc/5422399.html###"><i class="renren"></i>人人</a> <a href="http://baike.so.com/doc/5422399.html###"><i class="douban"></i>豆瓣</a></div></div></div>
+<div class="content_middle_2"></div>
+<div id="lemma-main">
+<div id="main-content-text" class="main_content_text cl">
+<p><a class="show_img layoutright" href="" jquery1830023835282733863927="95" data-index="0" data-type="gallery"><img style="FILTER: ; ZOOM: 1; DISPLAY: inline" id="img_7302196" title="旋转矩阵" alt="旋转矩阵" src="http://image78.360doc.com/DownloadImg/2014/09/0911/45102039_1.jpg" jquery1830023835282733863927="78" data-img="mod_img"><span>旋转矩阵</span></a>旋转矩阵（Rotation matrix）是在乘以一个向量的时候有改变向量的方向但不改变大小的效果的矩阵。旋转矩阵不包括反演，它可以把右手坐标系改变成左手坐标系或反之。所有旋转加上反演形成了正交矩阵的集合。</p>
+<h2><a name="5422399-5660595-1"></a><span class="index">1</span> <b class="title">简介</b>&nbsp; </h2>
+<div class="h2_content">
+<p>旋转矩阵是<a href="http://baike.so.com/doc/5397782.html" target="_blank">世界</a>上著名的彩票专家、澳大利亚数学家底特罗夫研究的，它可以帮助您锁定喜爱的号码，提高中奖的机会。首先您要先选一些号码，然后，运用某一种旋转矩阵，将你挑选的数字填入相应位置。如果您选择的数字中有一些与开奖号码一样，您将一定会中一定奖级的奖。当然运用这种旋转矩阵，可以最小的成本获得最大的收益，且远远小于复式投注的成本。</p>
+<p>旋转矩阵的原理在数学上涉及到的是一种组合设计：覆盖<a href="http://baike.so.com/doc/5339570.html" target="_blank">设计</a>。而覆盖设计，填装设计，斯坦纳系，t-设计都是离散数学中的组合优化问题。它们解决的是如何组合集合中的元素以达到某种特定的要求。其最古老的数学命题是寇克曼女生问题：</p>
+<p>某教员打算这样安排她班上的十五名女生散步：散步时三女生为一组，共五组。问能否在一周内每日安排一次散步，使得每两名女生在一周内一道散步恰好一次？寇克曼于1847年提出了该问题，过了100多年后，对于一般形式的寇克曼问题的存在性才彻底解决。用1~15这15个数字分别代表15个女生，其中的一组符合要求的分组方法是：</p>
+<p>星期日：（1，2，3），（4，8，12），（5，10，15），（6，11，13），（7，9，14）</p>
+<p>星期一：（1，4，5），（2，8，10），（3，13，14），（6，9，15），（7，11，12）</p>
+<p>星期二：（1，6，7），（2，9，11），（3，12，15），（4，10，14），（5，8，13）</p>
+<p>星期三：（1，8，9），（2，12，14），（3，5，6），（4，11，15），（7，10，13）</p>
+<p>星期四：（1，10，11），（2，13，15），（3，4，7），（5，9，12），（6，8，14）</p>
+<p>星期五：（1，12，13），（2，4，6），（3，9，10），（5，11，14），（7，8，15）</p>
+<p>星期六：（1，14，15），（2，5，7），（3，8，11），（4，9，13），（6，10，12）</p></div>
+<h2><a name="5422399-5660595-2"></a><span class="index">2</span> <b class="title">数学家</b>&nbsp; </h2>
+<div class="h2_content">
+<p>1，Patric Ostergard</p>
+<p>他的主要贡献是用了全新的模拟冷却算法解决了旋转矩阵的构造问题，运用他的模拟冷却程序，可以很迅速的产生许许多多的旋转矩阵。</p>
+<p>2，Alex Sidorenko</p>
+<p>他研究出了许多旋转矩阵和几种产生旋转矩阵的基于秃岭<a href="http://baike.so.com/doc/2867004.html" target="_blank">浏览</a>的一般方法。</p>
+<p>3，Greg Kuperberg</p>
+<p>他注意到线性的[v,t]<a href="http://baike.so.com/doc/2161876.html" target="_blank">编码</a>的<a href="http://baike.so.com/doc/6505762.html" target="_blank">补集</a>可以给出区组长度不定的覆盖设计，而这可以产生对现有的旋转矩阵的一系列改进。</p>
+<p>4，Dan Gordon</p>
+<p>他收集的旋转矩阵是迄今为止最全面，最<a href="http://baike.so.com/doc/5332643.html" target="_blank">权威</a>的。</p></div>
+<h2><a name="5422399-5660595-3"></a><span class="index">3</span> <b class="title">性质</b>&nbsp; </h2>
+<div class="h2_content">
+<p>设 是任何维的一般旋转矩阵:</p>
+<p>两个向量的点积在它们都被一个旋转矩阵操作之后保持不变: 从而得出旋转矩阵的逆矩阵是它的转置矩阵: 这里的 是<a href="http://baike.so.com/doc/6668536.html" target="_blank">单位矩阵</a>。 一个矩阵是旋转矩阵，当且仅当它是正交矩阵并且它的行列式是单位一。正交矩阵的行列式是 ±1；如果行列式是 ?1，则它包含了一个反射而不是真旋转矩阵。 旋转矩阵是正交矩阵，如果它的列向量形成 的一个正交基，就是说在任何两个列向量之间的标量积是零(正交性)而每个列向量的大小是单位一(单位向量)。 任何旋转向量可以表示为斜对称矩阵A的指数: 这里的指数是以泰勒级数定义的而 是以矩阵乘法定义的。A 矩阵叫做旋转的“生成元”。旋转矩阵的李代数是它的生成元的代数，它就是斜对称矩阵的代数。生成元可以通过 M 的矩阵对数来找到。</p></div>
+<h2><a name="5422399-5660595-4"></a><span class="index">4</span> <b class="title">二维空间</b>&nbsp; </h2>
+<div class="h2_content">
+<p>在二维空间中，旋转可以用一个单一的角 <a href="http://baike.so.com/doc/737267.html" target="_blank">θ</a> 定义。作为约定，正角表示逆时针旋转。把笛卡尔坐标的列向量关于原点逆时针旋转θ 的矩阵是:</p>
+<p>cosθ -sinθ</p>
+<p>sinθ cosθ</p>
+<p>该矩阵的逆矩阵为：</p>
+<p>cosθ sinθ</p>
+<p>-sinθ cosθ</p>
+<p>表示较原来反方向旋转θ ，也即逆时针旋转 -θ</p></div>
+<h2><a name="5422399-5660595-5"></a><span class="index">5</span> <b class="title">三维空间</b> </h2>
+<div class="h2_content">
+<p>在<a href="http://baike.so.com/doc/5864874.html" target="_blank">三维空间</a>中，旋转矩阵有一个等于单位一的实特征值。旋转矩阵指定关于对应的特征向量的旋转(欧拉旋转定理)。如果旋转角是 θ，则旋转矩阵的另外两个(复数)特征值是 exp(iθ) 和 exp(-iθ)。从而得出 3 维旋转的迹数等于 1 + 2 cos(θ)，这可用来快速的计算任何 3 维旋转的旋转角。</p>
+<p>3 维旋转矩阵的生成元是三维斜对称矩阵。因为只需要三个实数来指定 3 维斜对称矩阵，得出只用三个是实数就可以指定一个3 维旋转矩阵。</p>
+<p>生成旋转矩阵的一种简单方式是把它作为三个基本旋转的序列复合。关于右手笛卡尔坐标系的 x-, y- 和 z-轴的旋转分别叫做 roll, pitch 和 yaw 旋转。因为这些旋转被表达为关于一个轴的旋转，它们的生成元很容易表达。</p>
+<p>绕 x-轴的旋转定义为: 这里的 θx 是 roll 角。 绕 y-轴的旋转定义为: 这里的 θy 是 pitch 角。 绕 z-轴的旋转定义为: 这里的 θz 是 yaw 角。</p>
+<p>在飞行动力学中，roll, pitch 和 yaw 角通常分别采用符号 γ, α, 和 β；但是为了避免混淆于<a href="http://baike.so.com/doc/5879446.html" target="_blank">欧拉角</a>这里使用符号 θx, θy 和 θz。</p>
+<p>任何 3 维旋转矩阵 都可以用这三个角 θx, θy, 和 θz 来刻画，并且可以表示为 roll, pitch 和 yaw 矩阵的乘积。</p>
+<p>是在 中的旋转矩阵 在 中所有旋转的集合，加上复合运算形成了旋转群 SO(3)。这里讨论的矩阵接着提供了这个群的群表示。更高维的情况可参见 Givens旋转。</p>
+<p>角-轴表示和四元数表示</p>
+<p>在三维中，旋转可以通过单一的旋转角 θ 和所围绕的单位向量方向 来定义。</p>
+<p>这个旋转可以简单的以生成元来表达:</p>
+<p>在运算于向量 r 上的时候，这等价于Rodrigues旋转公式：</p>
+<p>角-轴表示密切关联于四元数表示。依据轴和角，四元数可以给出为正规化四元数 Q:</p>
+<p>这里的 i, j 和 k 是 Q 的三个虚部。</p>
+<p>欧拉角表示</p>
+<p>在三维空间中，旋转可以通过三个欧拉角 (α,β,γ) 来定义。有一些可能的欧拉角定义，每个都可以依据 roll, pitch 和 yaw 的复合来表达。依据 "z-x-z" 欧拉角，在右手笛卡尔坐标中的旋转矩阵可表达为:</p>
+<p>进行乘法运算生成:</p>
+<p>因为这个旋转矩阵不可以表达为关于一个单一轴的旋转，它的生成元不能像上面例子那样简单表达出来。</p>
+<p>对称保持 SVD 表示</p>
+<p>对旋转轴 q 和旋转角 θ，旋转矩阵</p>
+<p>这里的 的纵列张开正交于 q 的空间而 G 是 θ 度 Givens 旋转，就是说</p></div></div>
+<div id="characterRelationship"></div>
+<div class="reinforce cl"></div></div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+
+
+                </div>
+                <table>
+                    <!--防止文章内容有不完整标签-->
+                    <tbody>
+                        <tr>
+                            <td>
+                                <ul></ul>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                <div></div>
+                <span></span>
+                <a></a>
+                <p style="margin: 0; padding: 0;"></p>
+                <p class="clearboth"></p>
+
+
+                <div id="oranuserinfo" style="display: none; border: 0; padding: 0; margin: 0; overflow: visible;" class="yc_user zcomdiv new_yc_user">
+                </div>
+
+                <div id="divtort"><div style="color:#999;text-align:left;line-height:22px;background:#f7f7f7;padding: 10px 20px;margin-bottom: -7px;margin-top:10px;">本站是提供个人知识管理的网络存储空间，所有内容均由用户发布，不代表本站观点。请注意甄别内容中的联系方式、诱导购买等信息，谨防诈骗。如发现有害或侵权内容，请点击<span style="color:#155d9a;cursor:pointer;white-space: nowrap;" onclick="reportLayer.isLogin();artStatistics('20-18');">一键举报。</span></div></div>
+                
+                
+
+                <div class="bottombtn2" id="bottombtn2">
+                    <span class="newbtn_forward" onclick="SaveArt();artStatistics('20-3-2');" id="bt_resave"><i></i><b>转藏</b></span>
+                    
+                    
+                    
+                    
+                    
+                    <span class="newbtn_share">
+                        <i></i><b>分享</b>
+                        <a href="javascript:void(0);" onclick="artStatistics('20-8-3');shareclickfun(this)"></a>
+                        <div class="sharelist_new bdsharebuttonbox" id="fenxiangLayer2" style="display: none;">
+                            <a class="slbg1" href="javascript:void(0);" data-cmd="qzone" onclick="artStatistics('20-8-6');shareStatic.addStatic('qzone');">QQ空间</a>
+                            <a class="slbg2" href="javascript:void(0);" data-cmd="sqq" onclick="artStatistics('20-8-7');shareStatic.addStatic('qq');">QQ好友</a>
+                            <a class="slbg3" href="javascript:void(0);" data-cmd="tsina" onclick="artStatistics('20-8-8');shareStatic.addStatic('sina');">新浪微博</a>
+                            <a class="slbg0" href="javascript:void(0);" onclick="shareWeixin()" id="bottom_weixin">微信</a>
+                            <iframe width="95" height="95" marginwidth="0" marginheight="0" frameborder="0" scrolling="no" allowtransparency="true" class="qr" rel="408120608" style="display: none;"></iframe>
+                        </div>
+                    </span>
+                    <span id="flowimg3" class="newbtn_hua" onclick="Showflowerlayer('sendedLayer1');"><i></i><b>献花（<span id="articleflowernum">0</span>）
+                            <span id="flowernumadd" style="display: none;">+1</span></b></span>
+                </div>
+                <div class="bottom_controler">
+                    <p class="bottom_cleft wordnobreak_">
+                        来自：
+                        <span class="a_username" style="width: auto;">
+                            <a href="http://www.360doc.com/userhome/358381" id="savernickname2" target="_blank" onclick="artStatistics('20-7-2');">渔翁很快乐</a>
+                        </span>
+                        &gt; 
+                        <span id="cname" class="a_from"><a href="http://www.360doc.com/userhome.aspx?userid=358381&amp;cid=366" target="_blank" onclick="artStatistics(&quot;20-6&quot;);">《博彩秘籍》</a></span>
+                    </p>
+                    <div class="bottom_cright">
+                        
+                        <span>
+                            <a href="javascript:void(0);" class="a2 a3" onclick="reportLayer.isLogin();artStatistics('20-18');">举报/认领</a>
+                        </span>
+                    </div>
+                </div>
+                
+                <div class="zcomdiv">
+                    <div class="prev_next">
+                        <div class="p1" id="lastart" style="">
+                            <span>上一篇：</span>
+                            <div><a onclick="artStatistics(&quot;20-9-5&quot;);" href="http://www.360doc.com/content/14/0909/10/358381_408104433.shtml" target="_blank">下期双色球中奖号码</a></div>
+                        </div>
+                        <div class="p2" id="nextart" style="">
+                            <span>下一篇：</span>
+                            <div><a onclick="artStatistics(&quot;20-9-6&quot;);" href="http://www.360doc.com/content/14/0909/12/358381_408123000.shtml" target="_blank">旋转矩阵转换法</a></div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <p class="clearboth"></p>
+
+            <div style="height: auto; overflow: hidden;">
+                <a href="javascript:void(0)" id="topref" style="height: 0px;"></a>
+                <div id="divyoulikeadtitle" class="mod__" style="">
+                    <div class="str_border" style="border: none; position: relative; z-index: 2;">
+                        <strong>猜你喜欢</strong>
+                    </div>
+                    <ul class="youlike" style="margin-top: -18px; position: relative; z-index: 1;" id="divyoulikeadbody">
+                        <div style="width: 676px; height: 280px; border: 0;" id="divyoulikead"><iframe id="youlikead" style="width: 676px; height: 280px; border: 0;" frameborder="0" scrolling="no" src="//www.360doc.com/ad/adbaiduyoulike.html?t=2017022201"></iframe></div>
+                    </ul>
+                </div>
+                <div class="clearboth"></div>
+                <div class="mod__">
+                    <div class="new_plbox zcomdiv">
+                        <p id="refNumDIV" class="p1 f_left"><span id="refNumSpan">0</span>条评论</p>
+                        
+                        
+                        <div class="new_huifubt f_left">
+                            <textarea name="SendRefTB" id="SendRefTB" value="写评论...">写评论...</textarea>
+                            <p>
+                                <a id="ImgSendPL" href="javascript:void(0);" onclick="SubmitReflection();">发表</a>
+                            </p>
+                        </div>
+                        
+                    </div>
+                    
+                    <p id="plgyDIV" style="margin: 0; text-align: right; padding: 7px 19px 0 0; color: #999;">请遵守用户&nbsp;<a href="http://www.360doc.com/pages/agreement.html" target="_blank">评论公约</a></p>
+                    
+                    <ul class="replylist" id="reflectionListUL">
+                    </ul>
+                    <div class="reply_pager" id="pageBarDIV">
+                    </div>
+                    <a href="javascript:void(0)" class="reply_more" onclick="setSpread()" style="display: none;">查看更多评论<img src="http://pubimage.360doc.com/NewArticle/reply_btn.gif"></a>
+                </div>
+                <div class="mod__">
+                    <div class="str_border" style="border: none;">
+                        <strong>类似文章</strong>
+                        <a href="http://www.360doc.com/relevant/408120608_more.shtml" target="_blank" class="a_more f_right" onclick="artStatistics(&quot;20-9-8&quot;);">更多</a>
+                    </div>
+                    <ul class="ul-similar">
+                        <li id="artid_146203171"><div style="width:100%;margin:0;" class="similar-info  f_left"><p class="similar-title"><a target="_blank" onclick="artStatistics('20-9-7');" href="http://www.360doc.com/content/11/0906/14/7317486_146203171.shtml">浅谈Ogre的四元数与旋转</a></p><p class="similar-text"><a onclick="artStatistics('20-9-7');" target="_blank" href="http://www.360doc.com/content/11/0906/14/7317486_146203171.shtml">浅谈Ogre的四元数与旋转。下面是一些有用的向量操作. 向量B减去向量A得到一个包含从A到B的距离和方向的向量（在这个例子中，A可以是（0,0,0），表示B的向量可以按A的自身的物体坐标系定义，而不是世界...</a></p></div></li><li id="artid_835532083"><div style="width:100%;margin:0;" class="similar-info  f_left"><p class="similar-title"><a target="_blank" onclick="artStatistics('20-9-7');" href="http://www.360doc.com/content/19/0514/01/32196507_835532083.shtml">特征方程的物理意义</a></p><p class="similar-text"><a onclick="artStatistics('20-9-7');" target="_blank" href="http://www.360doc.com/content/19/0514/01/32196507_835532083.shtml">回过头思考这句话，一个矩阵可以是一个变换，也可以是一个坐标系，如果这个坐标系或基正交，当我用这个矩阵乘以一个向量时，如果这个向量也恰好在坐标系也就是基的一个向量所指的方向，那么这个矩阵乘...</a></p></div></li><li id="artid_586760119"><span class="similar-pic f_left"><a href="http://www.360doc.com/content/16/0829/14/12282510_586760119.shtml" target="_blank" onclick="artStatistics(&quot;20-9-7&quot;);"><img src="http://thumbnail1.360doc.com/DownloadImg/2016/08/2914/i99/586760119_1.jpg"></a></span> <div class="similar-info  f_left"><p class="similar-title"><a target="_blank" onclick="artStatistics('20-9-7');" href="http://www.360doc.com/content/16/0829/14/12282510_586760119.shtml">Unity 中的旋转</a></p><p class="similar-text"><a onclick="artStatistics('20-9-7');" target="_blank" href="http://www.360doc.com/content/16/0829/14/12282510_586760119.shtml">二、旋转轴：静态欧拉角和动态欧拉角。图3、在Space.World中旋转      注意到这里 Parent 的 Y轴并不是 world 的 Y 轴，而这里的圆柱体...</a></p></div></li><li name="liadfeed" style="position: relative;"><iframe id="ifradfeed0" style="width: 676px; height: 105px; border: 0;" frameborder="0" scrolling="no" src="//www.360doc.com/ad/adfeed.html?t=2020052102"></iframe></li><li id="artid_562863712"><span class="similar-pic f_left"><a href="http://www.360doc.com/content/16/0527/22/31750011_562863712.shtml" target="_blank" onclick="artStatistics(&quot;20-9-7&quot;);"><img src="http://thumbnail1.360doc.com/DownloadImg/2016/05/2722/i97/562863712_1.jpg"></a></span> <div class="similar-info  f_left"><p class="similar-title"><a target="_blank" onclick="artStatistics('20-9-7');" href="http://www.360doc.com/content/16/0527/22/31750011_562863712.shtml">【Unity技巧】四元数（Quaternion）和旋转</a></p><p class="similar-text"><a onclick="artStatistics('20-9-7');" target="_blank" href="http://www.360doc.com/content/16/0527/22/31750011_562863712.shtml">四元数介绍。欧拉角到四元数：给定一个欧拉旋转(X, Y, Z)（即分别绕x轴、y轴和z轴旋转X、Y、Z度），则对应的四元数为：x = sin(Y/2)sin(...</a></p></div></li><li id="artid_799425258"><span class="similar-pic f_left"><a href="http://www.360doc.com/content/18/1205/10/496343_799425258.shtml" target="_blank" onclick="artStatistics(&quot;20-9-7&quot;);"><img src="http://thumbnail1.360doc.com/DownloadImg/2018/12/0510/i109/799425258_1.jpg"></a></span> <div class="similar-info  f_left"><p class="similar-title"><a target="_blank" onclick="artStatistics('20-9-7');" href="http://www.360doc.com/content/18/1205/10/496343_799425258.shtml">3D图形:矩阵、欧拉角、四元数与方位的故事</a></p><p class="similar-text"><a onclick="artStatistics('20-9-7');" target="_blank" href="http://www.360doc.com/content/18/1205/10/496343_799425258.shtml">我们已经知道了矩阵和欧拉角的情况,现在我们就看一下四元数是如何表示角位移的.在3D环境中任意的一个角位移都可以理解为绕某个轴旋转一...</a></p></div></li><li id="artid_691196457"><span class="similar-pic f_left"><a href="http://www.360doc.com/content/17/0929/20/1489589_691196457.shtml" target="_blank" onclick="artStatistics(&quot;20-9-7&quot;);"><img src="http://thumbnail1.360doc.com/DownloadImg/2017/09/2908/i109/691196457_1.jpg"></a></span> <div class="similar-info  f_left"><p class="similar-title"><a target="_blank" onclick="artStatistics('20-9-7');" href="http://www.360doc.com/content/17/0929/20/1489589_691196457.shtml">三维旋转：旋转矩阵，欧拉角，四元数</a></p><p class="similar-text"><a onclick="artStatistics('20-9-7');" target="_blank" href="http://www.360doc.com/content/17/0929/20/1489589_691196457.shtml">三维旋转：旋转矩阵，欧拉角，四元数。在旋转矩阵一节中，最先进行的旋转其矩阵在最右侧，说明该矩阵最先与点的齐次坐标相乘，旋转矩阵...</a></p></div></li><li name="liadfeed" style="position: relative;"><iframe id="ifradfeed1" style="width: 676px; height: 105px; border: 0;" frameborder="0" scrolling="no" src="//www.360doc.com/ad/adfeed.html?t=2020052102"></iframe></li><li id="artid_558735155"><span class="similar-pic f_left"><a href="http://www.360doc.com/content/16/0513/10/22925879_558735155.shtml" target="_blank" onclick="artStatistics(&quot;20-9-7&quot;);"><img src="http://thumbnail1.360doc.com/DownloadImg/2016/05/1310/i97/558735155_1.jpg"></a></span> <div class="similar-info  f_left"><p class="similar-title"><a target="_blank" onclick="artStatistics('20-9-7');" href="http://www.360doc.com/content/16/0513/10/22925879_558735155.shtml">初学PX4之飞控算法</a></p><p class="similar-text"><a onclick="artStatistics('20-9-7');" target="_blank" href="http://www.360doc.com/content/16/0513/10/22925879_558735155.shtml">DCM矩阵：也可以这样证明：DCMBB rGG = DCMBB DCMGG rBB = DCMGTGT DCMGG rBB = I33 rBB = rBB.active_EKF_type()) { //如果没有使用EKF...</a></p></div></li><li id="artid_900846762"><span class="similar-pic f_left"><a href="http://www.360doc.com/content/20/0321/23/4796447_900846762.shtml" target="_blank" onclick="artStatistics(&quot;20-9-7&quot;);"><img src="http://thumbnail1.360doc.com/DownloadImg/2020/03/2111/i109/900846762_1.jpg"></a></span> <div class="similar-info  f_left"><p class="similar-title"><a target="_blank" onclick="artStatistics('20-9-7');" href="http://www.360doc.com/content/20/0321/23/4796447_900846762.shtml">三维坐标系旋转</a></p><p class="similar-text"><a onclick="artStatistics('20-9-7');" target="_blank" href="http://www.360doc.com/content/20/0321/23/4796447_900846762.shtml">theta = np.linalg.norm(rvec)r = rvec / thetaR_ = np.array([[0, -r[2][0], r[1][0]], [r[2][0], 0, -r[0][0]], [-r[1][0], r[0][0], ...</a></p></div></li><li id="artid_609298657"><span class="similar-pic f_left"><a href="http://www.360doc.com/content/16/1124/23/33461940_609298657.shtml" target="_blank" onclick="artStatistics(&quot;20-9-7&quot;);"><img src="http://thumbnail1.360doc.com/DownloadImg/2016/11/2411/i101/609298657_1.jpg"></a></span> <div class="similar-info  f_left"><p class="similar-title"><a target="_blank" onclick="artStatistics('20-9-7');" href="http://www.360doc.com/content/16/1124/23/33461940_609298657.shtml">奇异值分解(SVD)原理详解及推导</a></p><p class="similar-text"><a onclick="artStatistics('20-9-7');" target="_blank" href="http://www.360doc.com/content/16/1124/23/33461940_609298657.shtml">正交矩阵是在欧几里得空间里的叫法，在酉空间里叫酉矩阵，一个正交矩阵对应的变换叫正交变换，这个变换的特点是不改变向量的尺寸和向量...</a></p></div></li><li name="liadfeed" style="position: relative;"><iframe id="ifradfeed2" style="width: 676px; height: 105px; border: 0;" frameborder="0" scrolling="no" src="//www.360doc.com/ad/adfeed.html?t=2020052102"></iframe></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="a_right">
+
+            <div id="rightfixed" style="width: 300px;">
+                <div class="user_info">
+                    <div class="user_photo_new f_left">
+                        <a href="http://www.360doc.com/userhome/358381" id="userphotourl" target="_blank" onclick="artStatistics('20-7-4');">
+                            <img src="http://pubimage.360doc.com/head/wash/009.gif" id="userphoto">
+                        </a>
+                    </div>
+                    <div class="user_data f_right">
+                        <div class="user_data_name">
+                            <a href="http://www.360doc.com/userhome/358381" id="nickname" target="_blank" onclick="artStatistics('20-7-3');">渔翁很快乐</a><i id="VerificationTips" style="display: none" class="aut" title="已通过个人认证"><a href="https://pay.360doc.com/pages/myaccount.aspx?app=23" target="_blank" onclick="artStatistics('25-13-3-27');"></a></i>
+                        </div>
+                        <p id="userdegree" style=""><img src="http://pubimage.360doc.com/NewArticle/userstar1.gif"><img src="http://pubimage.360doc.com/NewArticle/userstar1.gif"><img src="http://pubimage.360doc.com/NewArticle/userstar1.gif"><img src="http://pubimage.360doc.com/NewArticle/userstar1.gif"><img src="http://pubimage.360doc.com/NewArticle/userstar1.gif"></p>
+                        <p class="p1 wordnobreak_" style="display: none" id="oVerification"></p>
+                        <p class="p1 wordnobreak_" style="display: none" id="iVerification"></p>
+                        <div class="user_data_num" id="follow_talk">
+                            <a class="user_data_gz" href="javascript:void(0);" id="spanfollowstatusnew">关注</a>
+
+
+                            <a class="user_data_dh" href="javascript:void(0);" onclick="this.blur();docTalk();artStatistics('20-15');">对话</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="his_her"><ul class="his_her_type"><li class="f_left curone"><a href="http://www.360doc.com/userhome/358381" style="color:#000;" target="_blank" onclick="artStatistics('20-9-10');">TA的最新馆藏</a></li></ul><div class="his_her_div" style="height:190px;"><ul class="his_her_list"><li><div class="j"><span></span><a title="基尼系数如何计算？" href="http://www.360doc.com/content/16/0302/09/358381_538729646.shtml" target="_blank" onclick="artStatistics('20-9-11');">基尼系数如何计算？</a></div><div class="j"><span></span><a title="小我与大我" href="http://www.360doc.com/content/16/0301/09/358381_538464936.shtml" target="_blank" onclick="artStatistics('20-9-11');">小我与大我</a></div><div><span style="color:#b0b0b0;">[转]&nbsp;</span><a title="余生想和你走遍这30个地方，最后一个你一定喜欢。" href="http://www.360doc.com/showweb/0/0/792415440.aspx" target="_blank" onclick="artStatistics('20-9-11');">余生想和你走遍这30个地方，最后一个你一定喜欢。</a></div><div><span style="color:#b0b0b0;">[转]&nbsp;</span><a title="寻找国人记忆中隐秘的古村落" href="http://www.360doc.com/showweb/0/0/792621320.aspx" target="_blank" onclick="artStatistics('20-9-11');">寻找国人记忆中隐秘的古村落</a></div><div><span style="color:#b0b0b0;">[转]&nbsp;</span><a title="中国最矮的山，仅0.6米高，却被列为重点文物" href="http://www.360doc.com/content/18/1007/11/4958641_792649198.shtml" target="_blank" onclick="artStatistics('20-9-11');">中国最矮的山，仅0.6米高，却被列为重点文物</a></div><div><span style="color:#b0b0b0;">[转]&nbsp;</span><a title="中国古城墙大全" href="http://www.360doc.com/content/18/1008/07/137012_792852526.shtml" target="_blank" onclick="artStatistics('20-9-11');">中国古城墙大全</a></div></li></ul></div></div>
+
+
+<div class="clear360doc" style="padding-top: 10px; height: 250px;" id="outerdivifartad1">
+    <div id="divifartad1">
+        <script async="" src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6625678643128649" crossorigin="anonymous" data-checked-head="true"></script>
+        <!-- 2023/12/9文章页右侧第一个300*250 -->
+        <ins class="adsbygoogle" style="display: inline-block; width: 300px; height: 250px" data-ad-client="ca-pub-6625678643128649" data-ad-slot="4615527697" data-adsbygoogle-status="done" data-ad-status="unfilled"><div id="aswift_2_host" style="border: none; height: 250px; width: 300px; margin: 0px; padding: 0px; position: relative; visibility: visible; background-color: transparent; display: inline-block;" tabindex="0" title="Advertisement" aria-label="Advertisement"><iframe id="aswift_2" name="aswift_2" browsingtopics="true" style="left:0;position:absolute;top:0;border:0;width:300px;height:250px;" sandbox="allow-forms allow-popups allow-popups-to-escape-sandbox allow-same-origin allow-scripts allow-top-navigation-by-user-activation" width="300" height="250" frameborder="0" marginwidth="0" marginheight="0" vspace="0" hspace="0" allowtransparency="true" scrolling="no" allow="attribution-reporting" src="https://googleads.g.doubleclick.net/pagead/ads?client=ca-pub-6625678643128649&amp;output=html&amp;h=250&amp;slotname=4615527697&amp;adk=1918913706&amp;adf=697590661&amp;pi=t.ma~as.4615527697&amp;w=300&amp;lmt=1702136384&amp;format=300x250&amp;url=http%3A%2F%2Fwww.360doc.com%2Fcontent%2F14%2F0909%2F11%2F358381_408120608.shtml&amp;ea=0&amp;wgl=1&amp;dt=1702136338137&amp;bpp=1&amp;bdt=454&amp;idt=246&amp;shv=r20231206&amp;mjsv=m202312060101&amp;ptt=9&amp;saldr=aa&amp;abxe=1&amp;cookie=ID%3D08094cf65eef19cb%3AT%3D1697300572%3ART%3D1701705447%3AS%3DALNI_MbkkSU9csAta0qlLFcWKdBgIpjsPg&amp;gpic=UID%3D00000c60fe3e5c8a%3AT%3D1697300572%3ART%3D1701705447%3AS%3DALNI_Ma2JR8vpzhApQqcNizAqKHw2cTEnA&amp;prev_fmts=0x0%2C970x90&amp;nras=1&amp;correlator=802828574006&amp;frm=20&amp;pv=1&amp;ga_vid=1703602574.1702136338&amp;ga_sid=1702136338&amp;ga_hid=362321398&amp;ga_fc=0&amp;u_tz=480&amp;u_his=1&amp;u_h=1080&amp;u_w=1920&amp;u_ah=1040&amp;u_aw=1920&amp;u_cd=24&amp;u_sd=2&amp;adx=899&amp;ady=561&amp;biw=1383&amp;bih=855&amp;scr_x=0&amp;scr_y=0&amp;eid=44759875%2C44759926%2C44759837%2C31079979%2C44795921%2C31080064%2C95320869%2C95320885%2C31078668%2C31078670&amp;oid=2&amp;pvsid=2760225480059759&amp;tmod=1328048338&amp;uas=0&amp;nvt=1&amp;ref=https%3A%2F%2Fwww.baidu.com%2Flink%3Furl%3Dk5e9rUv_EvD8XdIJG3Xwm_uzaNxNoP6jhEy5uc7dZ2fyjTWYBPvN2iEVMSxM9QLUhA8miKzBaJp_uN0TKay0585QP3ebTzzXVtsb6BTxjUO%26wd%3D%26eqid%3Db51b34e8001c72280000000665748a26&amp;fc=1920&amp;brdim=98%2C3%2C98%2C3%2C1920%2C0%2C1413%2C950%2C1400%2C855&amp;vis=1&amp;rsz=od%7C%7CeE%7C&amp;abl=CS&amp;pfx=0&amp;fu=0&amp;bc=23&amp;psd=W251bGwsbnVsbCxudWxsLDNd&amp;nt=1&amp;ifi=3&amp;uci=a!3&amp;fsb=1&amp;dtd=251" data-google-container-id="a!3" data-load-complete="true" data-google-query-id="CKmr4pTYgoMDFatIDwIdljgNJQ"></iframe></div></ins>
+        <script>
+            (adsbygoogle = window.adsbygoogle || []).push({});
+        </script>
+    </div>
+</div>
+
+<div class="his_her" id="recommendArt">
+
+
+    <div class="hhtitle_">
+        <span class="s1">喜欢该文的人也喜欢</span>
+        <a onclick="artStatistics('20-28-4');" href="http://www.360doc.com/readroom.html" target="_blank">更多</a>
+    </div>
+    <div class="hhlist_new" id="recommendArtLists"><div class="d1"><span class="f_left g"></span><div class="f_right  data_"><a href="http://www.360doc.com/content/14/0118/01/8407612_346167283.shtml" title="双色球旋转矩阵" target="_blank" onclick="imgLog(2,'code=20-28-1&amp;artid=346167283');imgLog(2,'code=20-28-2&amp;artid=346167283');">双色球旋转矩阵</a><span>阅4916</span></div></div><div class="d1"><span class="f_left g"></span><div class="f_right  data_"><a href="http://www.360doc.com/document/12/0810/01/10562462_229395537.shtml" title="彩票杀码技巧5" target="_blank" onclick="imgLog(2,'code=20-28-1&amp;artid=229395537');imgLog(2,'code=20-28-2&amp;artid=229395537');">彩票杀码技巧5</a><span>阅1390</span></div></div><div class="d1"><span class="f_left g"></span><div class="f_right  data_"><a href="http://www.360doc.com/content/13/0430/01/8321943_281900115.shtml" title="彩民“四大门派”划分：哪种投注类型最受大奖青睐" target="_blank" onclick="imgLog(2,'code=20-28-1&amp;artid=281900115');imgLog(2,'code=20-28-2&amp;artid=281900115');">彩民“四大门派”划分：哪种投注类型最受大奖青睐</a><span>阅806</span></div></div><div class="d1"><span class="f_left g"></span><div class="f_right  data_"><a href="http://www.360doc.com/content/15/1113/11/27937347_513051148.shtml" title="彩迷：双色球名词解释之和值：巧用公式判定尾码" target="_blank" onclick="imgLog(2,'code=20-28-1&amp;artid=513051148');imgLog(2,'code=20-28-2&amp;artid=513051148');">彩迷：双色球名词解释之和值：巧用公式判定尾码</a><span>阅344</span></div></div><div class="d1"><span class="f_left g"></span><div class="f_right  data_"><a href="http://www.360doc.com/content/12/0108/11/8470805_178199599.shtml" title="红球和值追踪法" target="_blank" onclick="imgLog(2,'code=20-28-1&amp;artid=178199599');imgLog(2,'code=20-28-2&amp;artid=178199599');">红球和值追踪法</a><span>阅142</span></div></div></div>
+</div>
+
+
+
+
+<div class="his_her" id="recommendArtHot">
+    <div class="hhtitle_">
+        <span class="s1"><i class="atnavicons"></i>热门阅读</span>
+        <a onclick="reSetHotArt();artStatistics('20-55-1-0');" href="javascript:void(0)">换一换</a>
+    </div>
+    <div class="hhlist_new" id="recommendArtHotLists"><div class="d1"><span class="f_left"></span><div class="f_right  data_"><a href="http://www.360doc.com/content/19/0210/11/32937624_814004308.shtml" title="人教版七年级下册英语各单元知识点复习" target="_blank" onclick="imgLog(1,'code=20-55-1-1');">人教版七年级下册英语各单元知识点复习</a><span>阅22870</span></div></div><div class="d1"><span class="f_left"></span><div class="f_right  data_"><a href="http://www.360doc.com/content/22/0808/03/72666197_1042954004.shtml" title="什么是d带中心理论" target="_blank" onclick="imgLog(1,'code=20-55-1-1');">什么是d带中心理论</a><span>阅31387</span></div></div><div class="d1"><span class="f_left"></span><div class="f_right  data_"><a href="http://www.360doc.com/content/16/0501/17/32929953_555405017.shtml" title="常用建筑图纸符号大全【完整版】" target="_blank" onclick="imgLog(1,'code=20-55-1-1');">常用建筑图纸符号大全【完整版】</a><span>阅323557</span></div></div><div class="d1"><span class="f_left"></span><div class="f_right  data_"><a href="http://www.360doc.com/content/17/0826/22/35706693_682376866.shtml" title="学校手机使用管理制度" target="_blank" onclick="imgLog(1,'code=20-55-1-1');">学校手机使用管理制度</a><span>阅26222</span></div></div><div class="d1"><span class="f_left"></span><div class="f_right  data_"><a href="http://www.360doc.com/content/19/0216/10/51508517_815286654.shtml" title="简约而丰满的好课|特级教师王林波《猫》实录评析" target="_blank" onclick="imgLog(1,'code=20-55-1-1');">简约而丰满的好课|特级教师王林波《猫》实录评析</a><span>阅13707</span></div></div></div>
+
+</div>
+
+
+
+<div class="clear360doc" style="padding-top: 10px;" id="divifartad2">
+</div>
+
+
+
+
+<div class="clear360doc" id="divad5" style="zoom: 1; width: 300px; top: 80px; left: 898.5px; position: fixed;">
+    <div id="divad4" style="">
+        <div id="divifartad"><iframe id="ifartad" height="250px" width="300px" frameborder="0" scrolling="no" src="//www.360doc.com/ad/ad4_300.html?t=2018011101"></iframe></div>
+        <div class="ggwz">
+        </div>
+        <div style="height: 13px;">
+        </div>
+    </div>
+    <div style="clear: both;" id="divad6">
+        <div id="adfloatbaidu"><iframe id="ifartadfloadbaidu" height="250px" width="250px" frameborder="0" scrolling="no" src="//www.360doc.com/ad/ad5.html?t=2018011101" style="width: 250px; margin: 0px auto;"></iframe></div>
+        <div class="ggwz">
+        </div>
+        <div style="height: 13px;">
+        </div>
+    </div>
+    <div style="height: 75px;">
+    </div>
+</div>
+
+            </div>
+        </div>
+    </div>
+
+
+    <p class="clearboth"></p>
+    <input type="hidden" id="artid" value="408120608">
+    <input type="hidden" id="docarttitle" value="%e6%97%8b%e8%bd%ac%e7%9f%a9%e9%98%b5">
+    <input type="hidden" id="firstartid" value="408120608">
+    <input type="hidden" id="firstuid" value="358381">
+    <input type="hidden" id="myuid" value="-1">
+    <input type="hidden" id="firstarturl" value="http://www.360doc.com/content/14/0909/11/358381_408120608.shtml">
+    <input type="hidden" id="oranfirstarturl" value="">
+    <input type="hidden" id="subclassid" value="0">
+    <input type="hidden" id="recommendart1" value="405070535">
+    <input type="hidden" id="recommendart2" value="-1">
+    <input type="hidden" id="isowner" value="False">
+
+    <input type="hidden" id="isowner2" value="0">
+    <input type="hidden" id="original" value="0">
+    <input type="hidden" id="showrewardlist" value="0">
+    <input type="hidden" id="saveruserid" value="358381">
+    <input type="hidden" id="sourceurl" value="">
+    <input type="hidden" id="deschidden" value="退休高级工程师
+我的人生格言;
+思无禁区，行有规律。
+见人之所见，思人之未思。
+宁 ...">
+    <input type="hidden" id="firstkeywords" value="">
+    <input type="hidden" id="firsttagwords" value="">
+    <input type="hidden" id="firstsubclassid" value="0">
+    <input type="hidden" id="hidisneweditor" value="0">
+    <input type="hidden" id="hidreadroomclassid" value="0">
+    <input type="hidden" id="hidsubclassid" value="-1">
+    <input type="hidden" id="hidisshowminiapp" value="1">
+    <input type="hidden" id="articleTime" value="2014-09-09T11:51:51">
+    <input name="acinfo" type="hidden" id="acinfo">
+    <input type="hidden" id="activityimg" value="http://ebookimage.360doc.com/banner/banner_1590142105143.jpeg">
+    <input type="hidden" id="activityurl" value="http://www.360doc.com/member/index.html">
+    <input type="hidden" id="isblackartid" value="2">
+    <input type="hidden" id="isIllegalArt" value="2">
+    <input type="hidden" id="hidappid" value="">
+    <input type="hidden" id="userstatus" value="1">
+    <input type="hidden" id="isshowimg" value="1">
+    <input type="hidden" id="showarttype" value="1">
+    <input type="hidden" id="hidden_permission" value="0">
+    <input type="hidden" id="AuthorizerAppid" value="">
+    <input type="hidden" id="source" value="">
+    <input type="hidden" id="hidIsReflecion" value="1">
+    <input type="hidden" id="artreadroomid" value="0">
+    <div class="contextmenu" id="contextmenudiv" style="display: none;">
+        <ul>
+            <li><a href="javascript:void(0)" onclick="document.execCommand('Copy');addStatisticsNew('20-29-1-2');">复制</a></li>
+            <li><a href="javascript:void(0)" onclick="PrintObj.init();addStatisticsNew('20-31-1-72');">打印文章</a> </li>
+            <li class="sendtophone"><a href="javascript:void(0)" onclick="addStatisticsNew('20-41-1-147');">发送到手机</a>
+                <div class="qr" id="mobileQr" style="display: none;">
+                    <p>微信扫码，在手机上查看选中内容</p>
+                    <div id="sendtophone_qr"></div>
+                </div>
+            </li>
+            <li><a href="javascript:void(0)" onclick="FullScreenObj.init();addStatisticsNew('20-30-1-118');">全屏阅读</a> </li>
+            
+            <li id="ArticleReadingLiBtn1" style=""><a id="ArticleReadingBtn1" href="javascript:void(0)" onclick="ArticleReadingClick(2);">朗读全文<b></b></a></li>
+            
+            <li id="share_li">
+                <a href="javascript:void(0)" class="tri">分享文章</a>
+                <div class="sharelist_new ctxshare bdsharebuttonbox" id="ctxshare" style="display: none;">
+                    <a class="slbg1" href="javascript:void(0);" data-cmd="qzone" onclick="artStatistics('20-8-6');shareStatic.addStatic('qzone');">QQ空间</a>
+                    <a class="slbg2" href="javascript:void(0);" data-cmd="sqq" onclick="shareStatic.addStatic('qq');artStatistics('20-8-7');">QQ好友</a>
+                    <a class="slbg3" href="javascript:void(0);" data-cmd="tsina" onclick="shareStatic.addStatic('sina');artStatistics('20-8-8');">新浪微博</a>
+                    <a class="slbg0" href="javascript:void(0);" onclick="shareWeixin()" id="ctx_weixin">微信</a>
+                    <iframe width="95" height="95" marginwidth="0" marginheight="0" frameborder="0" scrolling="no" allowtransparency="true" class="qr" rel="408120608" style="display: none;"></iframe>
+                </div>
+            </li>
+        </ul>
+    </div>
+    <div class="contextmenu unlogin" id="contextmenudivmouseup" style="display: none;">
+        <ul>
+            <li><a class="a1" href="javascript:void(0)" onclick="document.execCommand('Copy');$('#contextmenudivmouseup').hide();addStatisticsNew('20-29-1-2');">复制</a></li>
+            <li id="print_li_mouseup"><a href="javascript:void(0)" onclick="PrintObj.init();$('#contextmenudivmouseup').hide();addStatisticsNew('20-31-1-71');">打印文章</a> </li>
+            <li class="sendtophone" style="display: none"><a href="javascript:void(0)" onclick="addStatisticsNew('20-41-1-146');">发送到手机</a>
+                <div class="qr" style="display: none;">
+                    <p>微信扫码，在手机上查看选中内容</p>
+                    <div></div>
+                </div>
+            </li>
+            <li><a href="javascript:void(0)" onclick="FullScreenObj.init();$('#contextmenudivmouseup').hide();addStatisticsNew('20-30-1-117');">全屏阅读</a> </li>
+            
+            <li id="ArticleReadingLiBtn2" style=""><a id="ArticleReadingBtn2" href="javascript:void(0)" onclick="ArticleReadingClick(3);$('#contextmenudivmouseup').hide();">朗读全文</a> </li>
+            
+        </ul>
+    </div>
+
+    <script src="/js/Statistics/sha1.js?t=2017092101" type="text/javascript"></script>
+    <script type="text/javascript" src="/js/index7/newheader2022.js?t=2023120501"></script>
+    <script src="/js/showarticle.js?t=2023120805" type="text/javascript" charset="utf-8"></script>
+    <ins class="adsbygoogle adsbygoogle-noablate" data-adsbygoogle-status="done" style="display: none !important;" data-ad-status="unfilled"><div id="aswift_0_host" style="border: none; height: 0px; width: 0px; margin: 0px; padding: 0px; position: relative; visibility: visible; background-color: transparent; display: inline-block;" tabindex="0" title="Advertisement" aria-label="Advertisement"><iframe id="aswift_0" name="aswift_0" browsingtopics="true" style="left:0;position:absolute;top:0;border:0;width:undefinedpx;height:undefinedpx;" sandbox="allow-forms allow-popups allow-popups-to-escape-sandbox allow-same-origin allow-scripts allow-top-navigation-by-user-activation" frameborder="0" marginwidth="0" marginheight="0" vspace="0" hspace="0" allowtransparency="true" scrolling="no" allow="attribution-reporting" src="https://googleads.g.doubleclick.net/pagead/ads?client=ca-pub-6625678643128649&amp;output=html&amp;adk=1812271804&amp;adf=3025194257&amp;lmt=1702136384&amp;plaf=1%3A2%2C2%3A2%2C7%3A2&amp;plat=1%3A128%2C2%3A128%2C3%3A128%2C4%3A128%2C8%3A128%2C9%3A32776%2C16%3A8388608%2C17%3A32%2C24%3A32%2C25%3A32%2C30%3A1081344%2C32%3A32%2C41%3A32%2C42%3A32&amp;format=0x0&amp;url=http%3A%2F%2Fwww.360doc.com%2Fcontent%2F14%2F0909%2F11%2F358381_408120608.shtml&amp;ea=0&amp;pra=5&amp;wgl=1&amp;easpi=1&amp;asro=0&amp;asiscm=1&amp;aslmt=0.4&amp;asamt=-1&amp;asedf=0&amp;asefa=1&amp;aseiel=1~2~4~6&amp;dt=1702136338131&amp;bpp=4&amp;bdt=447&amp;idt=204&amp;shv=r20231206&amp;mjsv=m202312060101&amp;ptt=9&amp;saldr=aa&amp;abxe=1&amp;cookie=ID%3D08094cf65eef19cb%3AT%3D1697300572%3ART%3D1701705447%3AS%3DALNI_MbkkSU9csAta0qlLFcWKdBgIpjsPg&amp;gpic=UID%3D00000c60fe3e5c8a%3AT%3D1697300572%3ART%3D1701705447%3AS%3DALNI_Ma2JR8vpzhApQqcNizAqKHw2cTEnA&amp;nras=1&amp;correlator=802828574006&amp;frm=20&amp;pv=2&amp;ga_vid=1703602574.1702136338&amp;ga_sid=1702136338&amp;ga_hid=362321398&amp;ga_fc=0&amp;u_tz=480&amp;u_his=1&amp;u_h=1080&amp;u_w=1920&amp;u_ah=1040&amp;u_aw=1920&amp;u_cd=24&amp;u_sd=2&amp;adx=-12245933&amp;ady=-12245933&amp;biw=1383&amp;bih=855&amp;scr_x=0&amp;scr_y=0&amp;eid=44759875%2C44759926%2C44759837%2C31079979%2C44795921%2C31080064%2C95320869%2C95320885%2C31078668%2C31078670&amp;oid=2&amp;pvsid=2760225480059759&amp;tmod=1328048338&amp;uas=0&amp;nvt=1&amp;fsapi=1&amp;ref=https%3A%2F%2Fwww.baidu.com%2Flink%3Furl%3Dk5e9rUv_EvD8XdIJG3Xwm_uzaNxNoP6jhEy5uc7dZ2fyjTWYBPvN2iEVMSxM9QLUhA8miKzBaJp_uN0TKay0585QP3ebTzzXVtsb6BTxjUO%26wd%3D%26eqid%3Db51b34e8001c72280000000665748a26&amp;fc=1920&amp;brdim=98%2C3%2C98%2C3%2C1920%2C0%2C1413%2C950%2C1400%2C855&amp;vis=1&amp;rsz=%7C%7Cs%7C&amp;abl=NS&amp;fu=32768&amp;bc=23&amp;psd=W251bGwsbnVsbCxudWxsLDNd&amp;nt=1&amp;ifi=1&amp;uci=a!1&amp;fsb=1&amp;dtd=229" data-google-container-id="a!1" data-load-complete="true"></iframe></div></ins><script>GerLookingUserInfo(1,358381,1,1,'','',10,0);OutputLastNextArt('下期双色球中奖号码','http://www.360doc.com/content/14/0909/10/358381_408104433.shtml',0);OutputLastNextArt('旋转矩阵转换法','http://www.360doc.com/content/14/0909/12/358381_408123000.shtml',1);</script>
+
+    <script src="//blockart.360doc.com/ajax/getstatusv2.ashx?aid=408120608" type="text/javascript" charset="utf-8" async="async"></script>
+    
+    
+    <script type="text/javascript">
+        var baiduImagePlus = {
+            noLogo: true,
+            unionId: 'u2617463',
+            maxMiniAdCount: 0,
+            formList: [{ formId: 10 }]
+        };
+        //imgLogPcPage(1, 'code=69-2');
+    </script>
+    <script type="text/javascript" src="//cpro.baidustatic.com/cpro/ui/i.js" async="async"></script>
+    
+    
+    
+    <script type="application/ld+json">
+    {
+        "@context": "https://ziyuan.baidu.com/contexts/cambrian.jsonld",
+        "@id": "http://www.360doc.com/content/14/0909/11/358381_408120608.shtml",
+        "title": "旋转矩阵",
+        "pubDate": "2014-09-09T11:51:51"
+    }
+    </script>
+    
+
+
+<div id="goTop2" style="left: 1218.5px;"><div style="border-bottom: solid 1px #eee;width: 50px;"><a id="goTop" onclick="imgLog(1, 'code=20-39-1-1');" style=""></a></div><div id="goTop1"><a id="go_top1"></a></div><div class="fxbtn_app" id="fxbtn_app"><a></a><div><span></span></div></div><div id="fxbtn_service" class="fxbtn_service"><a></a><div><p class="d0">联系客服</p><div class="d1"><p class="p1"><i class="sic"></i>客服微信：kefu360doc</p><span class="sic"></span></div><div class="d2"><p class="p1"><i class="sic"></i>客服QQ：</p><a class="p2 sic" href="http://wpa.qq.com/msgrd?v=3&amp;uin=1732698931&amp;site=qq&amp;menu=yes" target="_blank">1732698931</a></div><div class="d3"><p class="p1"><i class="sic"></i>联系电话：4000-999-276</p></div><p class="d4">客服工作时间9:00-18:00，晚上非工作时间，请在微信或QQ留言，<br>第二天客服上班后会立即联系您。</p></div></div></div><iframe name="googlefcPresent" style="display: none; width: 0px; height: 0px; border: none; z-index: -1000; left: -1000px; top: -1000px;"></iframe><div id="needVerify" style="display: none; position: fixed; z-index: 1002;"></div><div id="fullbg" style="width: 100%; height: 100%; display: block;display:none;"></div><div class="bevip__" id="bevip__" style="display: none;">	<a href="javascript:void(0);" class="closer" onclick="noPayCopyTemp();TipLayer.close()">×</a>	<div class="bevip__step1" style="display: none;">		<div>			<div class="bevip__text1" style="display:none;"><!--全屏提示文字--></div>			<!--复制提示文字-->			<div class="bevip__text2" style="display:none;"></div>            <div class="bevip__text3" style="display:none;"></div>            <div class="bevip__text4" style="display:none;"></div>            <div class="bevip__text5" style="display:none;"></div>            <div class="bevip__text6" style="display:none;"></div>			<!---->            <div id="card_container_unlogin">                <ul class="bevip__card" id="cardlist_unlogin"></ul>            </div>			<div class="bevip__qr">				<span class="bevip__code"></span>				<div class="bevip__qr_right">					<p class="p1" id="qrprice_p_unlogin">¥<span id="qrprice_unlogin"></span>.00</p>					<p class="p2">微信或支付宝扫码支付：<i class="bevip__icon"></i></p>					<p class="p3">开通即同意<a href="http://www.360doc.com/pages/vipagreement.html" target="_blank">《个图VIP服务条款》</a></p>                    <p class="p4" style="display:none" id="paying">正在支付中，请勿关闭二维码！</p>				</div>			</div>            <p class="vxpaytext">微信支付后，该微信自动注册为你的个人图书馆账号</p>			<a class="to508" href="/help.html?id=508" target="_blank">如何开发票？</a>		</div>		<p><a href="javascript:TipLayer.showCheckOrder_Copy();" id="checkorderalink">付费成功，还是不能使用？</a></p>	</div>	<div class="bevip__step2" style="display: none;">		<p class="p1" id="sucessTips_p"><i class="bevip__icon"></i><span id="sucessTips">复制成功！</span></p>		<div id="bevip__zfbtips">		<p class="p2">绑定账号，享受<i class="bevip__icon"></i>特权</p>		<div class="d1" id="paidbinddiv">			<a href="javascript:void(0)" onclick="toSNSLogin('wx',5); addStatisticsNew('20-29-1-26');" class="bevip__icon a1"><!--weixin--></a>			<a href="javascript:void(0)" onclick="toSNSLogin('qq',5); addStatisticsNew('20-29-1-28');" class="bevip__icon a2"><!--qq--></a>			<a href="javascript:void(0)" onclick="toSNSLogin('smb',5); addStatisticsNew('20-29-1-30');" class="bevip__icon a3"><!--wibo--></a>		</div>		</div>		<div id="bevip__wxtips" style="display: none;">            <p class="p3" id="wx_pay_copy_tips">恭喜你成为个图VIP！<br>在打印前，点击“下一步”观看2个提示</p><a href="javascript:void(0)" id="nextstep" onclick="TipLayer.close()">下一步</a>		</div>		<div class="bevip__icon d2"><a href="http://www.360doc.com/member/index.html?callback=VipOpen&amp;imgcode=20-29" id="openviplink_nologin" target="_blank">全部&gt;&gt;</a></div>        <div class="bevip__rights_bg">					<ul class="bevip__rights">						<li><span>●</span> 电子书免费读</li>						<li><span>●</span> 全站无广告</li>						<li><span>●</span> 全屏阅读</li>						<li><span>●</span> 高品质朗读</li>						<li><span>●</span> 批量上传文档</li>						<li><span>●</span> 可关注600人</li>						<li><span>●</span> 5千个文件夹</li>						<li><span>●</span> 专属客服</li>					</ul>        </div>	</div>	<div class="bevip__lost" style="display: none;">		<div class="p1_tips" id="bevip__p1_tips" style="top:-72px;">			<p>微信支付查找“商户单号”方法：<br>			1.打开微信app，点击消息列表中和“微信支付”的对话<br>			2.找到扫码支付给360doc个人图书馆的账单，点击“查看账单详情”<br>			3.在“账单详情”页，找到“商户单号”<br>			4.将“商户单号”填入下方输入框，点击“恢复VIP特权”，等待系统校验完成即可。<br><br>			支付宝查找“商户订单号”方法：<br>			1.打开支付宝app，点击“我的”-“账单”<br>			2.找到扫码支付给个人图书馆的账单，点击进入“账单详情”页<br>			3.在“账单详情”页，找到“商家订单号”<br>			4.将“商家订单号”填入下方输入框，点击“恢复VIP特权”，等待系统校验完成即可。</p><i class="bevip__icon"></i>		</div>		<p class="p1x" id="backTips_p">已经开通VIP，还是不能<span>打印</span>？</p>		<p class="p2x"><span>请通过以下步骤，尝试恢复VIP特权</span><br>		<i>第1步</i>在下方输入你支付的微信“商户单号”或支付宝“商家订单号”<br>		<i>第2步</i>点击“恢复VIP特权”，等待系统校验完成即可</p>		<p class="ptips"><a href="javascript:void(0);" onmouseover="$('#bevip__p1_tips').show();" onmouseout="$('#bevip__p1_tips').hide();">如何查找商户单号？</a></p>		<div class="bevip__rform">			<input type="text" id="backOderId" value="输入微信【商户单号】或支付宝【商家订单号】" onfocus="if(this.value==this.defaultValue){this.value=''}" onblur="if(this.value==''){this.value=this.defaultValue}">		<a href="javascript:void(0);" class="bevip__retrieve" onclick="UserObj.findBack()">恢复VIP特权</a>		</div>		<span class="bevip__rloading">			<span></span>			<p>正在查询...</p>		</span>		<p class="p3x" id="ordererrortips">订单号过期！<br>该订单于2020/09/09 23:59:59支付，VIP有效期：2020/09/09 23:59:59至2020/09/11 23:59:59！如需使用VIP功能，建议重新开通VIP</p>		<a href="javascript:void(0);" class="bevip__back" onclick="TipLayer.showBack()">返回上一页</a>	</div>        <div class="bevip__copysub" id="bevip__copysub" style="display: none;">		<p class="p1"><i class="bevip__icon"></i><span>支付成功！</span></p><p class="p2"></p><a href="javascript:void(0)" onclick="reCopy()">确定</a>        </div>        <div class="bevip__copysub" id="mobilepaydtips" style="display: none;height: auto;">		<p class="p1" id="sendtips" style="margin: 46px 0 22px 0;"><i class="bevip__icon"></i><span>已获得“发送到手机”权限！</span></p><p class="p2" id="qrTopTips">微信扫码，在手机上查看选中内容</p><div class="qr" id="bigqr"></div><div style="display: none;" id="sendmobileBindLayer">	<div class="bevip__icon d2"></div>	<div class="bevip__rights_bg">					<ul class="bevip__rights">						<li><span>●</span> 电子书免费读</li>						<li><span>●</span> 全站无广告</li>						<li><span>●</span> 全屏阅读</li>						<li><span>●</span> 高品质朗读</li>						<li><span>●</span> 批量上传文档</li>						<li><span>●</span> 可关注600人</li>						<li><span>●</span> 5千个文件夹</li>						<li><span>●</span> 专属客服</li>					</ul>        </div></div>        </div>        <div class="bevip__copysub2" style="display: none;">		<p class="p1"><i class="bevip__icon"></i><span></span></p><p class="p2" style="">确定复制刚才选中的内容？</p><a href="javascript:void(0)" onclick="reCopy2()">确定</a>									</div></div><div class="bevip__tips" id="bevip__tips">    <a href="javascript:void(0);" class="closer" onclick="TipLayer.closeAd()">×</a>    <!--        bevip__tips_p1 ： 开通VIP 全屏           bevip__tips_p2 ： 开通VIP 去广告    -->        <p class="p1" id="novipusercopy" style="display:none;"><i class="bevip__icon"></i><span>复制成功！</span></p>    <div class="bevip__icon2 bevip__tips_p2" id="openvipdiv"></div>         <div id="card_container">                   <ul class="bevip__card" id="cardlist"></ul>            </div>		<div class="bevip__qr">				<span class="bevip__code"></span>				<div class="bevip__qr_right">					<p class="p1" id="qrprice_p">¥<span id="qrprice"></span>.00</p>					<p class="p2">微信或支付宝扫码支付：<i class="bevip__icon"></i></p>                    <p class="p3">开通即同意<a href="http://www.360doc.com/pages/vipagreement.html" target="_blank">《个图VIP服务条款》</a></p>                    <p class="p4" style="display:none" id="paying2">正在支付中，请勿关闭二维码！</p>                     <p class="p6" id="autotips" style="display:none;"><span>自动续费¥12/月，可随时取消&nbsp;<a href="http://www.360doc.com/pages/renewagreement.html?id=off" target="_blank"><img src="http://pubimage.360doc.com/payment/wallet/mywallet_1.jpg" style="vertical-align: top;margin-top: 2px;"></a><br></span></p>				</div>            <p class="clause_" id="autotips2" style="display:none;">开通即同意<a href="http://www.360doc.com/pages/renewagreement.html" target="_blank">《自动续费服务协议》</a>|<a href="http://www.360doc.com/pages/vipagreement.html" target="_blank">《个图VIP服务条款》</a></p>			<a class="to508" href="/help.html?id=508" target="_blank">如何开发票？</a>			</div>    <div class="bevip__icon d2"><a href="#" id="openviplink" target="_blank">全部&gt;&gt;</a></div>					<ul class="bevip__rights">						<li><span>●</span> 电子书免费读</li>						<li><span>●</span> 全站无广告</li>						<li><span>●</span> 全屏阅读</li>						<li><span>●</span> 高品质朗读</li>						<li><span>●</span> 批量上传文档</li>						<li><span>●</span> 可关注600人</li>						<li><span>●</span> 5千个文件夹</li>						<li><span>●</span> 专属客服</li>					</ul>         </div><div class="bevip__paymenttip" id="bevip__paymenttip" style="display:none;">    <a href="javascript:void(0)" class="closer" onclick="TipLayer.closeLoopPayTips()">×</a>    <p class="p1">支付确认</p>    <p class="p2">1. 请在手机上打开的页面进行支付；<br>2. 如支付完成，请点击“支付完成”。</p>    <div>        <a href="javascript:LoopPool.checkPaySucess()" class="a1">支付完成</a>        <a href="javascript:void(0)" onclick="TipLayer.closeLoopPayTips()">取消支付</a>    </div></div><div id="artfullscreen" class="artfullscreen__">	<div id="artfullscreen__box" class="artfullscreen__box">		<div class="artfullscreen__box_scr" id="artfullscreen__box_scr"></div>	</div>	<div class="artfullscreen_toolbar" id="artfullscreen_toolbar">		<a href="#" class="artfullscreen_closer" id="artfullscreen_closer">×</a>		<div class="d1"></div>		<div class="d2"></div>	</div></div><iframe src="https://www.google.com/recaptcha/api2/aframe" width="0" height="0" style="display: none;"></iframe></body><iframe id="google_esf" name="google_esf" src="https://googleads.g.doubleclick.net/pagead/html/r20231206/r20190131/zrt_lookup_fy2021.html" style="display: none;"></iframe></html>

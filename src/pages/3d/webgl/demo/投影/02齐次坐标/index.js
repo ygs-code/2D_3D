@@ -103,7 +103,7 @@ function WebGLBox() {
 
   // Setup a WebGL program
   // 创建  program
-  this.webglProgram = MDN.createWebGLProgramFromIds(gl, "vertex-shader", "fragment-shader");
+  this.webglProgram =initShader(gl, vertexShader, fragmentShader);
   gl.useProgram(this.webglProgram);
   
   // Save the attribute and uniform locations
