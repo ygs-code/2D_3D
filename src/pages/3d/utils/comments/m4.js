@@ -175,7 +175,7 @@ export default {
       var c = Math.cos(angleInRadians);
       var s = Math.sin(angleInRadians);
        /*
-     direction =1 角度为正，逆时针旋转，
+     direction = 1 角度为正，逆时针旋转，
      当不为1的时候是 顺时针旋转。角度为负
      */
       return direction===1?[

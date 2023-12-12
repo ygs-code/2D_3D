@@ -266,6 +266,7 @@
 
   */
     
+/*  
   let mat4 = multiply(
     {
       //
@@ -330,7 +331,7 @@
 
   console.log("mat4==", mat4);
   
-
+   */
   return {
     createHtmlMatrix,
     filterList,

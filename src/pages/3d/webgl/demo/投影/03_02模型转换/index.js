@@ -1,5 +1,6 @@
 import initShader from "@/pages/3d/utils/initShader.js";
 import m4 from "@/pages/3d/utils/comments/m4.js";
+import controller from "@/pages/3d/utils/controller.js";
 import {createHtmlMatrix} from "@/pages/3d/utils/matrix";
 import vertexShader from "./index.vert";
 import fragmentShader from "./index.frag";
@@ -104,7 +105,31 @@ function CubeDemo () {
   // Grab a context
   // 获取gl Context
   // this.gl = MDN.createContext(this.canvas);
+       // 改变
+ this.parmas = {
+  color: [Math.random(), Math.random(), Math.random(), 1],
+  // 变换参数，平移  x y z
+  translation: {
+    x: 0,
+    y: 0,
+    z: 0
+  },
+  // 放大
+  scale: {
+    x: 0.5,
+    y: 0.5,
+    z: 0.5,
+  },
+  // 旋转
+  rotation: {
+    angleX: 0,
+    angleY: 0,
+    angleZ: 0
+  },
+  fn: () => {}
+};
 
+  this.onController();
   this.transforms = {}; // All of the matrix transforms
   this.locations = {}; //All of the shader locations
   
@@ -150,27 +175,7 @@ CubeDemo.prototype.setupProgram = function() {
 
 
 
-console.log(
-  'aaaaaaaaa',
-  m4.multiply(
-    [
-      5,6,0,0,
-      7,8,0,0,
-      0,0,0,0,
-      0,0,0,0,
-    ] ,
-  
-    [
-      1,2,0,0,
-      3,4,0,0,
-      0,0,0,0,
-      0,0,0,0,
-    ]
-   
-  )
-
-);
-
+ 
 
 
 
@@ -179,23 +184,23 @@ CubeDemo.prototype.computeModelMatrix = function( now ) {
 
   //See /shared/matrices.js for the definitions of these matrix functions
 
-  //Scale down by 50%
-  // 缩放 缩小
-  var scale = m4.scaling(0.5, 0.5, 0.5);
+  // //Scale down by 50%
+  // // 缩放 缩小
+  // var scale = m4.scaling(0.5, 0.5, 0.5);
   
-  // Rotate a slight tilt 轻微倾斜旋转
-  var rotateX = m4.xRotation( now * 0.0005);
+  // // Rotate a slight tilt 轻微倾斜旋转
+  // var rotateX = m4.xRotation( now * 0.0005);
 
 
    
-  // Rotate according to time  根据时间旋转
-  var rotateY = m4.yRotation( now * 0.0005);
+  // // Rotate according to time  根据时间旋转
+  // var rotateY = m4.yRotation( now * 0.0005);
 
-  var rotateZ = m4.zRotation( now * 0.0005);
+  // var rotateZ = m4.zRotation( now * 0.0005);
 
 
-  // Move slightly down //稍微向下移动
-  var position = m4.translation(0, -0.1, 0);
+  // // Move slightly down //稍微向下移动
+  // var position = m4.translation(0, -0.1, 0);
   
   // Multiply together, make sure and read them in opposite order
   // 乘在一起，确保按相反的顺序读
@@ -211,17 +216,75 @@ CubeDemo.prototype.computeModelMatrix = function( now ) {
   
   // console.log(' rotateY ==',  rotateY );
   
+  /*
+   1. 新的顶点(顶点坐标) = 线性缩放 * 单位阵(初始顶点)
+   2. 新的顶点(顶点坐标) = X方向旋转变换 * 顶点坐标
+   3. 新的顶点(顶点坐标) = Y方向旋转变换 * 顶点坐标
+   3. 新的顶点(顶点坐标) = 偏移变换 * 顶点坐标
+  */
 
 
-  // vectorMultiply
+const {
+    color,
+    // 变换参数，平移  x y z
+    translation={
+
+    },
+    // 放大
+    scale= {
+      // x: 1,
+      // y: 1,
+      // z: 1
+    },
+    // 旋转
+    rotation={
+      // angleX: 40,
+      // angleY: 25,
+      // angleZ: 325
+    },
+  
+  }=this.parmas;
+
+  // 放大
+  // this.transforms.model =[
+  //   1,0,0,0,
+  //   0,1,0,0,
+  //   0,0,1,0,
+  //   0,0,0,1,
+  // ];
+  
+  
+  this.transforms.model = m4.multiply([
+    1,0,0,0,
+    0,1,0,0,
+    0,0,1,0,
+    0,0,0,1,
+  ],m4.scaling(scale.x,scale.y,scale.z));
+ 
+
+  this.transforms.model = m4.multiply(this.transforms.model,m4.xRotation(rotation.angleX));
+  this.transforms.model = m4.multiply(this.transforms.model,m4.yRotation(rotation.angleY));
+  this.transforms.model = m4.multiply(this.transforms.model,m4.zRotation(rotation.angleZ));
+
+
+  this.transforms.model = m4.multiply(this.transforms.model,m4.translation(translation.x,translation.y,translation.z));
+ 
+
+  /*
+  
+  
+  */
+  /*
   this.transforms.model = m4.multiply(rotateX ,scale);
   this.transforms.model = m4.multiply(rotateY, this.transforms.model);
   this.transforms.model = m4.multiply(position, this.transforms.model);
+  
+  */
  
 
   createHtmlMatrix({matrix:this.transforms.model, title: "model矩阵", row: 4, list: 4, elId: "model"});
 
-  // debugger;
+ 
 
 
   // this.transforms.model = m4.multiply(rotateY, this.transforms.model);
@@ -282,9 +345,171 @@ CubeDemo.prototype.updateAttributesAndUniforms = function() {
   
 };
 
+CubeDemo.prototype.onController=function(){
+     // 改变
+//  let parmas = {
+//   color: [Math.random(), Math.random(), Math.random(), 1],
+//   // 变换参数，平移  x y z
+//   translation: {
+//     x: 45,
+//     y: 45,
+//     z: 0
+//   },
+//   // 放大
+//   scale: {
+//     x: 1,
+//     y: 1,
+//     z: 1
+//   },
+//   // 旋转
+//   rotation: {
+//     angleX: 40,
+//     angleY: 25,
+//     angleZ: 325
+//   },
+//   fn: () => {}
+// };
+
+// 控制 参数改变
+controller({
+  onChange: () => {
+    // drawScene(parmas);
+    // render(settings);
+    // console.log("parmas========", parmas);
+  },
+  parmas: this.parmas,
+  options: [
+    {
+      min: 0,
+      max: 1,
+      step: 0.001,
+      key: "translation.x",
+      name: "位移X",
+      // onChange: (value) => {},
+      onFinishChange: (value) => {
+        // 完全修改停下来的时候触发这个事件
+        console.log("onFinishChange value==", value);
+      }
+    },
+    {
+      min: -1,
+      max: 1,
+      step: 0.01,
+      key: "translation.y",
+      name: "位移Y",
+      onChange: (value) => {},
+      onFinishChange: (value) => {
+        // 完全修改停下来的时候触发这个事件
+        console.log("onFinishChange value==", value);
+      }
+    },
+    {
+      min: -1,
+      max: 1,
+      step: 0.01,
+      key: "translation.z",
+      name: "位移Z",
+      onChange: (value) => {},
+      onFinishChange: (value) => {
+        // 完全修改停下来的时候触发这个事件
+        console.log("onFinishChange value==", value);
+      }
+    },
+
+    {
+      min: -1,
+      max: 1,
+      step: 0.001,
+      key: "scale.x",
+      name: "放大X",
+      // onChange: (value) => {},
+      onFinishChange: (value) => {
+        // 完全修改停下来的时候触发这个事件
+        console.log("onFinishChange value==", value);
+      }
+    },
+    {
+      min: -1,
+      max: 1,
+      step: 0.01,
+      key: "scale.y",
+      name: "放大Y",
+      onChange: (value) => {},
+      onFinishChange: (value) => {
+        // 完全修改停下来的时候触发这个事件
+        console.log("onFinishChange value==", value);
+      }
+    },
+    {
+      min: -1,
+      max: 1,
+      step: 0.01,
+      key: "scale.z",
+      name: "放大Z",
+      onChange: (value) => {},
+      onFinishChange: (value) => {
+        // 完全修改停下来的时候触发这个事件
+        console.log("onFinishChange value==", value);
+      }
+    },
+
+    {
+      min: 0,
+      max: 360,
+      step: 0.0001,
+      key: "rotation.angleX",
+      name: "旋转X",
+      // onChange: (value) => {},
+      onFinishChange: (value) => {
+        // 完全修改停下来的时候触发这个事件
+        console.log("onFinishChange value==", value);
+      }
+    },
+    {
+      min: 0,
+      max: 360,
+      step: 0.0001,
+      key: "rotation.angleY",
+      name: "旋转Y",
+      onChange: (value) => {},
+      onFinishChange: (value) => {
+        // 完全修改停下来的时候触发这个事件
+        console.log("onFinishChange value==", value);
+      }
+    },
+    {
+      min: 0,
+      max: 360,
+      step: 0.0001,
+      key: "rotation.angleZ",
+      name: "旋转Z",
+      onChange: (value) => {},
+      onFinishChange: (value) => {
+        // 完全修改停下来的时候触发这个事件
+        console.log("onFinishChange value==", value);
+      }
+    }
+  ]
+});
+
+};
+
 var cube = new CubeDemo();
 
 cube.draw();
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 };

@@ -68,7 +68,7 @@ function lookAt(out, eye, center, up) {
     return identity$3(out);
   }
 
-  // N = eye–at  并归一化N。
+  // N = eye–at  并归一化N。 眼睛位置，与 看到目标点的位置的模长。
   z0 = eyex - centerx;
   z1 = eyey - centery;
   z2 = eyez - centerz;
@@ -79,6 +79,7 @@ function lookAt(out, eye, center, up) {
   z2 *= len;
 
   /*
+    选取up和N的叉积为U轴： U= up×N，并归一化U。
     u = up x n    up 叉乘 n  并归一化U。
   
     eye=[xx,xx,xx]
@@ -179,7 +180,7 @@ function lookAt(out, eye, center, up) {
   let mat4_UVN = eval(
     ` [
       // u  v  n
-        x0,y0,z0, 0,
+        x0,y0,z0,0,
         x1,y1,z1,0,
         x2,y2,z2,0,
         -(x0 * eyex + x1 * eyey + x2 * eyez),-(y0 * eyex + y1 * eyey + y2 * eyez), -(z0 * eyex + z1 * eyey + z2 * eyez),1
