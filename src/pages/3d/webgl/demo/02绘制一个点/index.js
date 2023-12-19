@@ -63,7 +63,7 @@ window.onload = function () {
 
   // 链接程序对象
   gl.linkProgram(program);
-  // 使用程序对象
+  // 使用程序对象 // 告诉它用我们之前写好的着色程序（一个着色器对）
   gl.useProgram(program);
 
   // 第一步清空这个画布

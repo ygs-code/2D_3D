@@ -315,8 +315,6 @@ module.exports = {
         },
         index: path.resolve(process.cwd(), '/dist/index.html'), // dist/index 主页面
         contentBase: path.join(process.cwd(), '/dist'), //访问主页的界面 目录
-        port: 8089, // 开启服务器的端口
-        open: true, // 是否开启在浏览器中打开
         // public: 'http://localhost:8089',//添加配置
         host: getIPAdress(), //获取本机地址
 

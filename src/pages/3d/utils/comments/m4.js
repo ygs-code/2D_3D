@@ -54,11 +54,31 @@ export default {
      * @returns {mat4} out
      */
 
-    
-    perspectiveNO:function(out, fovy, aspect, near, far) {
+      // 透视投影
+    perspectiveNO:function(
+      out, 
+      fovy,  // 垂直视角视角，即可视空点顶面和底面的夹角 必须大于0  弧度   
+      aspect, // 指定近截面和远截面的宽高比  (宽/高)
+      near, // 近截面位置
+      far   // 远截面位置
+      ) {
+    /*
+      比如宽高比是  4/3
+      比如设置 60度
+      fovy=60
+      fovy / 2=30
+      Math.tan(30)=  √3 /3
+      f = 1 / (√3 /3)
+      f = 3 / √3 
 
-      var f = 1.0 / Math.tan(fovy / 2),
-          nf;
+      out[0] = 3 / √3  / ( 4/ 3 )
+             = 3/√3 * 3/4
+             = 9/4/√3
+       out[5] = 3 / √3      
+    */ 
+  // 透视投影
+      var f = 1.0 / Math.tan(fovy / 2);
+      var nf;
       out[0] = f / aspect;
       out[1] = 0;
       out[2] = 0;
@@ -74,7 +94,7 @@ export default {
       out[13] = 0;
       out[15] = 0;
 
-      if (far != null && far !== Infinity) {
+      if (far !== null && far !== Infinity) {
         nf = 1 / (near - far);
         out[10] = (far + near) * nf;
         out[14] = 2 * far * near * nf;
@@ -83,16 +103,23 @@ export default {
         out[14] = -2 * near;
       }
 
-      /*
+      /**
         [
-          f / aspect,  0, 0,                    0,
-            0,          f, 0,                    0,
-            0,          0, (far + near) * nf,   -1,
-            0,          0, 2 * far * near * nf,  0,  
+         // x            y     z                     w
+            f / aspect,  0,    0,                    0,
+            0,           f,    0,                    0,
+            0,           0,    (far + near) * nf,    -1,
+            0,           0,    2 * far * near * nf,   0,  
         ]
       
-      
-      */
+         Math.tan(x)
+             一个数值，表示一个角（单位：弧度）。
+          tanθ=sinθ/cosθ。
+          r是斜边
+          sinθ = y/r。
+          cosθ = x/r。
+          tanθ = y/x。
+        */
 
       
       return out;

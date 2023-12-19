@@ -52,7 +52,8 @@ module.exports = {
         // devMiddleware: { // 一个开发环境的中间件
         //   writeToDisk: true, // 写入硬盘
         // },
-
+        port: 8089, // 开启服务器的端口
+        open: true, // 是否开启在浏览器中打开
         // 代理 支持对象或者数组配置化
         proxy: [
             {
