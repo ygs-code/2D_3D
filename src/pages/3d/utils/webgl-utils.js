@@ -153,7 +153,7 @@
   // 创建 Program
   function createProgram(
     gl,
-    shaders,
+    shaders, //  shaders 
     opt_attribs,
     opt_locations,
     opt_errorCallback
@@ -170,6 +170,7 @@
 
     if (opt_attribs) {
       opt_attribs.forEach(function (attrib, ndx) {
+        // 绑定 Attrib
         gl.bindAttribLocation(
           program,
           opt_locations ? opt_locations[ndx] : ndx,
@@ -204,6 +205,7 @@
    * @param {module:webgl-utils.ErrorCallback} opt_errorCallback callback for errors.
    * @return {WebGLShader} The created shader.
    */
+  // 创建 ShaderFrom
   function createShaderFromScript(
     gl,
     scriptId,
@@ -212,6 +214,7 @@
   ) {
     let shaderSource = "";
     let shaderType;
+    // 获取 文本内容
     const shaderScript = document.getElementById(scriptId);
     if (!shaderScript) {
       throw "*** Error: unknown script element" + scriptId;
@@ -233,7 +236,7 @@
     // 加载 和创建 Shader
     return loadShader(
       gl,
-      shaderSource,
+      shaderSource, // 
       opt_shaderType ? opt_shaderType : shaderType,
       opt_errorCallback
     );
@@ -257,9 +260,9 @@
    * @memberOf module:webgl-utils
    */
   function createProgramFromScripts(
-    gl,
-    shaderScriptIds,
-    opt_attribs,
+    gl,  // gl 对象
+    shaderScriptIds, // 脚本id 
+    opt_attribs, 
     opt_locations,
     opt_errorCallback
   ) {
@@ -276,8 +279,8 @@
     }
     // 创建 Program
     return createProgram(
-      gl,
-      shaders,
+      gl,  // gl
+      shaders, // 获取到 shaders
       opt_attribs,
       opt_locations,
       opt_errorCallback

@@ -520,6 +520,7 @@ window.onload = () => {
         const eyePosition = m4.transformPoint(worldViewProjection, [0, 0, 0]);
         const ex = ((eyePosition[0] * 0.5 + 0.5) * width) / pixelRatio;
         const ey = ((eyePosition[1] * -0.5 + 0.5) * halfHeight) / pixelRatio;
+        
         eyeElem.style.left = px(ex - eyeElem.width / 2 + 50);
         eyeElem.style.top = px(ey - eyeElem.height / 2 + 50);
       }

@@ -264,9 +264,20 @@ export default {
       ];
     },
   
+    // xRotation: function (angleInRadians) {
+    //   var c = Math.cos(angleInRadians);
+    //   var s = Math.sin(angleInRadians);
+  
+    //   return [
+    //           1, 0, 0, 0,
+    //           0, c, s, 0, 
+    //           0, -s, c, 0, 
+    //           0, 0, 0, 1
+    //         ];
+    // },
     // x轴旋转
     // 逆时针
-    xRotation: function(angleInRadians,direction=1) {
+    xRotation: function(angleInRadians,direction) {
       var c = Math.cos(angleInRadians);
       var s = Math.sin(angleInRadians);
      /*
@@ -291,7 +302,7 @@ export default {
       ];
     },
     // y轴旋转
-    yRotation: function(angleInRadians,direction=1) {
+    yRotation: function(angleInRadians,direction) {
       var c = Math.cos(angleInRadians);
       var s = Math.sin(angleInRadians);
        /*
@@ -311,7 +322,7 @@ export default {
       ];
     },
     // z轴旋转
-    zRotation: function(angleInRadians ,direction=1) {
+    zRotation: function(angleInRadians ,direction) {
       var c = Math.cos(angleInRadians);
       var s = Math.sin(angleInRadians);
        /*
