@@ -7,6 +7,7 @@ import m4 from "./m4";
 import FSHADER_SOURCE from "./index.frag";
 import VSHADER_SOURCE from "./index.vert";
 import $m4 from "@/pages/3d/utils/comments/m4";
+
 // import FSHADER_SOURCE from "./color.frag";
 // import VSHADER_SOURCE from "./color.vert";
 import {
@@ -33,6 +34,8 @@ window.onload = () => {
     /** @type {HTMLCanvasElement} */
     var canvas = document.createElement("canvas");
     document.body.appendChild(canvas);
+    canvas.width = 500;
+    canvas.height = 500;
     // var canvas = document.querySelector("#canvas");
     var gl = canvas.getContext("webgl");
 
@@ -81,25 +84,188 @@ window.onload = () => {
       return d * Math.PI / 180;
     }
 
+    let parmas = {
+      zNear: 10,
+      zFar: 50,
+      fieldOfView: 30,
+      zPosition: -25,
+
+      // 
+      translation:{
+        x:-150,
+        y:0,
+        z:-360
+      },
+      rotation:{
+        degX:(190),
+        degY:(40),
+        degZ:(320),
+      },
+      scale:{
+        x:1,
+        y:1,
+        z:1
+      },
+      fieldOfViewRadians:(60),
+    };
+
+
     var translation = [-150, 0, -360];
     var rotation = [degToRad(190), degToRad(40), degToRad(320)];
     var scale = [1, 1, 1];
+
     var fieldOfViewRadians = degToRad(60);
 
     drawScene();
 
-    // Setup a ui.
-    // webglLessonsUI.setupSlider("#fieldOfView", { value: radToDeg(fieldOfViewRadians), slide: updateFieldOfView, min: 1, max: 179 });
-    // webglLessonsUI.setupSlider("#x", { value: translation[0], slide: updatePosition(0), min: -200, max: 200 });
-    // webglLessonsUI.setupSlider("#y", { value: translation[1], slide: updatePosition(1), min: -200, max: 200 });
-    // webglLessonsUI.setupSlider("#z", { value: translation[2], slide: updatePosition(2), min: -1000, max: 0 });
-    // webglLessonsUI.setupSlider("#angleX", { value: radToDeg(rotation[0]), slide: updateRotation(0), max: 360 });
-    // webglLessonsUI.setupSlider("#angleY", { value: radToDeg(rotation[1]), slide: updateRotation(1), max: 360 });
-    // webglLessonsUI.setupSlider("#angleZ", { value: radToDeg(rotation[2]), slide: updateRotation(2), max: 360 });
-    // webglLessonsUI.setupSlider("#scaleX", { value: scale[0], slide: updateScale(0), min: -5, max: 5, step: 0.01, precision: 2 });
-    // webglLessonsUI.setupSlider("#scaleY", { value: scale[1], slide: updateScale(1), min: -5, max: 5, step: 0.01, precision: 2 });
-    // webglLessonsUI.setupSlider("#scaleZ", { value: scale[2], slide: updateScale(2), min: -5, max: 5, step: 0.01, precision: 2 });
 
+
+
+  
+    // 控制 参数改变
+    controller({
+      onChange: () => {
+        drawScene();
+      },
+      parmas: parmas,
+      options: [
+        {
+          min: 0,
+          max: 179,
+          step: 0.001,
+          key: "fieldOfViewRadians",
+          name: "fieldOfViewRadians",
+          // onChange: (value) => {},
+          onFinishChange: (value) => {
+            // parmas.fieldOfViewRadians=degToRad(value);
+            // 完全修改停下来的时候触发这个事件
+            console.log("onFinishChange value==", value);
+          }
+        },
+        {
+          min: -200,
+          max: 200,
+          step: 0.001,
+          key: "translation.x",
+          name: "移动x轴",
+          // onChange: (value) => {},
+          onFinishChange: (value) => {
+            // 完全修改停下来的时候触发这个事件
+            console.log("onFinishChange value==", value);
+          }
+        },
+        {
+          min: -200,
+          max: 200,
+          step: 0.001,
+          key: "translation.y",
+          name: "移动y轴",
+          // onChange: (value) => {},
+          onFinishChange: (value) => {
+            // 完全修改停下来的时候触发这个事件
+            console.log("onFinishChange value==", value);
+          }
+        },
+        {
+          min: -200,
+          max: 200,
+          step: 0.001,
+          key: "translation.z",
+          name: "移动z轴",
+          // onChange: (value) => {},
+          onFinishChange: (value) => {
+            // 完全修改停下来的时候触发这个事件
+            console.log("onFinishChange value==", value);
+          }
+        },
+
+
+
+        {
+          min: 0,
+          max: 360,
+          step: 0.001,
+          key: "rotation.degX",
+          name: "旋转x轴",
+          // onChange: (value) => {},
+          onFinishChange: (value) => {
+            // 完全修改停下来的时候触发这个事件
+            console.log("onFinishChange value==", value);
+          }
+        },
+        {
+          min: 0,
+          max: 360,
+          step: 0.001,
+          key: "rotation.degY",
+          name: "旋转y轴",
+          // onChange: (value) => {},
+          onFinishChange: (value) => {
+            // 完全修改停下来的时候触发这个事件
+            console.log("onFinishChange value==", value);
+          }
+        },
+        {
+          min: 0,
+          max: 360,
+          step: 0.001,
+          key: "rotation.degZ",
+          name: "旋转z轴",
+          // onChange: (value) => {},
+          onFinishChange: (value) => {
+            // 完全修改停下来的时候触发这个事件
+            console.log("onFinishChange value==", value);
+          }
+        },
+
+
+
+
+        {
+          min: -5,
+          max: 5,
+          step: 0.001,
+          key: "scale.x",
+          name: "缩放x轴",
+          // onChange: (value) => {},
+          onFinishChange: (value) => {
+            // 完全修改停下来的时候触发这个事件
+            console.log("onFinishChange value==", value);
+          }
+        },
+
+        {
+          min: -5,
+          max: 5,
+          step: 0.001,
+          key: "scale.y",
+          name: "缩放y轴",
+          // onChange: (value) => {},
+          onFinishChange: (value) => {
+            // 完全修改停下来的时候触发这个事件
+            console.log("onFinishChange value==", value);
+          }
+        },
+
+        {
+          min: -5,
+          max: 5,
+          step: 0.001,
+          key: "scale.z",
+          name: "缩放z轴",
+          // onChange: (value) => {},
+          onFinishChange: (value) => {
+            // 完全修改停下来的时候触发这个事件
+            console.log("onFinishChange value==", value);
+          }
+        },
+
+
+      ]
+    });
+
+
+ 
     function updateFieldOfView(event, ui) {
       fieldOfViewRadians = degToRad(ui.value);
       drawScene();
@@ -130,6 +296,33 @@ window.onload = () => {
 
     // Draw the scene.
     function drawScene() {
+
+      let   {
+        // zNear: 10,
+        // zFar: 50,
+        // fieldOfView: 30,
+        // zPosition: -25,
+  
+        // 
+        translation={
+          // x:-150,
+          // y:0,
+          // z:-360
+        },
+        rotation={
+          // degX:190,
+          // degY:40,
+          // degZ:320,
+        },
+        scale={
+          // x:1,
+          // y:1,
+          // z:1
+        },
+        fieldOfViewRadians ,
+      }=parmas;
+
+
       // webglUtils.resizeCanvasToDisplaySize(gl.canvas);
 
       // Tell WebGL how to convert from clip space to pixels
@@ -184,17 +377,20 @@ window.onload = () => {
       var zNear = 1;
       var zFar = 2000;
 
-      var matrix = $m4.perspective(fieldOfViewRadians, aspect, zNear, zFar);
 
-      matrix = $m4.translate(matrix, translation[0], translation[1], translation[2]);
+        // 透视矩阵
+      var matrix = m4.perspective(degToRad(fieldOfViewRadians), aspect, zNear, zFar);
 
-      matrix = $m4.xRotate(matrix, rotation[0]);
+      // 平移
+      matrix = m4.translate(matrix, translation.x, translation.y, translation.z);
+     // 旋转
+      matrix = m4.xRotate(matrix, degToRad(rotation.degX));
+      //  旋转
+      matrix = m4.yRotate(matrix, degToRad(rotation.degY));
 
-      matrix = $m4.yRotate(matrix, rotation[1]);
-
-      matrix = m4.zRotate(matrix, rotation[2]);
-
-      matrix = m4.scale(matrix, scale[0], scale[1], scale[2]);
+      matrix = m4.zRotate(matrix, degToRad(rotation.degZ));
+      // 缩放
+      matrix = m4.scale(matrix, scale.x, scale.y, scale.z);
 
 
       // Set the matrix.

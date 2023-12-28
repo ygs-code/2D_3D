@@ -10,6 +10,8 @@ import {createHtmlMatrix, multiply} from "@/pages/3d/utils/matrix.js";
 import * as glMatrix from "gl-matrix";
 import "./index.less";
 
+console.log('fData==',fData);
+
 // Returns a random integer from 0 to range - 1.
 function randomInt(range) {
   return Math.floor(Math.random() * range);
