@@ -173,7 +173,16 @@ window.onload = function () {
       [at.x, at.y, at.z],
       [up.x, up.y, up.z]
     );
-    createHtmlMatrix(viewMatrix, 4, 4, "viewMatrix");
+    
+
+
+    createHtmlMatrix({
+      matrix: viewMatrix,
+      title: "viewMatrix 矩阵",
+      row: 4,
+      list: 4,
+      elId: "viewMatrix"
+    });
 
     /*
    观察者的默认状态是：视点为系统原点(0,0,1) eyeX, eyeY, eyeZ
@@ -210,14 +219,21 @@ window.onload = function () {
       100 + 2
     );
 
+    createHtmlMatrix({
+      matrix: perspectiveMatrix,
+      title: "perspectiveMatrix矩阵",
+      row: 4,
+      list: 4,
+      elId: "perspectiveMatrix"
+    });
+
+
     gl.uniformMatrix4fv(u_ProjMatrix, false, perspectiveMatrix);
-    // createHtmlMatrix(perspectiveMatrix, 4, 4, "perspectiveMatrix");
+   
+
     // gl.enable(gl.DEPTH_TEST);
 
-    // createHtmlMatrix(perspectiveMatrix, 4, 4, "perspectiveMatrix");
-
-    // createHtmlMatrix(glMatrix.mat4.multiply([], [...positions], [...viewMatrix]), 4, 4, "perspectiveMatrix-positions");
-
+    
     // 使用完全不透明的黑色清除所有图像
     // 清空掉颜色
     gl.clearColor(0, 0, 0, 1.0); // RBGA

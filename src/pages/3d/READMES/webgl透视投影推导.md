@@ -12,15 +12,12 @@ https://zhuanlan.zhihu.com/p/362713511
 
 https://www.codenong.com/28286057/
 
-
-
 https://www.songho.ca/opengl/gl_projectionmatrix.html
 
 
+https://blog.csdn.net/cj9551/article/details/114592113
 
 如果将观察者视为一个模型，那么视图矩阵就是观察者的 模型矩阵 的 逆矩阵。
-
-
 
 相关主题:OpenGL变换，OpenGL矩阵
 
@@ -69,8 +66,6 @@ https://www.songho.ca/opengl/gl_projectionmatrix.html
 
 因此，我们可以将剪辑坐标的w分量设置为-ze。并且，GL_PROJECTION矩阵的第4次方变成(0,0，- 1,0)。
 
-
-
 ![img](https://www.songho.ca/opengl/files/gl_projectionmatrix_eq03.png)
 
 接下来，我们将xp和yp映射到线性关系NDC的xn和yn;[l, r]⇒[- 1,1]和[b, t]⇒[- 1,1]。
@@ -80,4 +75,3 @@ https://www.songho.ca/opengl/gl_projectionmatrix.html
    从xp到xn的映射
 
 ![img](https://www.songho.ca/opengl/files/gl_projectionmatrix_eq04.png)
-
