@@ -1,4 +1,4 @@
-import {getWebGLContext, initShaders} from "@/pages/3d/utils/lib/cuon-utils";
+import initShaders from "@/pages/3d/utils/initShader";
 import {resizeCanvasToDisplaySize} from "@/pages/3d/utils/webgl-utils.js";
 // import m4 from "./m4";
 import FSHADER_SOURCE from "./index.frag";
@@ -6,570 +6,768 @@ import VSHADER_SOURCE from "./index.vert";
 import controller from "@/pages/3d/utils/controller.js";
 import {fData} from "./data";
  
-// import {createHtmlMatrix} from "@/pages/3d/utils/matrix.js";
+ 
 import {createHtmlMatrix} from "@/pages/3d/utils/matrix.js";
 import m4 from "@/pages/3d/utils/comments/m4";
 import * as glMatrix from "gl-matrix";
 import "./index.less";
 // import "@/pages/index.less";
-
-let A = glMatrix.mat4.transpose(
-  [],
-  [1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 1, 0, 0, 1]
-);
-
-let B = glMatrix.mat4.transpose(
-  [],
-  [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15]
-);
-
-let C = glMatrix.mat4.multiply([], A, B);
-
-// C=glMatrix.mat4.transpose(
-//   [],
-//    C
-// );
-
-console.log("A====", A);
-console.log("B====", B);
-// createHtmlMatrix({matrix: A, title: "矩阵A", row: 4, list: 4, elId: "a"});
-// createHtmlMatrix({matrix: B, title: "矩阵B", row: 4, list: 4, elId: "b"});
-// createHtmlMatrix({matrix: C, title: "矩阵a*b", row: 4, list: 4, elId: "ab"});
-
-let $A = [1, 0, 0, 1, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1];
-
-let $B = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15];
-
-let $C = glMatrix.mat4.multiply([], $B, $A);
-
-$C = glMatrix.mat4.transpose([], $C);
-
-// createHtmlMatrix({matrix: $A, title: "矩阵$A", row: 4, list: 4, elId: "$a"});
-// createHtmlMatrix({matrix: $B, title: "矩阵$B", row: 4, list: 4, elId: "$b"});
-// createHtmlMatrix({
-//   matrix: $C,
-//   title: "矩阵$a*b",
-//   row: 4,
-//   list: 4,
-//   elId: "$ab"
-// });
-
-let $$A = [
-  // 1,1,
-  // 0,1
-  1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 1, 0, 0, 1
-];
-
-let $$B = [
-  // 1,2,3,4
-  0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15
-];
-
-let $$C = glMatrix.mat2.multiply([], $$B, $$A);
-
-// $C=glMatrix.mat4.transpose(
-//   [],
-//   $C
-// );
-
-// createHtmlMatrix({
-//   matrix: $$A,
-//   title: "矩阵$$A",
-//   row: 2,
-//   list: 2,
-//   elId: "$$a"
-// });
-// createHtmlMatrix({
-//   matrix: $$B,
-//   title: "矩阵$$B",
-//   row: 2,
-//   list: 2,
-//   elId: "$$b"
-// });
-// createHtmlMatrix({
-//   matrix: $$C,
-//   title: "矩阵$$a*b",
-//   row: 2,
-//   list: 2,
-//   elId: "$$ab"
-// });
-
-// Returns a random integer from 0 to range - 1.
-function randomInt(range) {
-  return Math.floor(Math.random() * range);
-}
-
-// Fill the buffer with the values that define a rectangle.
-// 用定义矩形的值填充缓冲区。
-// 随机更新 vertices 数据
-function setRectangle(gl, x, y, width, height) {
-  var x1 = x;
-  var x2 = x + width;
-  var y1 = y;
-  var y2 = y + height;
-  gl.bufferData(
-    gl.ARRAY_BUFFER,
-    new Float32Array([x1, y1, x2, y1, x1, y2, x1, y2, x2, y1, x2, y2]),
-    gl.STATIC_DRAW
-  );
-}
+ 
 window.onload = function () {
-  let canvas_w = 400,
-    canvas_h = 400;
+ 
   const canvas = document.createElement("canvas");
-  canvas.width = 500;
-  canvas.height = 500;
+  canvas.width = 398;
+  canvas.height = 298;
   // getWebGLContext(canvas);
   document.body.appendChild(canvas);
 
   if (!canvas.getContext) return;
   let gl = canvas.getContext("webgl");
   // vertexShader, fragmentShader
-
-  console.log("VSHADER_SOURCE=====", VSHADER_SOURCE);
-  console.log("FSHADER_SOURCE=====", FSHADER_SOURCE);
-  if (!initShaders(gl, VSHADER_SOURCE, FSHADER_SOURCE)) {
+ 
+  const program = initShaders(gl, VSHADER_SOURCE, FSHADER_SOURCE);
+  if (!program) {
     console.log("failed to initialize shaders");
     return;
   }
+    // setup GLSL program
+    // var program = createProgramFromScripts(gl, ["3d-vertex-shader", "3d-fragment-shader"]);
+    // gl.useProgram(program);
+  
+    // look up where the vertex data needs to go.
+    var positionLocation = gl.getAttribLocation(program, "a_position");
+    var colorLocation = gl.getAttribLocation(program, "a_color");
+  
+    // lookup uniforms
+    var matrixLocation = gl.getUniformLocation(program, "u_matrix");
+    let parmas = {
+      zNear: 10,
+      zFar: 50,
+      fieldOfView: 30,
+      zPosition: -25,
+      // 
+      translation:{
+        x:-150,
+        y:0,
+        z:-360
+      },
+      rotation:{
+        degX:(190),
+        degY:(40),
+        degZ:(320),
+      },
+      scale:{
+        x:1,
+        y:1,
+        z:1
+      },
+      cameraAngleRadians:0,
+      fieldOfViewRadians:60,
+    };
+   
 
-  // setup GLSL program
-  // var program = webglUtils.createProgramFromScripts(gl, ["vertex-shader-3d", "fragment-shader-3d"]);
+    // Draw the scene.
+    function drawScene() {
+      const {
+        cameraAngleRadians,
+        fieldOfViewRadians
+      }=parmas;
+      var numFs = 5;
+      var radius = 200;
+  
+      // Clear the canvas AND the depth buffer.
+      gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+  
+      // Compute the projection matrix
+      var aspect = canvas.clientWidth / canvas.clientHeight;
+      var projectionMatrix =makePerspective(fieldOfViewRadians* Math.PI/180, aspect, 1, 2000);
+  
+      // Compute the position of the first F
+      var fPosition = [radius, 0, 0];
+  
+      // Use matrix math to compute a position on the circle.
+      var $cameraMatrix = makeTranslation(0, 50, radius * 1.5);
+      $cameraMatrix = matrixMultiply($cameraMatrix, makeYRotation(cameraAngleRadians * Math.PI/180));
+  
+      // Get the camera's postion from the matrix we computed
+      var cameraPosition = [
+            $cameraMatrix[12],
+            $cameraMatrix[13],
+            $cameraMatrix[14]
+        ];
+  
+      var up = [0, 1, 0];
+  
+      // Compute the camera's matrix using look at.
+      var cameraMatrix = makeLookAt(cameraPosition, fPosition, up);
+  
+      // Make a view matrix from the camera matrix.
+      var viewMatrix = makeInverse(cameraMatrix);
+  
+      // Draw 'F's in a circle
+      for (var ii = 0; ii < numFs; ++ii) {
+        var angle = ii * Math.PI * 2 / numFs;
+  
+        var x = Math.cos(angle) * radius;
+        var z = Math.sin(angle) * radius;
+        var translationMatrix = makeTranslation(x, 0, z);
+  
+        // Multiply the matrices.
+        var matrix = translationMatrix;
+        matrix = matrixMultiply(matrix, viewMatrix);
+        matrix = matrixMultiply(matrix, projectionMatrix);
+  
+        // Set the matrix.
+        gl.uniformMatrix4fv(matrixLocation, false, matrix);
+  
+        // Draw the geometry.
+        gl.drawArrays(gl.TRIANGLES, 0, 16 * 6);
+      }
+    }
 
-  // look up where the vertex data needs to go. 查找顶点数据需要放到哪里。
-  var positionLocation = gl.getAttribLocation(gl.program, "a_position");
 
-  // lookup uniforms 颜色
-  var colorLocation = gl.getUniformLocation(gl.program, "u_color");
-  // 矩阵
-  var matrixLocation = gl.getUniformLocation(gl.program, "u_matrix");
+  function main() {
+    // Get A WebGL context
+ 
+  
+    gl.enable(gl.CULL_FACE);
+    gl.enable(gl.DEPTH_TEST);
+  
 
-  // Create a buffer to put positions in
-  // 创建一个缓冲区来放置位置
-  var positionBuffer = gl.createBuffer();
+    // Create a buffer.
+    var buffer = gl.createBuffer();
+    gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
+    gl.enableVertexAttribArray(positionLocation);
+    gl.vertexAttribPointer(positionLocation, 3, gl.FLOAT, false, 0, 0);
+  
+    // Set Geometry.
+    setGeometry(gl);
+  
+    // Create a buffer for colors.
+    var buffer1 = gl.createBuffer();
+    gl.bindBuffer(gl.ARRAY_BUFFER, buffer1);
+    gl.enableVertexAttribArray(colorLocation);
+  
+    // We'll supply RGB as bytes.
+    gl.vertexAttribPointer(colorLocation, 3, gl.UNSIGNED_BYTE, true, 0, 0);
+  
+    // Set Colors.
+    setColors(gl);
+  
+    function radToDeg(r) {
+      return r * 180 / Math.PI;
+    }
+  
+    function degToRad(d) {
+      return d * Math.PI / 180;
+    }
+  
+    var cameraAngleRadians = degToRad(0);
+    var fieldOfViewRadians = degToRad(60);
+  
+    drawScene();
+  
+    // Setup a ui.
+    // $("#cameraAngle").gmanSlider({value: radToDeg(cameraAngleRadians), slide: updateCameraAngle, min: -360, max: 360});
+  
+    function updateFieldOfView(event, ui) {
+      fieldOfViewRadians = degToRad(ui.value);
+      drawScene();
+    }
+  
+    function updateCameraAngle(event, ui) {
+      cameraAngleRadians = degToRad(ui.value);
+      drawScene();
+    }
+  
+  
 
-  // Bind it to ARRAY_BUFFER (think of it as ARRAY_BUFFER = positionBuffer)
-  // 将其绑定到ARRAY_BUFFER(将其视为ARRAY_BUFFER = positionBuffer) 绑定缓冲区数据
-  gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
-
+  }
+  
+  function makeLookAt(cameraPosition, target, up) {
+    var zAxis = normalize(
+        subtractVectors(cameraPosition, target));
+    var xAxis = cross(up, zAxis);
+    var yAxis = cross(zAxis, xAxis);
+  
+    return [
+       xAxis[0], xAxis[1], xAxis[2], 0,
+       yAxis[0], yAxis[1], yAxis[2], 0,
+       zAxis[0], zAxis[1], zAxis[2], 0,
+       cameraPosition[0],
+       cameraPosition[1],
+       cameraPosition[2],
+       1];
+  }
+  
+  function subtractVectors(a, b) {
+    return [a[0] - b[0], a[1] - b[1], a[2] - b[2]];
+  }
+  
+  function normalize(v) {
+    var length = Math.sqrt(v[0] * v[0] + v[1] * v[1] + v[2] * v[2]);
+    // make sure we don't divide by 0.
+    if (length > 0.00001) {
+      return [v[0] / length, v[1] / length, v[2] / length];
+    } else {
+      return [0, 0, 0];
+    }
+  }
+  
+  function cross(a, b) {
+    return [a[1] * b[2] - a[2] * b[1],
+            a[2] * b[0] - a[0] * b[2],
+            a[0] * b[1] - a[1] * b[0]];
+  }
+  
+  function makePerspective(fieldOfViewInRadians, aspect, near, far) {
+    var f = Math.tan(Math.PI * 0.5 - 0.5 * fieldOfViewInRadians);
+    var rangeInv = 1.0 / (near - far);
+  
+    return [
+      f / aspect, 0, 0, 0,
+      0, f, 0, 0,
+      0, 0, (near + far) * rangeInv, -1,
+      0, 0, near * far * rangeInv * 2, 0
+    ];
+  }
+  
+  function makeTranslation(tx, ty, tz) {
+    return [
+       1,  0,  0,  0,
+       0,  1,  0,  0,
+       0,  0,  1,  0,
+      tx, ty, tz,  1
+    ];
+  }
+  
+  function makeXRotation(angleInRadians) {
+    var c = Math.cos(angleInRadians);
+    var s = Math.sin(angleInRadians);
+  
+    return [
+      1, 0, 0, 0,
+      0, c, s, 0,
+      0, -s, c, 0,
+      0, 0, 0, 1
+    ];
+  }
+  
+  function makeYRotation(angleInRadians) {
+    var c = Math.cos(angleInRadians);
+    var s = Math.sin(angleInRadians);
+  
+    return [
+      c, 0, -s, 0,
+      0, 1, 0, 0,
+      s, 0, c, 0,
+      0, 0, 0, 1
+    ];
+  }
+  
+  function makeZRotation(angleInRadians) {
+    var c = Math.cos(angleInRadians);
+    var s = Math.sin(angleInRadians);
+    return [
+       c, s, 0, 0,
+      -s, c, 0, 0,
+       0, 0, 1, 0,
+       0, 0, 0, 1,
+    ];
+  }
+  
+  function makeScale(sx, sy, sz) {
+    return [
+      sx, 0,  0,  0,
+      0, sy,  0,  0,
+      0,  0, sz,  0,
+      0,  0,  0,  1,
+    ];
+  }
+  
+  function matrixMultiply(a, b) {
+    var a00 = a[0*4+0];
+    var a01 = a[0*4+1];
+    var a02 = a[0*4+2];
+    var a03 = a[0*4+3];
+    var a10 = a[1*4+0];
+    var a11 = a[1*4+1];
+    var a12 = a[1*4+2];
+    var a13 = a[1*4+3];
+    var a20 = a[2*4+0];
+    var a21 = a[2*4+1];
+    var a22 = a[2*4+2];
+    var a23 = a[2*4+3];
+    var a30 = a[3*4+0];
+    var a31 = a[3*4+1];
+    var a32 = a[3*4+2];
+    var a33 = a[3*4+3];
+    var b00 = b[0*4+0];
+    var b01 = b[0*4+1];
+    var b02 = b[0*4+2];
+    var b03 = b[0*4+3];
+    var b10 = b[1*4+0];
+    var b11 = b[1*4+1];
+    var b12 = b[1*4+2];
+    var b13 = b[1*4+3];
+    var b20 = b[2*4+0];
+    var b21 = b[2*4+1];
+    var b22 = b[2*4+2];
+    var b23 = b[2*4+3];
+    var b30 = b[3*4+0];
+    var b31 = b[3*4+1];
+    var b32 = b[3*4+2];
+    var b33 = b[3*4+3];
+    return [a00 * b00 + a01 * b10 + a02 * b20 + a03 * b30,
+            a00 * b01 + a01 * b11 + a02 * b21 + a03 * b31,
+            a00 * b02 + a01 * b12 + a02 * b22 + a03 * b32,
+            a00 * b03 + a01 * b13 + a02 * b23 + a03 * b33,
+            a10 * b00 + a11 * b10 + a12 * b20 + a13 * b30,
+            a10 * b01 + a11 * b11 + a12 * b21 + a13 * b31,
+            a10 * b02 + a11 * b12 + a12 * b22 + a13 * b32,
+            a10 * b03 + a11 * b13 + a12 * b23 + a13 * b33,
+            a20 * b00 + a21 * b10 + a22 * b20 + a23 * b30,
+            a20 * b01 + a21 * b11 + a22 * b21 + a23 * b31,
+            a20 * b02 + a21 * b12 + a22 * b22 + a23 * b32,
+            a20 * b03 + a21 * b13 + a22 * b23 + a23 * b33,
+            a30 * b00 + a31 * b10 + a32 * b20 + a33 * b30,
+            a30 * b01 + a31 * b11 + a32 * b21 + a33 * b31,
+            a30 * b02 + a31 * b12 + a32 * b22 + a33 * b32,
+            a30 * b03 + a31 * b13 + a32 * b23 + a33 * b33];
+  }
+  
+  function makeInverse(m) {
+    var m00 = m[0 * 4 + 0];
+    var m01 = m[0 * 4 + 1];
+    var m02 = m[0 * 4 + 2];
+    var m03 = m[0 * 4 + 3];
+    var m10 = m[1 * 4 + 0];
+    var m11 = m[1 * 4 + 1];
+    var m12 = m[1 * 4 + 2];
+    var m13 = m[1 * 4 + 3];
+    var m20 = m[2 * 4 + 0];
+    var m21 = m[2 * 4 + 1];
+    var m22 = m[2 * 4 + 2];
+    var m23 = m[2 * 4 + 3];
+    var m30 = m[3 * 4 + 0];
+    var m31 = m[3 * 4 + 1];
+    var m32 = m[3 * 4 + 2];
+    var m33 = m[3 * 4 + 3];
+    var tmp_0  = m22 * m33;
+    var tmp_1  = m32 * m23;
+    var tmp_2  = m12 * m33;
+    var tmp_3  = m32 * m13;
+    var tmp_4  = m12 * m23;
+    var tmp_5  = m22 * m13;
+    var tmp_6  = m02 * m33;
+    var tmp_7  = m32 * m03;
+    var tmp_8  = m02 * m23;
+    var tmp_9  = m22 * m03;
+    var tmp_10 = m02 * m13;
+    var tmp_11 = m12 * m03;
+    var tmp_12 = m20 * m31;
+    var tmp_13 = m30 * m21;
+    var tmp_14 = m10 * m31;
+    var tmp_15 = m30 * m11;
+    var tmp_16 = m10 * m21;
+    var tmp_17 = m20 * m11;
+    var tmp_18 = m00 * m31;
+    var tmp_19 = m30 * m01;
+    var tmp_20 = m00 * m21;
+    var tmp_21 = m20 * m01;
+    var tmp_22 = m00 * m11;
+    var tmp_23 = m10 * m01;
+  
+    var t0 = (tmp_0 * m11 + tmp_3 * m21 + tmp_4 * m31) -
+        (tmp_1 * m11 + tmp_2 * m21 + tmp_5 * m31);
+    var t1 = (tmp_1 * m01 + tmp_6 * m21 + tmp_9 * m31) -
+        (tmp_0 * m01 + tmp_7 * m21 + tmp_8 * m31);
+    var t2 = (tmp_2 * m01 + tmp_7 * m11 + tmp_10 * m31) -
+        (tmp_3 * m01 + tmp_6 * m11 + tmp_11 * m31);
+    var t3 = (tmp_5 * m01 + tmp_8 * m11 + tmp_11 * m21) -
+        (tmp_4 * m01 + tmp_9 * m11 + tmp_10 * m21);
+  
+    var d = 1.0 / (m00 * t0 + m10 * t1 + m20 * t2 + m30 * t3);
+  
+    return [
+      d * t0,
+      d * t1,
+      d * t2,
+      d * t3,
+      d * ((tmp_1 * m10 + tmp_2 * m20 + tmp_5 * m30) -
+            (tmp_0 * m10 + tmp_3 * m20 + tmp_4 * m30)),
+      d * ((tmp_0 * m00 + tmp_7 * m20 + tmp_8 * m30) -
+            (tmp_1 * m00 + tmp_6 * m20 + tmp_9 * m30)),
+      d * ((tmp_3 * m00 + tmp_6 * m10 + tmp_11 * m30) -
+            (tmp_2 * m00 + tmp_7 * m10 + tmp_10 * m30)),
+      d * ((tmp_4 * m00 + tmp_9 * m10 + tmp_10 * m20) -
+            (tmp_5 * m00 + tmp_8 * m10 + tmp_11 * m20)),
+      d * ((tmp_12 * m13 + tmp_15 * m23 + tmp_16 * m33) -
+            (tmp_13 * m13 + tmp_14 * m23 + tmp_17 * m33)),
+      d * ((tmp_13 * m03 + tmp_18 * m23 + tmp_21 * m33) -
+            (tmp_12 * m03 + tmp_19 * m23 + tmp_20 * m33)),
+      d * ((tmp_14 * m03 + tmp_19 * m13 + tmp_22 * m33) -
+            (tmp_15 * m03 + tmp_18 * m13 + tmp_23 * m33)),
+      d * ((tmp_17 * m03 + tmp_20 * m13 + tmp_23 * m23) -
+            (tmp_16 * m03 + tmp_21 * m13 + tmp_22 * m23)),
+      d * ((tmp_14 * m22 + tmp_17 * m32 + tmp_13 * m12) -
+            (tmp_16 * m32 + tmp_12 * m12 + tmp_15 * m22)),
+      d * ((tmp_20 * m32 + tmp_12 * m02 + tmp_19 * m22) -
+            (tmp_18 * m22 + tmp_21 * m32 + tmp_13 * m02)),
+      d * ((tmp_18 * m12 + tmp_23 * m32 + tmp_15 * m02) -
+            (tmp_22 * m32 + tmp_14 * m02 + tmp_19 * m12)),
+      d * ((tmp_22 * m22 + tmp_16 * m02 + tmp_21 * m12) -
+            (tmp_20 * m12 + tmp_23 * m22 + tmp_17 * m02))
+    ];
+  }
+  
+  function matrixVectorMultiply(v, m) {
+    var dst = [];
+    for (var i = 0; i < 4; ++i) {
+      dst[i] = 0.0;
+      for (var j = 0; j < 4; ++j)
+        dst[i] += v[j] * m[j * 4 + i];
+    }
+    return dst;
+  }
+  
   // Fill the buffer with the values that define a letter 'F'.
-  // //用定义字母'F'的值填充缓冲区。
   function setGeometry(gl) {
-    // F 顶点数据
-    gl.bufferData(gl.ARRAY_BUFFER, fData, gl.STATIC_DRAW);
+    var positions = new Float32Array([
+            // left column front
+            0,   0,  0,
+            0, 150,  0,
+            30,   0,  0,
+            0, 150,  0,
+            30, 150,  0,
+            30,   0,  0,
+  
+            // top rung front
+            30,   0,  0,
+            30,  30,  0,
+            100,   0,  0,
+            30,  30,  0,
+            100,  30,  0,
+            100,   0,  0,
+  
+            // middle rung front
+            30,  60,  0,
+            30,  90,  0,
+            67,  60,  0,
+            30,  90,  0,
+            67,  90,  0,
+            67,  60,  0,
+  
+            // left column back
+              0,   0,  30,
+             30,   0,  30,
+              0, 150,  30,
+              0, 150,  30,
+             30,   0,  30,
+             30, 150,  30,
+  
+            // top rung back
+             30,   0,  30,
+            100,   0,  30,
+             30,  30,  30,
+             30,  30,  30,
+            100,   0,  30,
+            100,  30,  30,
+  
+            // middle rung back
+             30,  60,  30,
+             67,  60,  30,
+             30,  90,  30,
+             30,  90,  30,
+             67,  60,  30,
+             67,  90,  30,
+  
+            // top
+              0,   0,   0,
+            100,   0,   0,
+            100,   0,  30,
+              0,   0,   0,
+            100,   0,  30,
+              0,   0,  30,
+  
+            // top rung front
+            100,   0,   0,
+            100,  30,   0,
+            100,  30,  30,
+            100,   0,   0,
+            100,  30,  30,
+            100,   0,  30,
+  
+            // under top rung
+            30,   30,   0,
+            30,   30,  30,
+            100,  30,  30,
+            30,   30,   0,
+            100,  30,  30,
+            100,  30,   0,
+  
+            // between top rung and middle
+            30,   30,   0,
+            30,   60,  30,
+            30,   30,  30,
+            30,   30,   0,
+            30,   60,   0,
+            30,   60,  30,
+  
+            // top of middle rung
+            30,   60,   0,
+            67,   60,  30,
+            30,   60,  30,
+            30,   60,   0,
+            67,   60,   0,
+            67,   60,  30,
+  
+            // front of middle rung
+            67,   60,   0,
+            67,   90,  30,
+            67,   60,  30,
+            67,   60,   0,
+            67,   90,   0,
+            67,   90,  30,
+  
+            // bottom of middle rung.
+            30,   90,   0,
+            30,   90,  30,
+            67,   90,  30,
+            30,   90,   0,
+            67,   90,  30,
+            67,   90,   0,
+  
+            // front of bottom
+            30,   90,   0,
+            30,  150,  30,
+            30,   90,  30,
+            30,   90,   0,
+            30,  150,   0,
+            30,  150,  30,
+  
+            // bottom
+            0,   150,   0,
+            0,   150,  30,
+            30,  150,  30,
+            0,   150,   0,
+            30,  150,  30,
+            30,  150,   0,
+  
+            // left side
+            0,   0,   0,
+            0,   0,  30,
+            0, 150,  30,
+            0,   0,   0,
+            0, 150,  30,
+            0, 150,   0]);
+  
+    // Center the F around the origin and Flip it around. We do this because
+    // we're in 3D now with and +Y is up where as before when we started with 2D
+    // we had +Y as down.
+  
+    // We could do by changing all the values above but I'm lazy.
+    // We could also do it with a matrix at draw time but you should
+    // never do stuff at draw time if you can do it at init time.
+    var matrix = makeTranslation(-50, -75, -15);
+    matrix = matrixMultiply(matrix, makeXRotation(Math.PI));
+  
+    for (var ii = 0; ii < positions.length; ii += 3) {
+      var vector = matrixVectorMultiply([positions[ii + 0], positions[ii + 1], positions[ii + 2], 1], matrix);
+      positions[ii + 0] = vector[0];
+      positions[ii + 1] = vector[1];
+      positions[ii + 2] = vector[2];
+    }
+  
+    gl.bufferData(gl.ARRAY_BUFFER, positions, gl.STATIC_DRAW);
   }
-  // Put geometry data into buffer 将几何数据放入缓冲区
-  setGeometry(gl);
-
-  // 弧度变角度
-  function radToDeg(r) {
-    return (r * 180) / Math.PI;
+  
+  // Fill the buffer with colors for the 'F'.
+  function setColors(gl) {
+    gl.bufferData(
+        gl.ARRAY_BUFFER,
+        new Uint8Array([
+            // left column front
+          200,  70, 120,
+          200,  70, 120,
+          200,  70, 120,
+          200,  70, 120,
+          200,  70, 120,
+          200,  70, 120,
+  
+            // top rung front
+          200,  70, 120,
+          200,  70, 120,
+          200,  70, 120,
+          200,  70, 120,
+          200,  70, 120,
+          200,  70, 120,
+  
+            // middle rung front
+          200,  70, 120,
+          200,  70, 120,
+          200,  70, 120,
+          200,  70, 120,
+          200,  70, 120,
+          200,  70, 120,
+  
+            // left column back
+          80, 70, 200,
+          80, 70, 200,
+          80, 70, 200,
+          80, 70, 200,
+          80, 70, 200,
+          80, 70, 200,
+  
+            // top rung back
+          80, 70, 200,
+          80, 70, 200,
+          80, 70, 200,
+          80, 70, 200,
+          80, 70, 200,
+          80, 70, 200,
+  
+            // middle rung back
+          80, 70, 200,
+          80, 70, 200,
+          80, 70, 200,
+          80, 70, 200,
+          80, 70, 200,
+          80, 70, 200,
+  
+            // top
+          70, 200, 210,
+          70, 200, 210,
+          70, 200, 210,
+          70, 200, 210,
+          70, 200, 210,
+          70, 200, 210,
+  
+            // top rung front
+          200, 200, 70,
+          200, 200, 70,
+          200, 200, 70,
+          200, 200, 70,
+          200, 200, 70,
+          200, 200, 70,
+  
+            // under top rung
+          210, 100, 70,
+          210, 100, 70,
+          210, 100, 70,
+          210, 100, 70,
+          210, 100, 70,
+          210, 100, 70,
+  
+            // between top rung and middle
+          210, 160, 70,
+          210, 160, 70,
+          210, 160, 70,
+          210, 160, 70,
+          210, 160, 70,
+          210, 160, 70,
+  
+            // top of middle rung
+          70, 180, 210,
+          70, 180, 210,
+          70, 180, 210,
+          70, 180, 210,
+          70, 180, 210,
+          70, 180, 210,
+  
+            // front of middle rung
+          100, 70, 210,
+          100, 70, 210,
+          100, 70, 210,
+          100, 70, 210,
+          100, 70, 210,
+          100, 70, 210,
+  
+            // bottom of middle rung.
+          76, 210, 100,
+          76, 210, 100,
+          76, 210, 100,
+          76, 210, 100,
+          76, 210, 100,
+          76, 210, 100,
+  
+            // front of bottom
+          140, 210, 80,
+          140, 210, 80,
+          140, 210, 80,
+          140, 210, 80,
+          140, 210, 80,
+          140, 210, 80,
+  
+            // bottom
+          90, 130, 110,
+          90, 130, 110,
+          90, 130, 110,
+          90, 130, 110,
+          90, 130, 110,
+          90, 130, 110,
+  
+            // left side
+          160, 160, 220,
+          160, 160, 220,
+          160, 160, 220,
+          160, 160, 220,
+          160, 160, 220,
+          160, 160, 220]),
+        gl.STATIC_DRAW);
   }
 
-  //角度变弧度
-  function degToRad(d) {
-    return (d * Math.PI) / 180;
-  }
 
-  // 改变
-  let parmas = {
-    color: [Math.random(), Math.random(), Math.random(), 1],
-    // 变换参数，平移  x y z
-    translation: {
-      x: 45,
-      y: 45,
-      z: 0
-    },
-    // 放大
-    scale: {
-      x: 1,
-      y: 1,
-      z: 1
-    },
-    // 旋转
-    rotation: {
-      angleX: 40,
-      angleY: 25,
-      angleZ: 325
-    },
-    fn: () => {}
-  };
+
+
+
+
+
+
+
+
+
+  // Setup a ui.
+  // $("#cameraAngle").gmanSlider({value: radToDeg(cameraAngleRadians), slide: updateCameraAngle, min: -360, max: 360});
+
+
 
   // 控制 参数改变
   controller({
     onChange: () => {
-      drawScene(parmas);
-      // render(settings);
-      // console.log("parmas========", parmas);
+      drawScene();
     },
     parmas: parmas,
     options: [
       {
         min: 0,
-        max: 400,
+        max: 179,
         step: 0.001,
-        key: "translation.x",
-        name: "位移X",
+        key: "fieldOfViewRadians",
+        name: "相机广角",
+        // onChange: (value) => {},
+        onFinishChange: (value) => {
+          // parmas.fieldOfViewRadians=degToRad(value);
+          // 完全修改停下来的时候触发这个事件
+          console.log("onFinishChange value==", value);
+        }
+      },
+      {
+        min: -360,
+        max: 360,
+        step: 0.001,
+        key: "cameraAngleRadians",
+        name: "相机Y轴旋转",
         // onChange: (value) => {},
         onFinishChange: (value) => {
           // 完全修改停下来的时候触发这个事件
           console.log("onFinishChange value==", value);
         }
       },
-      {
-        min: -1,
-        max: 400,
-        step: 0.01,
-        key: "translation.y",
-        name: "位移Y",
-        onChange: (value) => {},
-        onFinishChange: (value) => {
-          // 完全修改停下来的时候触发这个事件
-          console.log("onFinishChange value==", value);
-        }
-      },
-      {
-        min: -1,
-        max: 400,
-        step: 0.01,
-        key: "translation.z",
-        name: "位移Z",
-        onChange: (value) => {},
-        onFinishChange: (value) => {
-          // 完全修改停下来的时候触发这个事件
-          console.log("onFinishChange value==", value);
-        }
-      },
-
-      {
-        min: -1,
-        max: 10,
-        step: 0.001,
-        key: "scale.x",
-        name: "放大X",
-        // onChange: (value) => {},
-        onFinishChange: (value) => {
-          // 完全修改停下来的时候触发这个事件
-          console.log("onFinishChange value==", value);
-        }
-      },
-      {
-        min: -1,
-        max: 10,
-        step: 0.01,
-        key: "scale.y",
-        name: "放大Y",
-        onChange: (value) => {},
-        onFinishChange: (value) => {
-          // 完全修改停下来的时候触发这个事件
-          console.log("onFinishChange value==", value);
-        }
-      },
-      {
-        min: -1,
-        max: 10,
-        step: 0.01,
-        key: "scale.z",
-        name: "放大Z",
-        onChange: (value) => {},
-        onFinishChange: (value) => {
-          // 完全修改停下来的时候触发这个事件
-          console.log("onFinishChange value==", value);
-        }
-      },
-
-      {
-        min: 0,
-        max: 360,
-        step: 0.001,
-        key: "rotation.angleX",
-        name: "旋转X",
-        // onChange: (value) => {},
-        onFinishChange: (value) => {
-          // 完全修改停下来的时候触发这个事件
-          console.log("onFinishChange value==", value);
-        }
-      },
-      {
-        min: -1,
-        max: 360,
-        step: 0.01,
-        key: "rotation.angleY",
-        name: "旋转Y",
-        onChange: (value) => {},
-        onFinishChange: (value) => {
-          // 完全修改停下来的时候触发这个事件
-          console.log("onFinishChange value==", value);
-        }
-      },
-      {
-        min: -1,
-        max: 360,
-        step: 0.01,
-        key: "rotation.angleZ",
-        name: "旋转Z",
-        onChange: (value) => {},
-        onFinishChange: (value) => {
-          // 完全修改停下来的时候触发这个事件
-          console.log("onFinishChange value==", value);
-        }
-      }
     ]
   });
 
-  // //  变换参数，平移  x y z
-  // var translation = [45, 150, 0];
-
-  // // 旋转 参数  x y z
-  // var rotation = [degToRad(40), degToRad(25), degToRad(325)];
-
-  // // 缩放参数 x y z
-  // var scale = [1, 1, 1];
-
-  // // 颜色随机
-  // var color = [Math.random(), Math.random(), Math.random(), 1];
-
-  // Draw the scene. 画出场景。
-  function drawScene(parmas) {
-    const {
-      color,
-      // 变换参数，平移  x y z
-      translation = {},
-      // 放大
-      scale = {},
-      // 旋转
-      rotation: {angleX, angleY, angleZ}
-    } = parmas;
-
-    //  将画布调整为显示大小
-    resizeCanvasToDisplaySize(gl.canvas);
-
-    // Tell WebGL how to convert from clip space to pixels //告诉WebGL如何从剪辑空间转换为像素
-    gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
-
-    // Clear the canvas. //清除画布。
-    gl.clear(gl.COLOR_BUFFER_BIT);
-
-    // Tell it to use our program (pair of shaders) //告诉它使用我们的程序(shaders pair)
-    gl.useProgram(gl.program);
-
-    // Turn on the attribute //打开属性
-    gl.enableVertexAttribArray(positionLocation);
-
-    // Bind the position buffer. // 绑定顶点数据 绑定位置缓冲区。/
-    gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
-
-    // Tell the attribute how to get data out of positionBuffer (ARRAY_BUFFER)
-    // //告诉属性如何从positionBuffer (ARRAY_BUFFER)中获取数据
-    var size = 3; // 3 components per iteration 每次迭代3个组件
-    var type = gl.FLOAT; // the data is 32bit floats 数据是32位浮点数
-    var normalize = false; // don't normalize the data 不要规范化数据
-    var stride = 0; // 0 = move forward size * sizeof(type) each iteration to get the next position 0 =每次迭代向前移动size * sizeof(type)以获得下一个位置
-    var offset = 0; // start at the beginning of the buffer 从缓冲区的开头开始
-    // 连接a_position变量与分配给他的缓冲区对象
-    /*
-     
-     告诉显卡从当前绑定的缓冲区（bindBuffer() 指定的缓冲区）中读取顶点数据。
-     方法绑定当前缓冲区范围到gl.ARRAY_BUFFER,
-     成为当前顶点缓冲区对象的通用顶点属性并指定它的布局 (缓冲区对象中的偏移量)。
-
-     */
-    gl.vertexAttribPointer(
-      positionLocation,
-      size,
-      type,
-      normalize,
-      stride,
-      offset
-    );
-
-    // set the color  设置颜色值到 u_color 变量中
-    gl.uniform4fv(colorLocation, color);
-
-    // Compute the matrices 计算矩阵 创建一个正交投影
-    // 
-
-        // Compute the projection matrix
-    // 获取相加宽高比
-
-
-    let [fieldOfViewRadians,aspect ,n ,f ] = [
-        degToRad(60),
-        canvas.clientWidth / canvas.clientHeight,
-        1,
-        2000
-    ];
-     // 透视矩阵
-  //  var projectionMatrix = m4.perspective(fieldOfViewRadians, aspect, n, f);
-
-
-   let perspectiveMatrix = glMatrix.mat4.create();
-    /**
-   out       输入矩阵
-   fovy      焦距 制定垂直角，即可视空间顶面和底面的夹角，可以理解是焦距。
-   aspect    指定近裁剪面的宽高比(宽度/高度)
-   near,far  指定近裁面和远裁面的位置，即可视角空间的近边界和远边界，(near和far必须都大于0)
- */
-
-   console.log('canvas===',canvas);
-
-   glMatrix.mat4.perspective(
-    perspectiveMatrix,
-    // 角度转弧度
-    (50 * (2 * Math.PI)) / 360, // 角度越大,视角越远
-    1,
-    -1,
-    10
-  );
-
-  createHtmlMatrix({matrix:perspectiveMatrix, title:"perspectiveMatrix", row:4, list:4,});
-
-    // var radius = 200;
-
-    // var fPosition = [radius, 0, 0];
-
-    // Use matrix math to compute a position on the circle.
-    // 偏移矩阵
-    // var cameraMatrix = m4.translation(0, 50, radius * 1.5);
-
-
-
-    var modelMatrix = [
-      1.0, 0.0, 0.0, 0.0,
-      0.0, 1.0, 0.0, 0.0,
-      0.0, 0.0, 1.0, 0.0,
-      0.0, 0.0, 0.0, 1.0,
-    ];
-
   
-
-  
-  
-    
-    // m4.projection(
-    //   gl.canvas.clientWidth,
-    //   gl.canvas.clientHeight,
-    //   400
-    // );
-
-    // 变换这个正交投影 位移
-    // matrix = m4.translate(matrix, translation.x, translation.y, translation.z);
-
-    // // 旋转正交矩阵
-    // matrix = m4.xRotate(matrix, degToRad(angleX));
-    // matrix = m4.yRotate(matrix, degToRad(angleY));
-    // matrix = m4.zRotate(matrix, degToRad(angleZ));
-
-    // // // 放大
-    // modelMatrix = m4.scale(modelMatrix, scale.x, scale.y, scale.z);
-
-
-
-    // console.log(
-    //   m4.multiply(
-    //     [
-    //       5,6,0,0,
-    //       7,8,0,0,
-    //       0,0,1,0,
-    //       0,0,0,1,
-    //     ],
-    //     [
-    //       1,2,0,0,
-    //       3,4,0,0,
-    //       0,0,1,0,
-    //       0,0,0,1,
-    //     ],
-    //   )
-    // );
-
-    debugger;
-    
+  main();
  
-   
-   
-    let x = 10;
-    let y = 20;
-    let {
-      eye,
-      at,
-      up
-    }={
-      eye:{
-        x:0,
-        y:0,
-        z:0,
-      },
-      at:{
-        x:0,
-        y:0,
-        z:-1,
-      },
-      up:{
-        x:0,
-        y:1,
-        z:0,
-      }
-    };
-
-    
-        //初始化视图矩阵
-        var viewMatrix = glMatrix.mat4.create();
-
-        // let eye = [0.0, 0.0, 1]; //  eyeX, eyeY, eyeZ  观察者的默认状态是：视点为系统原点(0,0,0) eyeX, eyeY, eyeZ
-        // let center = [0.0, 0.0, 0]; // atX, atY, atZ  视线为Z轴负方向，观察点为(0,0,0)   atX, atY, atZ
-        // let up = [0.0, 1.0, 0.0]; // upX, upY, upZ 上方向为Y轴负方向(0,1,0) upX, upY, upZ
-        glMatrix.mat4.lookAt(
-          viewMatrix,
-          [eye.x, eye.y, eye.z],
-          [at.x, at.y, at.z],
-          [up.x, up.y, up.z]
-        );
-        
-    
-    
-        createHtmlMatrix({
-          matrix: viewMatrix,
-          title: "viewMatrix 矩阵",
-          row: 4,
-          list: 4,
-          elId: "viewMatrix"
-        });
-    
-
- 
-    createHtmlMatrix({matrix:viewMatrix, title:"viewMatrix", row:4, list:4,});
-   
-    modelMatrix =  m4.multiply(
- 
-      modelMatrix,
-      viewMatrix,
-    );
- 
-    // modelMatrix =  m4.multiply(
-    //   modelMatrix,
-    //   perspectiveMatrix,
-    // );
-
-
-    createHtmlMatrix({matrix:modelMatrix, title:"matrix", row:4, list:4, elId :"matrix"});
-    createHtmlMatrix({matrix:fData, title:"fData", row:18, list:3, elId :"fData"});
-
-    // createHtmlMatrix(fData, 18, 3, "fData");
-
-    /*
-      m*v*p
-    */
-    // Set the matrix.
-    // 得到一个矩阵 放入 u_matrix 变量中传入gpu
-    gl.uniformMatrix4fv(matrixLocation, false, modelMatrix);
-
-    // 绘画顶点位置
-    // Draw the geometry.
-    var primitiveType = gl.TRIANGLES; // 绘画类型
-    // var offset = 0;
-    var count = 9; // 6 triangles in the 'F', 3 points per triangle  18个顶点
-    gl.drawArrays(primitiveType, offset, count);
-  }
-
-  drawScene(parmas);
 };
