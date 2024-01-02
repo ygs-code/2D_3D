@@ -104,3 +104,59 @@ webgl 中，观察者默认状态是
         
 ```
 
+
+
+
+
+# 关于数学：如何将世界坐标转换为相机坐标？
+
+我有一个输入的3D矢量，以及摄像机的俯仰和偏航。 谁能描述或提供资源链接，以帮助我理解和实现所需的转换和矩阵映射？
+
+相机到世界的转换矩阵是相机到世界的矩阵的逆矩阵。
+
+相机到世界的矩阵是相机位置平移和相机方向旋转的组合。
+
+因此，如果M是与摄影机方向相对应的3x3旋转矩阵，而t是摄影机位置，则4x4摄影机与世界的矩阵为：
+
+
+
+
+
+http://www.taodudu.cc/news/show-6058624.html?action=onClick
+
+https://blog.csdn.net/colorsky100/article/details/105599246/
+
+https://www.jianshu.com/p/2341da36aa8e?ivk_sa=1024609v
+
+https://download.csdn.net/blog/column/11720857/126894504
+
+https://www.jianshu.com/p/2341da36aa8e
+
+https://zhuanlan.zhihu.com/p/642715876
+
+https://blog.csdn.net/m0_50910915/article/details/129695132
+
+https://zhuanlan.zhihu.com/p/593204605/
+
+https://ethanli.blog.csdn.net/article/details/113248118
+
+https://blog.51cto.com/u_12485075/4801140
+
+http://ddrv.cn/a/782590
+
+https://blog.51cto.com/u_12485075/4801140
+
+https://zhuanlan.zhihu.com/p/561394626
+
+
+
+
+
+- 移动相机到拍摄位置，镜头对准某个方向(**视图变换**,view transform)
+- 将拍摄对象，移到场景中的某个位置(**模型变换**,model transform)
+- 设置相机焦距，或调整缩放比例(**投影变换**,projection transform)
+- 对结果图像拉伸或者压缩，变换为需要的图片大小(**视口变换**,viewpoint transform)；视口变换对应于选择被冲洗相片的大小这个阶段。我们希望照片像钱包一样大还是像海报一样大？在计算机图形中，视口是一个矩形的窗口区域，图像就是在这个区域中绘制的。
+
+**透视投影(perspective projection) :** 棱台模型， 透视投影属于中心投影。透视投影图简称为透视图或透视，它是从某个投射中心将物体投射到单一投影面上所得到的图形。
+
+**正交投影(orthographic projection)：**长方体模型**，**投影线垂直于投影面的投影属于正交投影 ，也称为平行投影。

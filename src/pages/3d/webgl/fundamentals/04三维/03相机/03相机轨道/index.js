@@ -86,10 +86,23 @@ window.onload = function () {
       var fPosition = [radius, 0, 0];
   
       // Use matrix math to compute a position on the circle.
+      // 先平移
       var $cameraMatrix = makeTranslation(0, 50, radius * 1.5);
+      // 旋转
       $cameraMatrix = matrixMultiply($cameraMatrix, makeYRotation(cameraAngleRadians * Math.PI/180));
   
       // Get the camera's postion from the matrix we computed
+      /*
+      x   y   z   w
+    [
+      0,  1,  2,  3,
+      4,  5,  6,  7,
+      8,  9,  10, 11,
+      12, 13, 14, 15,  // tx ty tw tz
+    ]
+        
+    
+      */
       var cameraPosition = [
             $cameraMatrix[12],
             $cameraMatrix[13],
@@ -99,6 +112,12 @@ window.onload = function () {
       var up = [0, 1, 0];
   
       // Compute the camera's matrix using look at.
+
+      /*
+      cameraPosition 视点 e
+      at
+      */
+
       var cameraMatrix = makeLookAt(cameraPosition, fPosition, up);
   
       // Make a view matrix from the camera matrix.
@@ -185,8 +204,16 @@ window.onload = function () {
   }
   
   function makeLookAt(cameraPosition, target, up) {
-    var zAxis = normalize(
-        subtractVectors(cameraPosition, target));
+    /*
+
+    cameraPosition  = eye ,
+    target  =  at 
+    up = up
+
+      // N = eye–at  并归一化N。 眼睛位置，与 看到目标点的位置的模长。
+
+    */ 
+    var zAxis = normalize(subtractVectors(cameraPosition, target));
     var xAxis = cross(up, zAxis);
     var yAxis = cross(zAxis, xAxis);
   
