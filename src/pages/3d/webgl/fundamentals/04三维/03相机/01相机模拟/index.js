@@ -160,19 +160,6 @@ window.onload = () => {
             console.log("onFinishChange value==", value);
           }
         },
-      
-
-
- 
-
-
- 
-
-     
-
-     
-
-
       ]
     });
 

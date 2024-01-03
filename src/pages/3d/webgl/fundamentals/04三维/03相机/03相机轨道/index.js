@@ -73,22 +73,27 @@ window.onload = function () {
         fieldOfViewRadians
       }=parmas;
       var numFs = 5;
+     // 半径
       var radius = 200;
+      let  cameraX = 0;
+      let  cameraY = 50; 
   
       // Clear the canvas AND the depth buffer.
       gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
   
       // Compute the projection matrix
+      // 宽高比
       var aspect = canvas.clientWidth / canvas.clientHeight;
-      var projectionMatrix =makePerspective(fieldOfViewRadians* Math.PI/180, aspect, 1, 2000);
+      // 透视投影
+      var projectionMatrix = makePerspective(fieldOfViewRadians* Math.PI/180, aspect, 1, 2000);
   
       // Compute the position of the first F
       var fPosition = [radius, 0, 0];
   
       // Use matrix math to compute a position on the circle.
-      // 先平移
-      var $cameraMatrix = makeTranslation(0, 50, radius * 1.5);
-      // 旋转
+      // 先平移                             x          y           z
+      var $cameraMatrix = makeTranslation(cameraX, cameraY, radius * 1.5);
+      // 再旋转  cameraAngleRadians 相机旋转
       $cameraMatrix = matrixMultiply($cameraMatrix, makeYRotation(cameraAngleRadians * Math.PI/180));
   
       // Get the camera's postion from the matrix we computed
@@ -100,8 +105,6 @@ window.onload = function () {
       8,  9,  10, 11,
       12, 13, 14, 15,  // tx ty tw tz
     ]
-        
-    
       */
       var cameraPosition = [
             $cameraMatrix[12],
@@ -114,24 +117,43 @@ window.onload = function () {
       // Compute the camera's matrix using look at.
 
       /*
-      cameraPosition 视点 e
-      at
+      世界坐标 先 平移 再旋转 得到一个 矩阵，
+      这个矩阵放到 eye 中
+
+      用 lookat 创建 相机矩阵
+      得到相机矩阵之后 相机 矩阵 乘以一个 逆矩阵 
+      得到一个viewMatrix视图矩阵
+      viewMatrix视图矩阵
+
+      然后 ： 模型矩阵 *  顶点 = 新矩阵1
+             视图矩阵 *  新矩阵1 = 新矩阵2
+             投影矩阵 *  新矩阵2 = 新矩阵3
+
+      cameraPosition = 视点 eye
+      fPosition = at
+      up = up
       */
 
+      // 相机 
       var cameraMatrix = makeLookAt(cameraPosition, fPosition, up);
   
       // Make a view matrix from the camera matrix.
+      // 视图矩阵
       var viewMatrix = makeInverse(cameraMatrix);
   
+
+     
       // Draw 'F's in a circle
       for (var ii = 0; ii < numFs; ++ii) {
         var angle = ii * Math.PI * 2 / numFs;
   
         var x = Math.cos(angle) * radius;
         var z = Math.sin(angle) * radius;
+
         var translationMatrix = makeTranslation(x, 0, z);
   
         // Multiply the matrices.
+        // 模型矩阵
         var matrix = translationMatrix;
         matrix = matrixMultiply(matrix, viewMatrix);
         matrix = matrixMultiply(matrix, projectionMatrix);
