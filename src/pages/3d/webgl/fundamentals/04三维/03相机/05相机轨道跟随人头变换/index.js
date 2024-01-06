@@ -12,7 +12,7 @@ import "./index.less";
 // import "@/pages/index.less";
  
 window.onload = function () {
- 
+   
   const canvas = document.createElement("canvas");
   canvas.width = 398;
   canvas.height = 298;
@@ -233,8 +233,11 @@ window.onload = function () {
       // 投影矩阵 角度   
         var projectionMatrix = m4.perspective(degToRad(fieldOfViewRadians), aspect, zNear, zFar);
     
+        // at
         var cameraTarget = [0, -100, 0];
+        // eye
         var cameraPosition = [500, 300, 500];
+        // up
         var up = [0, 1, 0];
     
         // Compute the camera's matrix using look at.
@@ -256,7 +259,6 @@ window.onload = function () {
          //移动世界，使相机有效地成为原点
         /*
            视图矩阵 * 透视矩阵
-        
         */
         var viewProjectionMatrix = m4.multiply(projectionMatrix, viewMatrix);
     
@@ -264,12 +266,19 @@ window.onload = function () {
         // 在网格中画头像
         var deep = 5;
         var across = 5;
+
         for (var zz = 0; zz < deep; ++zz) {
+
           var v = zz / (deep - 1);
+
           var z = (v - .5) * deep * 150;
+
           for (var xx = 0; xx < across; ++xx) {
+
             var u = xx / (across - 1);
+
             var x = (u - .5) * across * 150;
+
             // 相机矩阵
             var matrix = m4.lookAt([x, 0, z], target, up);
 
@@ -277,7 +286,7 @@ window.onload = function () {
           }
         }
     
-        drawHead(m4.translation(target[0], target[1], target[2]), viewProjectionMatrix, matrixLocation, numElements);
+         drawHead(m4.translation(target[0], target[1], target[2]), viewProjectionMatrix, matrixLocation, numElements);
 
 
      
@@ -286,6 +295,7 @@ window.onload = function () {
     
       function drawHead(matrix, viewProjectionMatrix, matrixLocation, numElements) {
         // multiply that with the viewProjecitonMatrix
+        //与viewProjecitonMatrix相乘
         matrix = m4.multiply(viewProjectionMatrix, matrix);
     
         // Set the matrix.
@@ -588,10 +598,12 @@ window.onload = function () {
     
     
     // Fill the buffer with the values that define a letter 'F'.
-    
+
     function setGeometry(gl) {
+      // 人头 顶点数据
       var positions = new Float32Array(HeadData.positions);
 
+      // 旋转 缩放
       var matrix = m4.multiply(m4.scaling(6, 6, 6), m4.yRotation(Math.PI));
 
       for (var ii = 0; ii < positions.length; ii += 3) {
@@ -606,6 +618,7 @@ window.onload = function () {
     }
     
     // Fill the buffer with colors for the 'F'.
+    // 设置颜色
     function setColors(gl, numElements) {
       var normals = HeadData.normals;
       var colors = new Uint8Array(normals.length);
@@ -616,8 +629,7 @@ window.onload = function () {
           ++offset;
         }
       }
-      gl.bufferData(
-          gl.ARRAY_BUFFER, colors, gl.STATIC_DRAW);
+      gl.bufferData(gl.ARRAY_BUFFER, colors, gl.STATIC_DRAW);
     }
     
 
