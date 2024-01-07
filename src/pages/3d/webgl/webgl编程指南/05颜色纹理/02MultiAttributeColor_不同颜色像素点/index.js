@@ -53,6 +53,7 @@ window.onload = function () {
   function initVertexBuffers(gl) {
     var verticesColors = new Float32Array([
       // Vertex coordinates and color
+   //  
        0.0,  0.5,  1.0,  0.0,  0.0, 
       -0.5, -0.5,  0.0,  1.0,  0.0, 
        0.5, -0.5,  0.0,  0.0,  1.0, 

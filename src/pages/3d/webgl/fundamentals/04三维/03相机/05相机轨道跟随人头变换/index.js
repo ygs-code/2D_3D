@@ -651,7 +651,7 @@ window.onload = function () {
         max: 179,
         step: 0.001,
         key: "targetAngleRadians",
-        name: "相机广角",
+        name: "目标点旋转",
         // onChange: (value) => {},
         onFinishChange: (value) => {
           // parmas.fieldOfViewRadians=degToRad(value);
@@ -664,7 +664,7 @@ window.onload = function () {
         max: 360,
         step: 0.001,
         key: "target1",
-        name: "相机Y轴旋转",
+        name: "目标点上下移动",
         // onChange: (value) => {},
         onFinishChange: (value) => {
           // 完全修改停下来的时候触发这个事件
