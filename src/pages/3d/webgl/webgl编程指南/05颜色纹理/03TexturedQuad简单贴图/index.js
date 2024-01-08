@@ -78,6 +78,7 @@ window.onload = function () {
     0.0, 0.0            1.0, 0.0   
 
     */
+   // 顶点位置
     var verticesTexCoords = new Float32Array([
       /*
       两个三角形

@@ -14,8 +14,9 @@ https://www.codenong.com/28286057/
 
 https://www.songho.ca/opengl/gl_projectionmatrix.html
 
-
 https://blog.csdn.net/cj9551/article/details/114592113
+
+https://zhuanlan.zhihu.com/p/554093703?utm_id=0
 
 如果将观察者视为一个模型，那么视图矩阵就是观察者的 模型矩阵 的 逆矩阵。
 
