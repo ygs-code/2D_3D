@@ -14,6 +14,12 @@ webgl 3d api 文档 https://en.wikipedia.org/wiki/List_of_3D_graphics_libraries
 
 webgl 3d api 教程文档 https://webglfundamentals.org/
 
+webgl 教程 学习网站 含高级: https://www.labs.cs.uregina.ca/315/
+
+webgl 教程学习网站 ：https://learnwebgl.brown37.net/index.html
+
+
+
 webgl  mdn web doc 操作api ：https://developer.mozilla.org/en-US/docs/Web/API/WebGLRenderingContext/getActiveUniform
 
 https://developer.mozilla.org/zh-CN/docs/Web/API/WebGL_API
@@ -67,3 +73,53 @@ webgl专区： https://codepen.io/search/pens/?limit=all&page=5&q=webgl
 网站地址： https://www.mixamo.com/
 
 相机 研究 https://www.jianshu.com/p/7b27447fdd0e?utm_campaign=maleskine&utm_content=note&utm_medium=seo_notes&utm_source=recommendation
+
+
+
+一些 学习 计算机图形的书本 ：https://www.realtimerendering.com/
+
+three.js 教程例子： https://stemkoski.github.io/Three.js/
+
+three.js 教程例子：https://discoverthreejs.com/
+
+webgl 官网 https://www.khronos.org/webgl/
+
+webgl 例子：https://wgld.org/
+
+
+
+webgl 视频教程：https://www.youtube.com/watch?v=kB0ZVUrI4Aw&list=PLjcVFFANLS5zH_PeKC6I8p0Pt1hzph_rt
+
+
+
+webgl 学习资料 ：https://www.realtimerendering.com/webgl.html
+
+webgl 学习网站 ：https://hackr.io/tutorials/learn-webgl
+
+webgl 学习网站 ： https://and-ha.com/coding/three-js-start/#toc___3
+
+一些 列子 ：https://bashooka.com/coding/25-beginner-friendly-three-js-tutorials-examples/
+
+一些webgl列子 ：https://madebyevan.com/
+
+three视频教程：https://www.classcentral.com/report/best-three-js-courses/
+
+ three 文档：https://github.com/puxiao/threejs-tutorial
+
+
+
+three 游戏https://blog.logrocket.com/creating-game-three-js/
+
+ three 教程 https://css-tricks.com/creating-photorealistic-3d-graphics-web/
+
+webxr https://www.w3.org/TR/2023/CRD-webxr-20231005/#xrsystem-interface
+
+ three 教程： https://github.com/Experience-Monks/jam3-lesson-webgl-shader-threejs
+
+实时渲染 ：https://www.realtimerendering.com/#intro
+
+
+
+webxr  ：https://immersive-web.github.io/webxr-samples/
+
+webxr ：https://immersiveweb.dev/
