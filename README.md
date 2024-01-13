@@ -18,6 +18,10 @@ webgl 教程 学习网站 含高级: https://www.labs.cs.uregina.ca/315/
 
 webgl 教程学习网站 ：https://learnwebgl.brown37.net/index.html
 
+webgl 教程学习网站 ：https://wgld.org/d/webgl/w021.html
+
+
+
 
 
 webgl  mdn web doc 操作api ：https://developer.mozilla.org/en-US/docs/Web/API/WebGLRenderingContext/getActiveUniform
@@ -123,3 +127,7 @@ webxr https://www.w3.org/TR/2023/CRD-webxr-20231005/#xrsystem-interface
 webxr  ：https://immersive-web.github.io/webxr-samples/
 
 webxr ：https://immersiveweb.dev/
+
+webgl 教程学习网站 ：https://learnwebgl.brown37.net/index.html
+
+角度符号 α β γ θ η 可在希腊/拉丁处找到。

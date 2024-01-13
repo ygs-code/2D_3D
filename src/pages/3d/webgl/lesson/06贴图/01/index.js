@@ -142,7 +142,12 @@ window.onload = function () {
     gl.enableVertexAttribArray(a_Position);
 
     // 正方形 4个点信息 - 贴图的
-    let uvs = new Float32Array([0.0, 0.0, 1.0, 0.0, 1.0, 1.0, 0.0, 1.0]);
+    let uvs = new Float32Array([
+        0.0, 0.0,
+        1.0, 0.0,
+        1.0, 1.0,
+        0.0, 1.0
+      ]);
 
     // 创建buffer
     let uvsBuffer = gl.createBuffer();
