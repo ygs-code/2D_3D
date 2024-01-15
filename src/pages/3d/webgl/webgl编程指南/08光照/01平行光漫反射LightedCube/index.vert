@@ -19,8 +19,9 @@ void main() {
   平行光漫反射
      漫反射颜色 = 入射光颜色 * 表面基底色 * (光线方向 * 法线方向)
 
-  入射反方向和法线夹角 = max(dot(u_LightDirection, normal), 0.0)  =  (光线方向 * 法线方向)
-
+  入射反方向和法线夹角  θ = max(dot(u_LightDirection, normal), 0.0)  =  (光线方向 * 法线方向)
+  dot 是计算两个矢量的点积<光线方向>*<法线向量> 
+    该函数接收两个矢量作为参数，返回他们的点积
 
   diffuse = u_LightColor * a_Color.rgb * nDotL = 入射光颜色 * 表面基底色 * 入射和法线夹角
 

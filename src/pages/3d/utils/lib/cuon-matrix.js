@@ -198,6 +198,9 @@
    * Calculate the inverse matrix of specified matrix, and set to this.
    * @param other The source matrix
    * @return this
+    * *计算指定矩阵的逆矩阵，设为。
+    * @param other源矩阵
+    * @return this
    */
   Matrix4.prototype.setInverseOf = function (other) {
     var i, s, d, inv, det;
