@@ -33,91 +33,54 @@ window.onload = function () {
  
   function main() {
  
-  
     // 
     var n = initVertexBuffers(gl);
     if (n < 0) {
-      console.log('Failed to set the vertex information');
+      console.log('Failed to initialize buffers');
       return;
     }
   
     // Set the clear color and enable the depth test
-    //设置清颜色，开启深度测试
     gl.clearColor(0, 0, 0, 1);
     gl.enable(gl.DEPTH_TEST);
   
-    // Get the storage locations of uniform variables
-    //获取统一变量的存储位置
-    var u_MvpMatrix = gl.getUniformLocation(program, 'u_MvpMatrix');
-    var u_NormalMatrix = gl.getUniformLocation(program, 'u_NormalMatrix');
-    var u_LightColor = gl.getUniformLocation(program, 'u_LightColor');
-    var u_LightDirection = gl.getUniformLocation(program, 'u_LightDirection');
-    var u_AmbientLight = gl.getUniformLocation(program, 'u_AmbientLight');
-    if (!u_MvpMatrix || !u_NormalMatrix || !u_LightColor || !u_LightDirection || !u_AmbientLight) { 
+    // Get the storage locations of uniform variables and so on
+    var u_mvpMatrix = gl.getUniformLocation(program, 'u_mvpMatrix');
+    var u_normalMatrix = gl.getUniformLocation(program, 'u_normalMatrix');
+    var u_LightDir = gl.getUniformLocation(program, 'u_LightDir');
+    if(!u_mvpMatrix || !u_normalMatrix || !u_LightDir) { 
       console.log('Failed to get the storage location');
       return;
     }
   
-    // Set the light color (white)
-    //设置灯光颜色(白色)
-    gl.uniform3f(u_LightColor, 1.0, 1.0, 1.0);
-    // Set the light direction (in the world coordinate)
-    //设置光照方向(世界坐标)
-
-    var lightDirection = new Vector3([0.0, 3.0, 4.0]);
-    lightDirection.normalize();     // Normalize
-    gl.uniform3fv(u_LightDirection, lightDirection.elements);
-
-
-    // Set the ambient light
-    // 环境反射光颜色
-    gl.uniform3f(u_AmbientLight, 0.2, 0.2, 0.2);
-  
-    // 模型矩阵
-    var modelMatrix = new Matrix4();  // Model matrix
-
-    // mvp 矩阵
+    // Set the viewing volume
+    var viewMatrix = new Matrix4();   // View matrix
     var mvpMatrix = new Matrix4();    // Model view projection matrix
-
-    // 法线矩阵 法向量的变换矩阵
+    var mvMatrix = new Matrix4();     // Model matrix
     var normalMatrix = new Matrix4(); // Transformation matrix for normals
   
-    // Calculate the model matrix
-    //计算模型矩阵
-    modelMatrix.setTranslate(0, 0.9, 0); // Translate to the y-axis direction
-    modelMatrix.rotate(90, 0, 0, 1);     // Rotate 90 degree around the z-axis
-
-    // Calculate the view projection matrix
-    //计算视图投影矩阵
-    mvpMatrix.setPerspective(30, canvas.width/canvas.height, 1, 100);
-    // 设置视图矩阵
-    mvpMatrix.lookAt(3, 3, 7, 0, 0, 0, 0, 1, 0);
-    // 矩阵相乘
-    mvpMatrix.multiply(modelMatrix);
-
-    // Pass the model view projection matrix to u_MvpMatrix
-    //将模型视图投影矩阵传递给u_MvpMatrix
-    gl.uniformMatrix4fv(u_MvpMatrix, false, mvpMatrix.elements);
-  
+    // Calculate the view matrix
+    viewMatrix.setLookAt(0, 3, 10, 0, 0, 0, 0, 1, 0);
+    mvMatrix.set(viewMatrix).rotate(60, 0, 1, 0); // Rotate 60 degree around the y-axis
+    // Calculate the model view projection matrix
+    mvpMatrix.setPerspective(30, 1, 1, 100);
+    mvpMatrix.multiply(mvMatrix);
     // Calculate the matrix to transform the normal based on the model matrix
-   
-    /*
-    A的逆矩阵的逆矩阵还是A。记作（A-1）-1=A。
-    
-    */
-    //根据模型矩阵计算矩阵变换法线
-    /*
-    逆矩阵的转置
-    若矩阵为方阵且其 逆矩阵 存在时，
-    矩阵的逆的转置 等于 矩阵的转置的逆；
-    */
-    // 逆矩阵
-    normalMatrix.setInverseOf(modelMatrix);
-    // 矩阵转置
+    normalMatrix.setInverseOf(mvMatrix);
     normalMatrix.transpose();
-
-    // Pass the transformation matrix for normals to u_NormalMatrix
-    gl.uniformMatrix4fv(u_NormalMatrix, false, normalMatrix.elements);
+  
+    // Pass the model view matrix to u_mvpMatrix
+    gl.uniformMatrix4fv(u_mvpMatrix, false, mvpMatrix.elements);
+  
+    // Pass the normal matrixu_normalMatrix
+    gl.uniformMatrix4fv(u_normalMatrix, false, normalMatrix.elements);
+  
+    // Pass the direction of the diffuse light(world coordinate, normalized)
+    var lightDir = new Vector3([1.0, 1.0, 1.0]);
+    lightDir.normalize();     // Normalize
+    var lightDir_eye = viewMatrix.multiplyVector3(lightDir); // Transform to view coordinate
+    lightDir_eye.normalize(); // Normalize
+    gl.uniform3fv(u_LightDir, lightDir_eye.elements);
   
     // Clear color and depth buffer
     gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
@@ -152,8 +115,8 @@ window.onload = function () {
       1, 0, 0,   1, 0, 0,   1, 0, 0,  1, 0, 0,     // v0-v5-v6-v1 up
       1, 0, 0,   1, 0, 0,   1, 0, 0,  1, 0, 0,     // v1-v6-v7-v2 left
       1, 0, 0,   1, 0, 0,   1, 0, 0,  1, 0, 0,     // v7-v4-v3-v2 down
-      1, 0, 0,   1, 0, 0,   1, 0, 0,  1, 0, 0    // v4-v7-v6-v5 back
-   ]);
+      1, 0, 0,   1, 0, 0,   1, 0, 0,  1, 0, 0      // v4-v7-v6-v5 back
+           ]);
   
     // Normal
     var normals = new Float32Array([
@@ -176,9 +139,9 @@ window.onload = function () {
    ]);
   
     // Write the vertex property to buffers (coordinates, colors and normals)
-    if (!initArrayBuffer(gl, 'a_Position', vertices, 3)) return -1;
-    if (!initArrayBuffer(gl, 'a_Color', colors, 3)) return -1;
-    if (!initArrayBuffer(gl, 'a_Normal', normals, 3)) return -1;
+    initArrayBuffer(gl, vertices, 3, 'a_Position');
+    initArrayBuffer(gl, colors, 3, 'a_Color');
+    initArrayBuffer(gl, normals, 3, 'a_Normal');
   
     // Unbind the buffer object
     gl.bindBuffer(gl.ARRAY_BUFFER, null);
@@ -195,7 +158,7 @@ window.onload = function () {
     return indices.length;
   }
   
-  function initArrayBuffer(gl, attribute, data, num) {
+  function initArrayBuffer (gl, data, num, attribute) {
     // Create a buffer object
     var buffer = gl.createBuffer();
     if (!buffer) {
@@ -211,13 +174,12 @@ window.onload = function () {
       console.log('Failed to get the storage location of ' + attribute);
       return false;
     }
-    gl.vertexAttribPointer(a_attribute, num, gl.FLOAT, false, 0, 0);
+    gl.vertexAttribPointer(a_attribute, 3, gl.FLOAT, false, 0, 0);
     // Enable the assignment of the buffer object to the attribute variable
     gl.enableVertexAttribArray(a_attribute);
   
     return true;
   }
   
-
   main(); 
 };
