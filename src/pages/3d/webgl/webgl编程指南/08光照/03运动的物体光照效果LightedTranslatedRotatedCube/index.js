@@ -9,6 +9,7 @@ import {createHtmlMatrix} from "@/pages/3d/utils/matrix.js";
 import m4 from "@/pages/3d/utils/comments/m4";
 import * as glMatrix from "gl-matrix";
 import {Matrix4 ,  Vector3}  from "@/pages/3d/utils/lib/cuon-matrix";
+import {color} from "utils";
 import "./index.less";
 // import "@/pages/index.less";
 window.onload = function () {
@@ -60,11 +61,12 @@ window.onload = function () {
   
     // Set the light color (white)
     //设置灯光颜色(白色)
-    gl.uniform3f(u_LightColor, 1.0, 1.0, 1.0);
+    gl.uniform3f(u_LightColor, ...color('rgba(255,255,255,1)'));
     // Set the light direction (in the world coordinate)
+    
     //设置光照方向(世界坐标)
-
     var lightDirection = new Vector3([0.0, 3.0, 4.0]);
+
     lightDirection.normalize();     // Normalize
     gl.uniform3fv(u_LightDirection, lightDirection.elements);
 

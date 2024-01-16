@@ -34,3 +34,4 @@ export {
 };
 // 整体输出
 export * from "./regular.js";
+export * from "./tool.js";
