@@ -24,7 +24,6 @@ window.onload = function () {
   let gl = canvas.getContext("webgl");
   // vertexShader, fragmentShader
 
- 
   // 创建 program
   const program = initShaders(gl, VSHADER_SOURCE, FSHADER_SOURCE);
   if (!program) {
@@ -32,7 +31,7 @@ window.onload = function () {
     return;
   }
   function main() {
-
+ 
     // 
     var n = initVertexBuffers(gl);
     if (n < 0) {
@@ -41,68 +40,56 @@ window.onload = function () {
     }
   
     // Set the clear color and enable the depth test
-    gl.clearColor(0, 0, 0, 1);
+    gl.clearColor(0.0, 0.0, 0.0, 1.0);
     gl.enable(gl.DEPTH_TEST);
   
-    // Get the storage locations of uniform variables and so on
+    // Get the storage locations of uniform variables
+    var u_ModelMatrix = gl.getUniformLocation(program, 'u_ModelMatrix');
     var u_MvpMatrix = gl.getUniformLocation(program, 'u_MvpMatrix');
     var u_NormalMatrix = gl.getUniformLocation(program, 'u_NormalMatrix');
-    var u_LightDirection = gl.getUniformLocation(program, 'u_LightDirection');
-    if (!u_MvpMatrix || !u_NormalMatrix || !u_LightDirection) { 
+    var u_LightColor = gl.getUniformLocation(program, 'u_LightColor');
+    var u_LightPosition = gl.getUniformLocation(program, 'u_LightPosition');
+    var u_AmbientLight = gl.getUniformLocation(program, 'u_AmbientLight');
+    if (!u_ModelMatrix || !u_MvpMatrix || !u_NormalMatrix || !u_LightColor || !u_LightPosition || !u_AmbientLight) { 
       console.log('Failed to get the storage location');
       return;
     }
   
-    // 视图投影矩阵
-    var vpMatrix = new Matrix4();   // View projection matrix
-    // Calculate the view projection matrix
-    // 透视投影
-    vpMatrix.setPerspective(30, canvas.width/canvas.height, 1, 100);
-    // 相机
-    vpMatrix.lookAt(3, 3, 7, 0, 0, 0, 0, 1, 0);
-
+    // Set the light color (white)
+    gl.uniform3f(u_LightColor, 1.0, 1.0, 1.0);
     // Set the light direction (in the world coordinate)
-    // 光方向
-    var lightDirection = new Vector3([0.5, 3.0, 4.0]);
-    lightDirection.normalize();     // Normalize
-    gl.uniform3fv(u_LightDirection, lightDirection.elements);
-    
-    var currentAngle = 0.0;  // Current rotation angle
-    // 模型矩阵
+    gl.uniform3f(u_LightPosition, 2.3, 4.0, 3.5);
+    // Set the ambient light
+    gl.uniform3f(u_AmbientLight, 0.2, 0.2, 0.2);
+  
     var modelMatrix = new Matrix4();  // Model matrix
-    // 
     var mvpMatrix = new Matrix4();    // Model view projection matrix
-    // 法线矩阵
     var normalMatrix = new Matrix4(); // Transformation matrix for normals
   
-    var tick = function() {
-      currentAngle = animate(currentAngle);  // Update the rotation angle
+    // Calculate the model matrix
+    modelMatrix.setRotate(90, 0, 1, 0); // Rotate around the y-axis
+    // Calculate the view projection matrix
+    mvpMatrix.setPerspective(30, canvas.width/canvas.height, 1, 100);
+    mvpMatrix.lookAt(6, 6, 14, 0, 0, 0, 0, 1, 0);
+    mvpMatrix.multiply(modelMatrix);
+    // Calculate the matrix to transform the normal based on the model matrix
+    normalMatrix.setInverseOf(modelMatrix);
+    normalMatrix.transpose();
   
-      // Calculate the model matrix
-      modelMatrix.setRotate(currentAngle, 0, 1, 0); // Rotate around the y-axis
-      mvpMatrix.set(vpMatrix).multiply(modelMatrix);
-      gl.uniformMatrix4fv(u_MvpMatrix, false, mvpMatrix.elements);
+    // Pass the model matrix to u_ModelMatrix
+    gl.uniformMatrix4fv(u_ModelMatrix, false, modelMatrix.elements);
   
-      // Pass the matrix to transform the normal based on the model matrix to u_NormalMatrix
-      //传递矩阵，将基于模型矩阵的法线转换为u_NormalMatrix
-      // 逆矩阵
-      normalMatrix.setInverseOf(modelMatrix);
-      // 转置矩阵
-      normalMatrix.transpose();
-      gl.uniformMatrix4fv(u_NormalMatrix, false, normalMatrix.elements);
+    // Pass the model view projection matrix to u_mvpMatrix
+    gl.uniformMatrix4fv(u_MvpMatrix, false, mvpMatrix.elements);
   
-      // Clear color and depth buffer
-      gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+    // Pass the transformation matrix for normals to u_NormalMatrix
+    gl.uniformMatrix4fv(u_NormalMatrix, false, normalMatrix.elements);
   
-      // Draw the cube
-      gl.drawElements(gl.TRIANGLES, n, gl.UNSIGNED_BYTE, 0);
+    // Clear color and depth buffer
+    gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
   
-      requestAnimationFrame(tick, canvas); // Request that the browser ?calls tick
-    };
-    tick();
-  }
-  
-  function draw(gl, n, angle, vpMatrix, u_MvpMatrix, u_NormalMatrix) {
+    // Draw the cube
+    gl.drawElements(gl.TRIANGLES, n, gl.UNSIGNED_BYTE, 0);
   }
   
   function initVertexBuffers(gl) {
@@ -116,12 +103,12 @@ window.onload = function () {
     //  v2------v3
     // Coordinates
     var vertices = new Float32Array([
-       1.0, 1.0, 1.0,  -1.0, 1.0, 1.0,  -1.0,-1.0, 1.0,   1.0,-1.0, 1.0, // v0-v1-v2-v3 front
-       1.0, 1.0, 1.0,   1.0,-1.0, 1.0,   1.0,-1.0,-1.0,   1.0, 1.0,-1.0, // v0-v3-v4-v5 right
-       1.0, 1.0, 1.0,   1.0, 1.0,-1.0,  -1.0, 1.0,-1.0,  -1.0, 1.0, 1.0, // v0-v5-v6-v1 up
-      -1.0, 1.0, 1.0,  -1.0, 1.0,-1.0,  -1.0,-1.0,-1.0,  -1.0,-1.0, 1.0, // v1-v6-v7-v2 left
-      -1.0,-1.0,-1.0,   1.0,-1.0,-1.0,   1.0,-1.0, 1.0,  -1.0,-1.0, 1.0, // v7-v4-v3-v2 down
-       1.0,-1.0,-1.0,  -1.0,-1.0,-1.0,  -1.0, 1.0,-1.0,   1.0, 1.0,-1.0  // v4-v7-v6-v5 back
+       2.0, 2.0, 2.0,  -2.0, 2.0, 2.0,  -2.0,-2.0, 2.0,   2.0,-2.0, 2.0, // v0-v1-v2-v3 front
+       2.0, 2.0, 2.0,   2.0,-2.0, 2.0,   2.0,-2.0,-2.0,   2.0, 2.0,-2.0, // v0-v3-v4-v5 right
+       2.0, 2.0, 2.0,   2.0, 2.0,-2.0,  -2.0, 2.0,-2.0,  -2.0, 2.0, 2.0, // v0-v5-v6-v1 up
+      -2.0, 2.0, 2.0,  -2.0, 2.0,-2.0,  -2.0,-2.0,-2.0,  -2.0,-2.0, 2.0, // v1-v6-v7-v2 left
+      -2.0,-2.0,-2.0,   2.0,-2.0,-2.0,   2.0,-2.0, 2.0,  -2.0,-2.0, 2.0, // v7-v4-v3-v2 down
+       2.0,-2.0,-2.0,  -2.0,-2.0,-2.0,  -2.0, 2.0,-2.0,   2.0, 2.0,-2.0  // v4-v7-v6-v5 back
     ]);
   
     // Colors
@@ -131,11 +118,10 @@ window.onload = function () {
       1, 0, 0,   1, 0, 0,   1, 0, 0,  1, 0, 0,     // v0-v5-v6-v1 up
       1, 0, 0,   1, 0, 0,   1, 0, 0,  1, 0, 0,     // v1-v6-v7-v2 left
       1, 0, 0,   1, 0, 0,   1, 0, 0,  1, 0, 0,     // v7-v4-v3-v2 down
-      1, 0, 0,   1, 0, 0,   1, 0, 0,  1, 0, 0     // v4-v7-v6-v5 back
+      1, 0, 0,   1, 0, 0,   1, 0, 0,  1, 0, 0    // v4-v7-v6-v5 back
    ]);
   
     // Normal
-    // 法向量
     var normals = new Float32Array([
       0.0, 0.0, 1.0,   0.0, 0.0, 1.0,   0.0, 0.0, 1.0,   0.0, 0.0, 1.0,  // v0-v1-v2-v3 front
       1.0, 0.0, 0.0,   1.0, 0.0, 0.0,   1.0, 0.0, 0.0,   1.0, 0.0, 0.0,  // v0-v3-v4-v5 right
@@ -156,9 +142,9 @@ window.onload = function () {
    ]);
   
     // Write the vertex property to buffers (coordinates, colors and normals)
-    if (!initArrayBuffer(gl, 'a_Position', vertices, 3, gl.FLOAT)) return -1;
-    if (!initArrayBuffer(gl, 'a_Color', colors, 3, gl.FLOAT)) return -1;
-    if (!initArrayBuffer(gl, 'a_Normal', normals, 3, gl.FLOAT)) return -1;
+    if (!initArrayBuffer(gl, 'a_Position', vertices, 3)) return -1;
+    if (!initArrayBuffer(gl, 'a_Color', colors, 3)) return -1;
+    if (!initArrayBuffer(gl, 'a_Normal', normals, 3)) return -1;
   
     // Unbind the buffer object
     gl.bindBuffer(gl.ARRAY_BUFFER, null);
@@ -175,7 +161,7 @@ window.onload = function () {
     return indices.length;
   }
   
-  function initArrayBuffer(gl, attribute, data, num, type) {
+  function initArrayBuffer(gl, attribute, data, num) {
     // Create a buffer object
     var buffer = gl.createBuffer();
     if (!buffer) {
@@ -191,28 +177,13 @@ window.onload = function () {
       console.log('Failed to get the storage location of ' + attribute);
       return false;
     }
-    gl.vertexAttribPointer(a_attribute, num, type, false, 0, 0);
+    gl.vertexAttribPointer(a_attribute, num, gl.FLOAT, false, 0, 0);
     // Enable the assignment of the buffer object to the attribute variable
     gl.enableVertexAttribArray(a_attribute);
   
     return true;
   }
   
-  // Rotation angle (degrees/second)
-  var ANGLE_STEP = 30.0;
-  // Last time that this function was called
-  var g_last = Date.now();
-  function animate(angle) {
-    // Calculate the elapsed time
-    var now = Date.now();
-    var elapsed = now - g_last;
-    g_last = now;
-    // Update the current rotation angle (adjusted by the elapsed time)
-    var newAngle = angle + (ANGLE_STEP * elapsed) / 1000.0;
-    return newAngle %= 360;
-  }
   
-  
-
   main(); 
 };

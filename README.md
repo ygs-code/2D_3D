@@ -20,7 +20,9 @@ webgl 教程学习网站 ：https://learnwebgl.brown37.net/index.html
 
 webgl 教程学习网站 ：https://wgld.org/d/webgl/w021.html
 
+webgl 教程学习网站 ：http://webgl-lesson.wysaid.org/
 
+webgl 教程学习网站 ： https://www.learnopengles.com/android-lesson-three-moving-to-per-fragment-lighting/
 
 
 
