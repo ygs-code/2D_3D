@@ -87,7 +87,14 @@ window.onload = function () {
   var modelMatrix = new Matrix4();
 
   //  Matrix4.setLookAt(eyeX, eyeY, eyeZ, atX, atY, atZ, upX, upY, upZ)
-  // 观察者的默认状态是：视点为系统原点(0,0,1)；视线为Z轴负方向，观察点为(0,0,0)；上方向为Y轴负方向(0,1,0)
+  /*
+  
+    在WebGL中，观察者的默认状态如下：
+    视点位于坐标系统原点 eye（0,0,0）
+    视线为Z轴负方向，观察点为 at（0,0,-1），
+    上方向为Y轴正方向，即（0,1,0）
+  */ 
+
   //设置视点、视线和上方向
 
   viewMatrix.setLookAt(0.2, 0.25, 0.25, 0, 0, 0, 0, 1.0, 0);

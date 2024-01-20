@@ -80,6 +80,7 @@ window.onload = function () {
     lightDir.normalize();     // Normalize
     var lightDir_eye = viewMatrix.multiplyVector3(lightDir); // Transform to view coordinate
     lightDir_eye.normalize(); // Normalize
+    
     gl.uniform3fv(u_LightDir, lightDir_eye.elements);
   
     // Clear color and depth buffer
