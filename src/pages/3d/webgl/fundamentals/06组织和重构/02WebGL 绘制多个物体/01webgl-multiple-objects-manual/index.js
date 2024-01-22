@@ -33,6 +33,7 @@ import "./index.less";
     // }
   
     var createFlattenedVertices = function(gl, vertices) {
+      // 创建定点
       return createBufferInfoFromArrays(
           gl,
           primitives.makeRandomVertexColors(
@@ -46,14 +47,15 @@ import "./index.less";
         );
     };
   
+    // 创建buffer
     var sphereBufferInfo = createFlattenedVertices(gl, primitives.createSphereVertices(10, 12, 6));
     var cubeBufferInfo   = createFlattenedVertices(gl, primitives.createCubeVertices(20));
     var coneBufferInfo   = createFlattenedVertices(gl, primitives.createTruncatedConeVertices(10, 0, 20, 12, 1, true, false));
    
-    // import FSHADER_SOURCE from "./index.frag";
-    // import VSHADER_SOURCE from "./index.vert";
+  
 
     // setup GLSL program
+    // 创建 program
     var programInfo = createProgramInfo(gl, [VSHADER_SOURCE,FSHADER_SOURCE ]);
   
     function degToRad(d) {
@@ -67,14 +69,17 @@ import "./index.less";
     // Uniforms for each object.
     var sphereUniforms = {
       u_colorMult: [0.5, 1, 0.5, 1],
+      // 创建 单位矩阵
       u_matrix: makeIdentity(),
     };
     var cubeUniforms = {
       u_colorMult: [1, 0.5, 0.5, 1],
+       // 创建 单位矩阵
       u_matrix: makeIdentity(),
     };
     var coneUniforms = {
       u_colorMult: [0.5, 0.5, 1, 1],
+       // 创建 单位矩阵
       u_matrix: makeIdentity(),
     };
     var sphereTranslation = [  0, 0, 0];
@@ -82,17 +87,28 @@ import "./index.less";
     var coneTranslation   = [ 40, 0, 0];
   
     function computeMatrix(viewMatrix, projectionMatrix, translation, xRotation, yRotation) {
+
+        // x 轴旋转
       var xRotationMatrix = makeXRotation(xRotation);
+      // y 轴旋转
       var yRotationMatrix = makeYRotation(yRotation);
+
+        // y 偏移
       var translationMatrix = makeTranslation(
           translation[0],
           translation[1],
           translation[2]);
+      // 创建初始化矩阵  
       var matrix = makeIdentity();
+        // 矩阵相乘 x轴 旋转
       matrix = matrixMultiply(matrix, xRotationMatrix);
+       // 矩阵相乘 y轴旋转
       matrix = matrixMultiply(matrix, yRotationMatrix);
+         // 矩阵相乘  偏移矩阵
       var worldMatrix = matrixMultiply(matrix, translationMatrix);
+         // 矩阵相乘  视图矩阵
       matrix = matrixMultiply(worldMatrix, viewMatrix);
+         // 矩阵相乘  透视投影矩阵
       return matrixMultiply(matrix, projectionMatrix);
     }
   
@@ -110,16 +126,18 @@ import "./index.less";
   
       // Compute the projection matrix
       var aspect = canvas.clientWidth / canvas.clientHeight;
-      var projectionMatrix =
-          makePerspective(fieldOfViewRadians, aspect, 1, 2000);
+      // 投影 透视
+      var projectionMatrix =   makePerspective(fieldOfViewRadians, aspect, 1, 2000);
   
       // Compute the camera's matrix using look at.
       var cameraPosition = [0, 0, 100];
       var target = [0, 0, 0];
       var up = [0, 1, 0];
+      // 相机
       var cameraMatrix = makeLookAt(cameraPosition, target, up);
   
       // Make a view matrix from the camera matrix.
+      // 从相机矩阵中创建一个视图矩阵。
       var viewMatrix = makeInverse(cameraMatrix);
   
       var sphereXRotation =  time;
@@ -134,6 +152,7 @@ import "./index.less";
       gl.useProgram(programInfo.program);
   
       // Setup all the needed attributes.
+      // 设置所有需要的属性。
       setBuffersAndAttributes(gl, programInfo.attribSetters, sphereBufferInfo);
   
       sphereUniforms.u_matrix = computeMatrix(
@@ -141,11 +160,12 @@ import "./index.less";
           projectionMatrix,
           sphereTranslation,
           sphereXRotation,
-          sphereYRotation);
+          sphereYRotation
+      );
   
       // Set the uniforms we just computed
       setUniforms(programInfo.uniformSetters, sphereUniforms);
-  
+      // 渲染模型1
       gl.drawArrays(gl.TRIANGLES, 0, sphereBufferInfo.numElements);
   
       // ------ Draw the cube --------
@@ -162,7 +182,7 @@ import "./index.less";
   
       // Set the uniforms we just computed
       setUniforms(programInfo.uniformSetters, cubeUniforms);
-  
+   // 渲染模型2
       gl.drawArrays(gl.TRIANGLES, 0, cubeBufferInfo.numElements);
   
       // ------ Draw the cone --------
@@ -180,6 +200,7 @@ import "./index.less";
       // Set the uniforms we just computed
       setUniforms(programInfo.uniformSetters, coneUniforms);
   
+         // 渲染模型3
       gl.drawArrays(gl.TRIANGLES, 0, coneBufferInfo.numElements);
   
       requestAnimationFrame(drawScene);
