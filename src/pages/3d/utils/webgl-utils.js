@@ -848,6 +848,7 @@
       return script ? script.text : source;
     });
 
+    console.log('shaderSources==',shaderSources)
     //  // 加载 和创建 Shader 创建 Program
     const program = createProgramFromSources(
       gl,

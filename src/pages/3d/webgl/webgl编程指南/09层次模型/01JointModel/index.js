@@ -246,7 +246,7 @@ window.onload = function () {
     //  转 置 矩阵
     g_normalMatrix.transpose();
     gl.uniformMatrix4fv(u_NormalMatrix, false, g_normalMatrix.elements);
-    // Draw
+    // Draw 渲染两次
     gl.drawElements(gl.TRIANGLES, n, gl.UNSIGNED_BYTE, 0);
   }
   
