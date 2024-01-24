@@ -33,6 +33,10 @@ https://developer.mozilla.org/zh-CN/docs/Web/API/WebGL_API
 shadertoy 网站
 https://www.shadertoy.com/browse
 
+shader 网站：https://www.vertexshaderart.com/art/PHWvovEcpp6R6yT8K
+
+
+
 https://learnopengl-cn.readthedocs.io/zh/latest/05%20Advanced%20Lighting/07%20Bloom/
 
 https://blog.csdn.net/AHcola233/article/details/117825091
