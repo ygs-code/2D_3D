@@ -1,3 +1,43 @@
+# 项目启动
+
+安装依赖
+
+```
+yarn 
+```
+
+或者用 npm
+
+```
+npm i 
+```
+
+启动项目
+
+```
+npm run start   
+```
+
+
+
+这个webpack配置我配置的是多页面入口的，所以在主页看到空白，不如要看那个例子 可以 复制该文件夹目录到浏览器地址栏上面查看。比如 在目录的 2D_3D\src\pages\3d\webgl\webgl编程指南\09层次模型\02MultiJointModel 中，如果要查看这个例子在浏览器可以这样访问
+
+```
+http://localhost:8089/3d/webgl/webgl编程指南/09层次模型/02MultiJointModel
+```
+
+这样拼接
+
+```
+http://localhost:8089+ /3d/webgl/webgl编程指南/09层次模型/02MultiJointModel
+```
+
+其他例子也是一样的。
+
+
+
+
+
 2d，3d 学习资料
 
 https://www.bilibili.com/video/BV1Gg411X7FY?p=60&vd_source=244d29250f99d72b759d594ebd4a6c47
