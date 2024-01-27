@@ -180,4 +180,4 @@ webxr ：https://immersiveweb.dev/
 
 webgl 教程学习网站 ：https://learnwebgl.brown37.net/index.html
 
-角度符号 α β γ θ η 可在希腊/拉丁处找到。
+角度符号 α β γ θ η  。
