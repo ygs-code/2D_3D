@@ -25,7 +25,10 @@ window.onload = function () {
   document.body.appendChild(canvas);
 
   if (!canvas.getContext) return;
-  let gl = canvas.getContext("webgl");
+  // alpha: false
+  let gl = canvas.getContext("webgl" ,{
+
+  });
   // vertexShader, fragmentShader
 
  
@@ -35,7 +38,7 @@ window.onload = function () {
     return;
   }
    
-var ANGLE_STEP = 20.0; // Rotation angle (degrees/second)
+  var ANGLE_STEP = 20.0; // Rotation angle (degrees/second)
 
 function main() {
   // // Retrieve <canvas> element
@@ -66,30 +69,47 @@ function main() {
   gl.enable(gl.DEPTH_TEST);
 
   // Get the storage locations of uniform variables
+  // mvp 矩阵
   var u_MvpMatrix = gl.getUniformLocation(program, 'u_MvpMatrix');
-  var u_Clicked = gl.getUniformLocation(program, 'u_Clicked');
-  if (!u_MvpMatrix || !u_Clicked) { 
+  // 
+  var u_PickedFace = gl.getUniformLocation(program, 'u_PickedFace');
+  if (!u_MvpMatrix || !u_PickedFace) { 
     console.log('Failed to get the storage location of uniform variable');
     return;
   }
 
   // Calculate the view projection matrix
+  // 视图矩阵
   var viewProjMatrix = new Matrix4();
+  // 透视投影
   viewProjMatrix.setPerspective(30.0, canvas.width / canvas.height, 1.0, 100.0);
+  // 相机
   viewProjMatrix.lookAt(0.0, 0.0, 7.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0);
 
-  gl.uniform1i(u_Clicked, 0); // Pass false to u_Clicked
+  // Initialize selected surface
+  //初始化选定曲面
+  gl.uniform1i(u_PickedFace, -1);
 
+  // 当前旋转角度
   var currentAngle = 0.0; // Current rotation angle
+
   // Register the event handler
-  canvas.onmousedown = function(ev) {   // Mouse is pressed
-    var x = ev.clientX, y = ev.clientY;
+  //注册事件处理程序
+  canvas.onmousedown = function(ev) {  
+     // Mouse is pressed 按下鼠标
+    var x = ev.clientX,
+     y = ev.clientY;
     var rect = ev.target.getBoundingClientRect();
+
     if (rect.left <= x && x < rect.right && rect.top <= y && y < rect.bottom) {
-      // If pressed position is inside <canvas>, check if it is above object
-      var x_in_canvas = x - rect.left, y_in_canvas = rect.bottom - y;
-      var picked = check(gl, n, x_in_canvas, y_in_canvas, currentAngle, u_Clicked, viewProjMatrix, u_MvpMatrix);
-      if (picked) alert('The cube was selected! ');
+      //如果点击位置在<canvas>内，则更新所选表面
+      // If Clicked position is inside the <canvas>, update the selected surface
+      var x_in_canvas = x - rect.left,
+       y_in_canvas = rect.bottom - y;
+      var face = checkFace(gl, n, x_in_canvas, y_in_canvas, currentAngle, u_PickedFace, viewProjMatrix, u_MvpMatrix);
+    
+      gl.uniform1i(u_PickedFace, face); //  将表面编号传递给u PickedFace Pass the surface number to u_PickedFace
+      draw(gl, n, currentAngle, viewProjMatrix, u_MvpMatrix);
     }
   };
 
@@ -110,6 +130,7 @@ function initVertexBuffers(gl) {
   //  | |v7---|-|v4
   //  |/      |/
   //  v2------v3
+
   var vertices = new Float32Array([   // Vertex coordinates
      1.0, 1.0, 1.0,  -1.0, 1.0, 1.0,  -1.0,-1.0, 1.0,   1.0,-1.0, 1.0,    // v0-v1-v2-v3 front
      1.0, 1.0, 1.0,   1.0,-1.0, 1.0,   1.0,-1.0,-1.0,   1.0, 1.0,-1.0,    // v0-v3-v4-v5 right
@@ -120,16 +141,29 @@ function initVertexBuffers(gl) {
   ]);
 
   var colors = new Float32Array([   // Colors
-    0.2, 0.58, 0.82,   0.2, 0.58, 0.82,   0.2,  0.58, 0.82,  0.2,  0.58, 0.82, // v0-v1-v2-v3 front
-    0.5,  0.41, 0.69,  0.5, 0.41, 0.69,   0.5, 0.41, 0.69,   0.5, 0.41, 0.69,  // v0-v3-v4-v5 right
-    0.0,  0.32, 0.61,  0.0, 0.32, 0.61,   0.0, 0.32, 0.61,   0.0, 0.32, 0.61,  // v0-v5-v6-v1 up
-    0.78, 0.69, 0.84,  0.78, 0.69, 0.84,  0.78, 0.69, 0.84,  0.78, 0.69, 0.84, // v1-v6-v7-v2 left
-    0.32, 0.18, 0.56,  0.32, 0.18, 0.56,  0.32, 0.18, 0.56,  0.32, 0.18, 0.56, // v7-v4-v3-v2 down
+    0.32, 0.18, 0.56,  0.32, 0.18, 0.56,  0.32, 0.18, 0.56,  0.32, 0.18, 0.56, // v0-v1-v2-v3 front
+    0.5, 0.41, 0.69,   0.5, 0.41, 0.69,   0.5, 0.41, 0.69,   0.5, 0.41, 0.69,  // v0-v3-v4-v5 right
+    0.78, 0.69, 0.84,  0.78, 0.69, 0.84,  0.78, 0.69, 0.84,  0.78, 0.69, 0.84, // v0-v5-v6-v1 up
+    0.0, 0.32, 0.61,   0.0, 0.32, 0.61,   0.0, 0.32, 0.61,   0.0, 0.32, 0.61,  // v1-v6-v7-v2 left
+    0.27, 0.58, 0.82,  0.27, 0.58, 0.82,  0.27, 0.58, 0.82,  0.27, 0.58, 0.82, // v7-v4-v3-v2 down
     0.73, 0.82, 0.93,  0.73, 0.82, 0.93,  0.73, 0.82, 0.93,  0.73, 0.82, 0.93, // v4-v7-v6-v5 back
    ]);
 
-  // Indices of the vertices
-  var indices = new Uint8Array([
+   // 顶点颜色信息
+  var faces = new Uint8Array([   // Faces
+
+    1, 1, 1, 1,     // v0-v1-v2-v3 front
+    2, 2, 2, 2,     // v0-v3-v4-v5 right
+    3, 3, 3, 3,     // v0-v5-v6-v1 up
+    4, 4, 4, 4,     // v1-v6-v7-v2 left
+    5, 5, 5, 5,     // v7-v4-v3-v2 down
+    6, 6, 6, 6,     // v4-v7-v6-v5 back
+  ]);
+
+  console.log('faces=====',faces);
+
+
+  var indices = new Uint8Array([   // Indices of the vertices
      0, 1, 2,   0, 2, 3,    // front
      4, 5, 6,   4, 6, 7,    // right
      8, 9,10,   8,10,11,    // up
@@ -138,15 +172,24 @@ function initVertexBuffers(gl) {
     20,21,22,  20,22,23     // back
   ]);
 
-  // Write vertex information to buffer object
-  if (!initArrayBuffer(gl, vertices, gl.FLOAT, 3, 'a_Position')) return -1; // Coordinate Information
-  if (!initArrayBuffer(gl, colors, gl.FLOAT, 3, 'a_Color')) return -1;      // Color Information
-
   // Create a buffer object
   var indexBuffer = gl.createBuffer();
   if (!indexBuffer) {
     return -1;
   }
+
+  // Write vertex information to buffer object
+  if (!initArrayBuffer(gl, vertices, gl.FLOAT, 3, 'a_Position')) return -1; // Coordinates Information
+  if (!initArrayBuffer(gl, colors, gl.FLOAT, 3, 'a_Color')) return -1;   
+     // Color Information  
+     /*
+       记录顶点面的信息
+     */
+  if (!initArrayBuffer(gl, faces, gl.UNSIGNED_BYTE, 1, 'a_Face')) return -1;// Surface Information Surface Information
+
+  // Unbind the buffer object
+  gl.bindBuffer(gl.ARRAY_BUFFER, null);
+
   // Write the indices to the buffer object
   gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, indexBuffer);
   gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, indices, gl.STATIC_DRAW);
@@ -154,22 +197,63 @@ function initVertexBuffers(gl) {
   return indices.length;
 }
 
-function check(gl, n, x, y, currentAngle, u_Clicked, viewProjMatrix, u_MvpMatrix) {
-  var picked = false;
-  gl.uniform1i(u_Clicked, 1);  // Pass true to u_Clicked
-  draw(gl, n, currentAngle, viewProjMatrix, u_MvpMatrix); // Draw cube with red
-  // Read pixel at the clicked position
-  var pixels = new Uint8Array(4); // Array for storing the pixel value
+/*
+ rgba   用
+
+*/
+
+function checkFace(gl, n, x, y, currentAngle, u_PickedFace, viewProjMatrix, u_MvpMatrix) {
+ // 获取像素
+  var pixels = new Uint8Array(4); // 用于存储像素值的数组 Array for storing the pixel value
+ 
+
+  /*
+    a_Face ,  face 是顶点标志  1 - 6
+    vec3 color = (face == u_PickedFace) ? vec3(1.0) : a_Color.rgb;
+    if(u_PickedFace == 0) { // 如果为0，则将面号插入alpha中  In case of 0, insert the face number into alpha
+  
+     a_Face 值为 1-6       因为在vertex设置1之后  gl.readPixels 获取到像素是 255。
+     所以要转换成 1-6 要除以 255，这样 gl.readPixels 就可以获取到 1-6
+   
+      v_Color = vec4(color, a_Face/255.0);
+    } else {
+      v_Color = vec4(color, a_Color.a);
+    }
+
+    点击 canvas 的 时候 如果是 设置 u_PickedFace 为 0 的时候 就 设置 立方体为透明度为为
+    a_Face  1-6/255  
+    此时 条件进入 if u_PickedFace == 0     v_Color = vec4(color, a_Face/255.0);
+    此时 可以通过  gl.readPixels 就能获取到  1-6 
+
+
+
+
+    然后js获取到 1-6 在传递到 u_PickedFace 中，
+
+    var face = checkFace(gl, n, x_in_canvas, y_in_canvas, currentAngle, u_PickedFace, viewProjMatrix, u_MvpMatrix);
+    
+     gl.uniform1i(u_PickedFace, face); 
+
+
+    然后在 此时 就 进入 else 条件中   v_Color = vec4(color, a_Color.a);
+    vertex 中 face == u_PickedFace 就相等，这样就吧 立方体 那一面 设置为 白色。
+
+    其他 面 不是 face == u_PickedFace 就设置为  a_Color.rgb颜色
+
+
+  
+  */
+  // 标志 u_PickedFace 为 0
+  gl.uniform1i(u_PickedFace, 0);  // 通过将表面数字写入alpha值来绘制  Draw by writing surface number into alpha value
+ 
+  draw(gl, n, currentAngle, viewProjMatrix, u_MvpMatrix);
+  
+  // 读取所单击位置的像素值。Pixels[3]为面数  Read the pixel value of the clicked position. pixels[3] is the surface number
   gl.readPixels(x, y, 1, 1, gl.RGBA, gl.UNSIGNED_BYTE, pixels);
 
-  console.log('pixels=====',pixels);
-  if (pixels[0] === 255) // The mouse in on cube if R(pixels[0]) is 255
-    picked = true;
+  console.log('第几个面:',pixels[3]);
 
-  gl.uniform1i(u_Clicked, 0);  // Pass false to u_Clicked(rewrite the cube)
-  draw(gl, n, currentAngle, viewProjMatrix, u_MvpMatrix); // Draw the cube
-  
-  return picked;
+  return pixels[3];
 }
 
 var g_MvpMatrix = new Matrix4(); // Model view projection matrix
@@ -185,9 +269,9 @@ function draw(gl, n, currentAngle, viewProjMatrix, u_MvpMatrix) {
   gl.drawElements(gl.TRIANGLES, n, gl.UNSIGNED_BYTE, 0);   // Draw
 }
 
-var last = Date.now(); // Last time that this function was called
+var last = Date.now();  // Last time that this function was called
 function animate(angle) {
-  var now = Date.now();   // Calculate the elapsed time
+  var now = Date.now(); // Calculate the elapsed time
   var elapsed = now - last;
   last = now;
   // Update the current rotation angle (adjusted by the elapsed time)
@@ -218,5 +302,6 @@ function initArrayBuffer (gl, data, type, num, attribute) {
   return true;
 }
 
+ 
 main(); 
 };
