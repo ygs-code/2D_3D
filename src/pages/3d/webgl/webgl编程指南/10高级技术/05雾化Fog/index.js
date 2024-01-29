@@ -52,7 +52,7 @@ window.onload = function () {
   function main() {
   
   
-    // 
+    // 创建顶点
     var n = initVertexBuffers(gl);
     if (n < 1) {
       console.log('Failed to set the vertex information');
@@ -112,6 +112,7 @@ window.onload = function () {
     mvpMatrix.lookAt(eye[0], eye[1], eye[2], 0, 2, 0, 0, 1, 0);
 
     mvpMatrix.multiply(modelMatrix);
+
     gl.uniformMatrix4fv(u_MvpMatrix, false, mvpMatrix.elements);
     document.onkeydown = function(ev){
       // 键盘事件
@@ -140,6 +141,7 @@ window.onload = function () {
   }
   
   function keydown(ev, gl, n, u_FogDist, fogDist) {
+
     switch (ev.keyCode) {
       case 38: // Up arrow key -> Increase the maximum distance of fog
         fogDist[1]  += 1;
@@ -151,6 +153,7 @@ window.onload = function () {
         break;
       default: return;
     }
+    // 通过雾的距离
     gl.uniform2fv(u_FogDist, fogDist);   // Pass the distance of fog
     // Clear color and depth buffer
     gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
