@@ -77,7 +77,7 @@
 
     let el = document.getElementById(elId);
     let oDiv;
-    console.log('el=======',el)
+   
     if (!el) {
       oDiv = document.createElement("div");
       document.body.appendChild(oDiv);
