@@ -1663,13 +1663,15 @@
     createAugmentedTypedArray: createAugmentedTypedArray,
     // 1. 创建 buffer 2.绑定buffer  3.向缓冲区写入数据
     createAttribsFromArrays: createAttribsFromArrays,
+    // 创建buffer
     createBuffersFromArrays: createBuffersFromArrays,
     // 1. 创建 buffer 2.绑定buffer  3.向缓冲区写入数据
     createBufferInfoFromArrays: createBufferInfoFromArrays,
     createAttributeSetters: createAttributeSetters,
     createProgram: createProgram,
+    //  加载 和创建 Shader 创建 Program 但是必须是 JavaScript 脚本 不然会报错
     createProgramFromScripts: createProgramFromScripts,
-    //  加载 和创建 Shader 创建 Program
+    //  加载 和创建 Shader 创建 Program 可以不是 JavaScript 脚本形式
     createProgramFromSources: createProgramFromSources,
     /*
   返回一个对象 对象包含
