@@ -79,6 +79,10 @@ https://www.shadertoy.com/browse
 
 shader 网站：https://www.vertexshaderart.com/art/PHWvovEcpp6R6yT8K
 
+shader 网站：https://ogldev.org/
+
+shader 书网站：https://www.realtimerendering.com/resources/shaderx/
+
 
 
 https://learnopengl-cn.readthedocs.io/zh/latest/05%20Advanced%20Lighting/07%20Bloom/
@@ -181,3 +185,4 @@ webxr ：https://immersiveweb.dev/
 webgl 教程学习网站 ：https://learnwebgl.brown37.net/index.html
 
 角度符号 α β γ θ η  。
+
