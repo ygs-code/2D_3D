@@ -387,7 +387,16 @@ import "./index.less";
       positions[ii + 1] = vector[1];
       positions[ii + 2] = vector[2];
     }
-  
+  console.log('positions===',positions);
+
+      // F数据矩阵
+      createHtmlMatrix({
+        matrix: positions,
+        title: "positions",
+        row: 4,
+        list: 4,
+        elId: "positions"
+      });
     gl.bufferData(gl.ARRAY_BUFFER, positions, gl.STATIC_DRAW);
   }
   

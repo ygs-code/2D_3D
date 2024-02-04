@@ -11,7 +11,7 @@ import chroma from "@/pages/3d/utils/chroma.min";
 import * as glMatrix from "gl-matrix";
 import {makeInverse,makeLookAt,makeIdentity,makeXRotation,makeYRotation,makeTranslation,matrixMultiply,makePerspective} from "@/pages/3d/utils/webgl-3d-math.js";
 import controller from "@/pages/3d/utils/controller.js";
-import fTexture from "static/image/f-texture.png";
+import fTexture from "static/image/f-texture1.png";
 import leaves from "static/image/leaves.jpg";
 
 import "./index.less";
@@ -32,24 +32,27 @@ import "./index.less";
 
  
   function main() {
- 
-   
+     /**检查数字是否为2的指数
+      * @param {Number} value - 要检查的值
+      * @return {Boolean}
+      */
+  function isPowerOf2(value) {
+      return !(value & (value - 1));
+  }
+
+
     // setup GLSL program
-    // 加载 shander
     var program = initShaders(gl, VSHADER_SOURCE, FSHADER_SOURCE);
   
     // look up where the vertex data needs to go.
-    //查找顶点数据需要放到哪里。
     var positionLocation = gl.getAttribLocation(program, "a_position");
     var texcoordLocation = gl.getAttribLocation(program, "a_texcoord");
   
-    // lookup uniforms
     // lookup uniforms
     var matrixLocation = gl.getUniformLocation(program, "u_matrix");
     var textureLocation = gl.getUniformLocation(program, "u_texture");
   
     // Create a buffer for positions
-    // 为位置创建一个缓冲区
     var positionBuffer = gl.createBuffer();
     // Bind it to ARRAY_BUFFER (think of it as ARRAY_BUFFER = positionBuffer)
     gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
@@ -68,14 +71,48 @@ import "./index.less";
     // Fill the texture with a 1x1 blue pixel.
     gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, 1, 1, 0, gl.RGBA, gl.UNSIGNED_BYTE,
                   new Uint8Array([0, 0, 255, 255]));
+
+                  
     // Asynchronously load an image
     var image = new Image();
     image.src = fTexture;
     image.addEventListener('load', function() {
+
       // Now that the image has loaded make copy it to the texture.
       gl.bindTexture(gl.TEXTURE_2D, texture);
       gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA,gl.UNSIGNED_BYTE, image);
       gl.generateMipmap(gl.TEXTURE_2D);
+
+
+   if (isPowerOf2(image.width) && isPowerOf2(image.height)) {
+        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST);
+        return texture;
+    }
+            
+ 
+    /*
+第四纹理加载的一些小问题
+如果你参照《webGL编程指南》的demo去写添加纹理，
+如果你是在网上随便找一张自己的图片的话，
+你可能会发现纹理渲染不出来，
+即便你的代码和例子一摸一样。它会报这样一行错：
+image.png
+这里的解决办法非常简单，最简单的解决办法，是先检查你使用的贴图尺寸。
+如果长和宽的大小都不是2的n次幂 即错误信息里面所说的non-power-of-2
+那么请用PS等图像处理软件把它的长和宽分别处理为2的n次幂
+如 1x1 2x2 4x4 8x8 16x16 32x32 64x64 128x128 256x256 512x512.....
+一般来说这样就能够解决了 然后参考一下stackoverflow一位dalao给的代码
+你可以这样写一个创建纹理的函数：
+    */ 
+
+ 
+
+
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+
     });
   
   
@@ -148,7 +185,7 @@ import "./index.less";
       var type1 = gl.FLOAT;   // the data is 32bit floats
       var normalize1 = false; // don't normalize the data
       var stride1 = 0;        // 0 = move forward size * sizeof(type) each iteration to get the next position
-      var offset1 = 0;        // start at the beginning of the buffer
+      var offset1= 0;        // start at the beginning of the buffer
       gl.vertexAttribPointer(
           texcoordLocation, size1, type1, normalize1, stride1, offset1);
   
@@ -186,9 +223,7 @@ import "./index.less";
   }
   
   // Fill the buffer with the values that define a letter 'F'.
-  // 用定义字母“F”的值填充缓冲区。
   function setGeometry(gl) {
-    // F 顶点位置
     var positions = new Float32Array([
             // left column front
             0,   0,  0,
@@ -338,71 +373,71 @@ import "./index.less";
     gl.bufferData(gl.ARRAY_BUFFER, positions, gl.STATIC_DRAW);
   }
   
-  // Fill the buffer with texture coordinates the F.
-  //  用纹理坐标F填充缓冲区。
+  // Fill the current ARRAY_BUFFER buffer
+  // with texture coordinates for the letter 'F'.
   function setTexcoords(gl) {
     gl.bufferData(
         gl.ARRAY_BUFFER,
         new Float32Array([
           // left column front
-          0, 0,
-          0, 1,
-          1, 0,
+          /*
 
-          0, 1,
-          1, 1,
-          1, 0,
+           贴图坐标 = 2d坐标 / 图片的宽高
+
+            图片上的 坐标  除以 255   255   255 是图片的 宽 高
+          */ 
+           38 / 255,  44 / 255,
+           38 / 255, 223 / 255,
+          113 / 255,  44 / 255,
+
+           38 / 255, 223 / 255,
+          113 / 255, 223 / 255,
+          113 / 255,  44 / 255,
   
           // top rung front
-          0, 0,
-          0, 1,
-          1, 0,
-
-          0, 1,
-          1, 1,
-          1, 0,
+          113 / 255, 44 / 255,
+          113 / 255, 85 / 255,
+          218 / 255, 44 / 255,
+          113 / 255, 85 / 255,
+          218 / 255, 85 / 255,
+          218 / 255, 44 / 255,
   
           // middle rung front
-          0, 0,
-          0, 1,
-          1, 0,
-
-          0, 1,
-          1, 1,
-          1, 0,
+          113 / 255, 112 / 255,
+          113 / 255, 151 / 255,
+          203 / 255, 112 / 255,
+          113 / 255, 151 / 255,
+          203 / 255, 151 / 255,
+          203 / 255, 112 / 255,
   
           // left column back
-          0, 0,
-          1, 0,
-          0, 1,
-
-          0, 1,
-          1, 0,
-          1, 1,
+           38 / 255,  44 / 255,
+          113 / 255,  44 / 255,
+           38 / 255, 223 / 255,
+           38 / 255, 223 / 255,
+          113 / 255,  44 / 255,
+          113 / 255, 223 / 255,
   
           // top rung back
-          0, 0,
-          1, 0,
-          0, 1,
-
-          0, 1,
-          1, 0,
-          1, 1,
+          113 / 255, 44 / 255,
+          218 / 255, 44 / 255,
+          113 / 255, 85 / 255,
+          113 / 255, 85 / 255,
+          218 / 255, 44 / 255,
+          218 / 255, 85 / 255,
   
           // middle rung back
-          0, 0,
-          1, 0,
-          0, 1,
-
-          0, 1,
-          1, 0,
-          1, 1,
+          113 / 255, 112 / 255,
+          203 / 255, 112 / 255,
+          113 / 255, 151 / 255,
+          113 / 255, 151 / 255,
+          203 / 255, 112 / 255,
+          203 / 255, 151 / 255,
   
           // top
           0, 0,
           1, 0,
           1, 1,
-
           0, 0,
           1, 1,
           0, 1,
@@ -411,7 +446,6 @@ import "./index.less";
           0, 0,
           1, 0,
           1, 1,
-
           0, 0,
           1, 1,
           0, 1,
@@ -420,7 +454,6 @@ import "./index.less";
           0, 0,
           0, 1,
           1, 1,
-
           0, 0,
           1, 1,
           1, 0,
@@ -429,7 +462,6 @@ import "./index.less";
           0, 0,
           1, 1,
           0, 1,
-
           0, 0,
           1, 0,
           1, 1,
@@ -438,7 +470,6 @@ import "./index.less";
           0, 0,
           1, 1,
           0, 1,
-
           0, 0,
           1, 0,
           1, 1,
@@ -447,7 +478,6 @@ import "./index.less";
           0, 0,
           1, 1,
           0, 1,
-
           0, 0,
           1, 0,
           1, 1,
@@ -456,7 +486,6 @@ import "./index.less";
           0, 0,
           0, 1,
           1, 1,
-
           0, 0,
           1, 1,
           1, 0,
@@ -465,7 +494,6 @@ import "./index.less";
           0, 0,
           1, 1,
           0, 1,
-
           0, 0,
           1, 0,
           1, 1,
@@ -474,7 +502,6 @@ import "./index.less";
           0, 0,
           0, 1,
           1, 1,
-
           0, 0,
           1, 1,
           1, 0,
@@ -483,15 +510,13 @@ import "./index.less";
           0, 0,
           0, 1,
           1, 1,
-
           0, 0,
           1, 1,
-          1, 0
+          1, 0,
         ]),
         gl.STATIC_DRAW);
   }
   
-   
   
  
   main();
