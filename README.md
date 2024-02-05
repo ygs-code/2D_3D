@@ -68,6 +68,8 @@ webgl 教程学习网站 ：http://webgl-lesson.wysaid.org/
 
 webgl 教程学习网站 ： https://www.learnopengles.com/android-lesson-three-moving-to-per-fragment-lighting/
 
+webgl 帖子 https://www.cnblogs.com/hammerc?page=1
+
 
 
 webgl  mdn web doc 操作api ：https://developer.mozilla.org/en-US/docs/Web/API/WebGLRenderingContext/getActiveUniform
@@ -175,6 +177,10 @@ webxr https://www.w3.org/TR/2023/CRD-webxr-20231005/#xrsystem-interface
  three 教程： https://github.com/Experience-Monks/jam3-lesson-webgl-shader-threejs
 
 实时渲染 ：https://www.realtimerendering.com/#intro
+
+
+
+
 
 
 
