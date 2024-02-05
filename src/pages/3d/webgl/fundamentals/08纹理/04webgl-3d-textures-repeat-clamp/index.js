@@ -291,20 +291,11 @@ function setChecked(key, prop){
       NEAREST 最近滤镜， 获得最靠近纹理坐标点的像素，效果锐利
       */ 
       gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST);
-      // // 纹理坐标水平填充 s
-      // gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, wrapS);
-      // // 纹理坐标垂直填充 t
-      // gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, wrapT);
+      // 纹理坐标水平填充 s
+      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, wrapS);
+      // 纹理坐标垂直填充 t
+      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, wrapT);
 
-
-    //   let  borderColor = [1.0, 1.0, 0.0, 1.0 ];
-    //   //  gl.texParameterfv(gl.TEXTURE_2D, gl.TEXTURE_BORDER_COLOR, borderColor);
-
-
-    //   gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_WRAP_S,gl.CLAMP_TO_BORDER);
-    // gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_WRAP_T,gl.CLAMP_TO_BORDER);
-   
-    // gl.texParameterfv(gl.TEXTURE_2D,gl.TEXTURE_BORDER_COLOR, borderColor);
  
 
   
@@ -345,14 +336,14 @@ function setChecked(key, prop){
         new Float32Array(
           [
 
-            0,1*2,
-            1*2,1*2,
+            0,1,
+            1,1,
             0,0,
 
 
             0,0,
-            1*2,1*2,
-            1*2,0,
+            1,1,
+            1,0,
 
 
             // -3, -1,
