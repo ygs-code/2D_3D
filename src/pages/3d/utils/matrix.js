@@ -77,6 +77,7 @@
 
     let el = document.getElementById(elId);
     let oDiv;
+   
     if (!el) {
       oDiv = document.createElement("div");
       document.body.appendChild(oDiv);

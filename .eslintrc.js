@@ -57,7 +57,7 @@ module.exports = {
         'no-debugger': process.env.NODE_ENV === 'production' ? 'warn' : 'off', // debugger可以终止代码执行
         'no-multiple-empty-lines': 'off', // 不允许有连续多行空行(关闭规则)
         // 'no-undef': 1, //不能有未定义的变量
-        eqeqeq: ['error', 'always'],
+        eqeqeq: ['off', 'always'], // 关闭 ===
         // 'react/jsx-filename-extension': [1, { extensions: ['.js', '.jsx'] }],
         'no-undef': 'error',
         // 'no-void': 2, //禁用void操作符

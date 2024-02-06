@@ -98,6 +98,7 @@ WebGL: drawArrays: texture bound to texture unit 0 is not renderable.
         gl.TEXTURE_MIN_FILTER, // 纹理缩小方法，默认值gl.NEAREST_MIPMAP_LINEAR  // 大的图片贴到小的形状上去
         gl.NEAREST // 使用原纹理上距离映射后像素（新像素）中心最近的那个像素的颜色值，作为新像素的值
       );
+      
       gl.texParameteri(
         gl.TEXTURE_2D, // gl.TEXTURE_2D或gl.TEXTURE_BUVE_MAP 分别代表二维纹理和立方体纹理
         gl.TEXTURE_MAG_FILTER, //纹理放大方法  // 小的图片贴到大的形状上去

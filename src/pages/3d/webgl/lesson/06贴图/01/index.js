@@ -49,6 +49,13 @@ window.onload = function () {
 
       console.log(this.width);
       console.log(this.height);
+      /*
+      
+      
+      webgl中图像纹理坐标系的v和图片的坐标Y是相反的，
+      因此，要先把图像Y轴进行反转，才能正确的映射纹理坐标：
+      
+      */
 
       // 翻转图片的Y轴,默认是不翻转
       gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, true); // 图像反转Y轴
@@ -87,7 +94,10 @@ window.onload = function () {
     //三角形顶点位置
     // 4个点的坐标信息 - 形状的四个顶点
     let vertices = new Float32Array([
-      -0.5, -0.5, 0.0, 0.5, -0.5, 0.0, 0.5, 0.5, 0.0, -0.5, 0.5, 0.0
+        -0.5, -0.5, 0.0, 
+        0.5,  -0.5, 0.0,
+        0.5, 0.5,  0.0, 
+        -0.5, 0.5, 0.0
     ]);
 
     let FSIZE = vertices.BYTES_PER_ELEMENT; // Float32 Size = 4
@@ -132,7 +142,12 @@ window.onload = function () {
     gl.enableVertexAttribArray(a_Position);
 
     // 正方形 4个点信息 - 贴图的
-    let uvs = new Float32Array([0.0, 0.0, 1.0, 0.0, 1.0, 1.0, 0.0, 1.0]);
+    let uvs = new Float32Array([
+        0.0, 0.0,
+        1.0, 0.0,
+        1.0, 1.0,
+        0.0, 1.0
+      ]);
 
     // 创建buffer
     let uvsBuffer = gl.createBuffer();

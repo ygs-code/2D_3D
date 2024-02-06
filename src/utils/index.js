@@ -16,7 +16,7 @@ import {
   findTreeData,
 } from "./ergodic";
 import {FloatingBall} from "./FloatingBall";
-import {getStyle} from "./getCssAttr";
+export * from "./style";
 
 export {
   FloatingBall, // 浮动球 类
@@ -30,7 +30,7 @@ export {
   recursionTreeData, // 递归循环树数据
   diffData, // 比较新旧两个数据
   findTreeData, //搜索到树数据的某一条数据单条 不包括父层数据的
-  getStyle, // 获取样式
 };
 // 整体输出
 export * from "./regular.js";
+export * from "./tool.js";
