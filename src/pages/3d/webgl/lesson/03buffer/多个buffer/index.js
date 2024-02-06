@@ -62,7 +62,14 @@ window.onload = function () {
     gl.bufferData(gl.ARRAY_BUFFER, vertices, gl.STATIC_DRAW);
 
     let a_position = gl.getAttribLocation(gl.program, "a_position");
-    gl.vertexAttribPointer(a_position, 3, gl.FLOAT, false, FSIZE * 6, 0);
+    gl.vertexAttribPointer(
+            a_position,   // 变量
+            3,   // 三个数据位一组
+            gl.FLOAT,
+            false,
+            FSIZE * 6, // 总一组数据为6位
+            0  // 从0索引开始
+        );
     gl.enableVertexAttribArray(a_position);
 
     // let colorsBuffer = gl.createBuffer()
