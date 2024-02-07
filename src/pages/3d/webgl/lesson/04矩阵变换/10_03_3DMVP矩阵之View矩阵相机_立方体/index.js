@@ -72,7 +72,7 @@ window.onload = function () {
     at: {
       x: 0,
       y: 0,
-      z: 0
+      z: -1
     },
     // 眼睛头部
     up: {
@@ -127,8 +127,8 @@ window.onload = function () {
     const {eye, at, up} = settings;
     var u_ViewMatrix = gl.getUniformLocation(gl.program, "u_ViewMatrix");
     var viewMatrix = glMatrix.mat4.create();
-    // let eye=[0.0, 0.0, 1];  //   观察者的默认状态是：视点为系统原点(0,0,1) eyeX, eyeY, eyeZ
-    // let center=[0.0, 0.0, 0];  // 视线为Z轴负方向，观察点为(0,0,0)   atX, atY, atZ
+    // let eye=[0.0, 0.0, 0];  //   观察者的默认状态是：视点为系统原点(0,0,1) eyeX, eyeY, eyeZ
+    // let center=[0.0, 0.0, -1];  // 视线为Z轴负方向，观察点为(0,0,0)   atX, atY, atZ
     // let up=[0.0, 1.0, 0.0]; //  上方向为Y轴负方向(0,1,0) upX, upY, upZ
     glMatrix.mat4.lookAt(
       viewMatrix,

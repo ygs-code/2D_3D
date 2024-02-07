@@ -16,7 +16,7 @@
 
 ```js
 Matrix4.setLookAt(eyeX, eyeY, eyeZ, atX, atY, atZ, upX, upY, upZ)
-// 观察者的默认状态是：视点为系统原点(0,0,1)；视线为Z轴负方向，观察点为(0,0,0)；上方向为Y轴负方向(0,1,0)
+// 观察者的默认状态是：视点为系统原点(0,0,0)；视线为Z轴负方向，观察点为(0,0,-1)；上方向为Y轴负方向(0,1,0)
 ```
 
 ![img](https://pic2.zhimg.com/80/v2-4b2ddd0b8236385d7a095a9d3dcb714d_1440w.webp)

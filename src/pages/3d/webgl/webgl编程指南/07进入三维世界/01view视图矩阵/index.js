@@ -161,8 +161,8 @@ window.onload = function () {
           //初始化视图矩阵
    var viewMatrix = glMatrix.mat4.create();
     // 视图矩阵
-       // let eye = [0.0, 0.0, 1]; //  eyeX, eyeY, eyeZ  观察者的默认状态是：视点为系统原点(0,0,0) eyeX, eyeY, eyeZ
-        // let center = [0.0, 0.0, 0]; // atX, atY, atZ  视线为Z轴负方向，观察点为(0,0,0)   atX, atY, atZ
+       // let eye = [0.0, 0.0, 0]; //  eyeX, eyeY, eyeZ  观察者的默认状态是：视点为系统原点(0,0,0) eyeX, eyeY, eyeZ
+        // let center = [0.0, 0.0, -1]; // atX, atY, atZ  视线为Z轴负方向，观察点为(0,0,0)   atX, atY, atZ
         // let up = [0.0, 1.0, 0.0]; // upX, upY, upZ 上方向为Y轴负方向(0,1,0) upX, upY, upZ
         glMatrix.mat4.lookAt(
           viewMatrix,

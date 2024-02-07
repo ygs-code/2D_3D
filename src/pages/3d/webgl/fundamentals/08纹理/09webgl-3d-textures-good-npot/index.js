@@ -97,9 +97,11 @@ import "@/pages/index.less";
       // 处理不是2为次幂的图片
       // Check if the image is a power of 2 in both dimensions.
       if (isPowerOf2(image.width) && isPowerOf2(image.height)) {
+        // 如果是2次幂的
          // Yes, it's a power of 2. Generate mips.
          gl.generateMipmap(gl.TEXTURE_2D);
       } else {
+        // 如果不是二次幂的
          // No, it's not a power of 2. Turn of mips and set wrapping to clamp to edge
          gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
          gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);

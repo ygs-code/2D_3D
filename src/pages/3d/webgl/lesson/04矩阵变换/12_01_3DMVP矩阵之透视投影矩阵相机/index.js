@@ -114,13 +114,13 @@ window.onload = function () {
     eye: {
       x,
       y,
-      z: 60 // z 眼睛的位置 必须要在 投影里面  z越大视角越远
+      z: 60 // z 眼睛的位置 必须要在 投影里面  z越大视角越远  默认 0
     },
     // 目标视角
     at: {
       x: 0,
       y: 0,
-      z: 0 // 目标视角默认并不是1
+      z: 0 // 目标视角默认-1
     },
     // 眼睛头部
     up: {
@@ -164,8 +164,8 @@ window.onload = function () {
     //初始化视图矩阵
     var viewMatrix = glMatrix.mat4.create();
 
-    // let eye = [0.0, 0.0, 1]; //  eyeX, eyeY, eyeZ  观察者的默认状态是：视点为系统原点(0,0,0) eyeX, eyeY, eyeZ
-    // let center = [0.0, 0.0, 0]; // atX, atY, atZ  视线为Z轴负方向，观察点为(0,0,0)   atX, atY, atZ
+    // let eye = [0.0, 0.0, 0]; //  eyeX, eyeY, eyeZ  观察者的默认状态是：视点为系统原点(0,0,0) eyeX, eyeY, eyeZ
+    // let center = [0.0, 0.0, -1]; // atX, atY, atZ  视线为Z轴负方向，观察点为(0,0,0)   atX, atY, atZ
     // let up = [0.0, 1.0, 0.0]; // upX, upY, upZ 上方向为Y轴负方向(0,1,0) upX, upY, upZ
     glMatrix.mat4.lookAt(
       viewMatrix,
@@ -185,8 +185,8 @@ window.onload = function () {
     });
 
     /*
-   观察者的默认状态是：视点为系统原点(0,0,1) eyeX, eyeY, eyeZ
-  ；视线为Z轴负方向，观察点为(0,0,0)   atX, atY, atZ
+   观察者的默认状态是：视点为系统原点(0,0,0) eyeX, eyeY, eyeZ
+  ；视线为Z轴负方向，观察点为(0,0,-1)   atX, atY, atZ
     设置视点、视线和上方向  上方向为Y轴负方向(0,1,0) upX, upY, upZ
   */
     //将视图矩阵传给顶点着色器uniform变量u_ViewMatrix
