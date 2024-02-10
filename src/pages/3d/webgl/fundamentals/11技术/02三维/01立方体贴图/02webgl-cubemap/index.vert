@@ -11,5 +11,6 @@
       // Pass a normal. Since the positions
       // centered around the origin we can just 
       // pass the position
+      // 归一化
       v_normal = normalize(a_position.xyz);
     }

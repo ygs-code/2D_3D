@@ -4,8 +4,8 @@ console.log('fabric==',fabric);
 window.onload = function () {
     let canvas1 = document.createElement("canvas");
     canvas1 .id='canvas';
-    canvas1.width = 500;
-    canvas1.height = 500;
+    // canvas1.width = 500;
+    // canvas1.height = 500;
     // getWebGLContext(canvas);
     document.body.appendChild(canvas1);
     let ctx = canvas1.getContext('2d');

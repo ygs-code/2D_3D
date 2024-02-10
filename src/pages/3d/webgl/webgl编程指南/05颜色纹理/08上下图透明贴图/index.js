@@ -168,7 +168,14 @@ function initTextures(gl, n) {
   //注册事件处理程序，当图像加载完成时调用
   image0.onload = function(){
         // 加载贴图
-        loadTexture(gl, n, texture0, u_Sampler0, image0, 0);
+        loadTexture(
+                  gl,
+                  n, 
+                  texture0, 
+                  u_Sampler0, 
+                  image0,
+                  0
+            );
      };
   image1.onload = function(){
        // 加载贴图
@@ -186,8 +193,16 @@ function initTextures(gl, n) {
 }
 // Specify whether the texture unit is ready to use
 //指定纹理单元是否可以使用
-var g_texUnit0 = false, g_texUnit1 = false; 
-function loadTexture(gl, n, texture, u_Sampler, image, texUnit) {
+var g_texUnit0 = false, 
+g_texUnit1 = false; 
+function loadTexture(
+        gl, 
+        n,
+        texture,
+        u_Sampler,
+        image, 
+        texUnit
+     ) {
   // 翻转图像的y轴
   gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, 1);// Flip the image's y-axis
   gl.pixelStorei(gl.UNPACK_PREMULTIPLY_ALPHA_WEBGL, true);
@@ -211,7 +226,7 @@ function loadTexture(gl, n, texture, u_Sampler, image, texUnit) {
   //设置图像为纹理
   gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, image);
   
-  gl.uniform1i(u_Sampler, texUnit);   // Pass the texure unit to u_Sampler
+  gl.uniform1i(u_Sampler, texUnit);   // 将纹理单元传递给采样器 Pass the texure unit to u_Sampler
 
 
       // Check if the image is a power of 2 in both dimensions.

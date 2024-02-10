@@ -36,28 +36,36 @@ console.log('m4=======',m4);
   
   
     // setup GLSL program
+    // 创建program
     var program = initShaders(gl, VSHADER_SOURCE, FSHADER_SOURCE);
   
     // look up where the vertex data needs to go.
+    // 获取定点位置
     var positionLocation = gl.getAttribLocation(program, "a_position");
   
     // lookup uniforms
+    // 获取 Uniform在shander中的存储地址
     var matrixLocation = gl.getUniformLocation(program, "u_matrix");
     var textureLocation = gl.getUniformLocation(program, "u_texture");
   
     // Create a buffer for positions
+    // 创建buffer
     var positionBuffer = gl.createBuffer();
     // Bind it to ARRAY_BUFFER (think of it as ARRAY_BUFFER = positionBuffer)
+    // 绑定buffer
     gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
     // Put the positions in the buffer
+    // 设置定点位置
     setGeometry(gl);
   
     // Create a texture.
+    // 创建纹理
     var texture = gl.createTexture();
     gl.bindTexture(gl.TEXTURE_CUBE_MAP, texture);
   
     // Get A 2D context
     /** @type {Canvas2DRenderingContext} */
+    // 创建2d
     const ctx = document.createElement("canvas").getContext("2d");
   
     ctx.canvas.width = 128;
@@ -73,6 +81,7 @@ console.log('m4=======',m4);
     ];
     faceInfos.forEach((faceInfo) => {
       const {target, faceColor, textColor, text} = faceInfo;
+      // 画布
       generateFace(ctx, faceColor, textColor, text);
   
       // Upload the canvas to the cubemap face.
@@ -80,10 +89,25 @@ console.log('m4=======',m4);
       const internalFormat = gl.RGBA;
       const format = gl.RGBA;
       const type = gl.UNSIGNED_BYTE;
-      gl.texImage2D(target, level, internalFormat, format, type, ctx.canvas);
+      console.log('==',ctx.canvas);
+      // 载入纹理
+      gl.texImage2D(
+            target,
+            level, 
+            internalFormat, 
+            format,
+            type,
+            ctx.canvas
+           );
     });
+    // 纹理参数设置
     gl.generateMipmap(gl.TEXTURE_CUBE_MAP);
-    gl.texParameteri(gl.TEXTURE_CUBE_MAP, gl.TEXTURE_MIN_FILTER, gl.LINEAR_MIPMAP_LINEAR);
+     // 纹理参数设置
+    gl.texParameteri(
+            gl.TEXTURE_CUBE_MAP,
+            gl.TEXTURE_MIN_FILTER, 
+            gl.LINEAR_MIPMAP_LINEAR
+         );
   
     function radToDeg(r) {
       return r * 180 / Math.PI;
@@ -103,6 +127,7 @@ console.log('m4=======',m4);
     requestAnimationFrame(drawScene);
   
     // Draw the scene.
+    // 渲染场景
     function drawScene(time) {
       // convert to seconds
       time *= 0.001;
@@ -116,6 +141,7 @@ console.log('m4=======',m4);
       // Tell WebGL how to convert from clip space to pixels
       gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
   
+      // 开启深度测试
       gl.enable(gl.CULL_FACE);
       gl.enable(gl.DEPTH_TEST);
   
@@ -133,6 +159,7 @@ console.log('m4=======',m4);
       gl.enableVertexAttribArray(positionLocation);
   
       // Bind the position buffer.
+      // 绑定buffer
       gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
   
       // Tell the position attribute how to get data out of positionBuffer (ARRAY_BUFFER)
@@ -141,26 +168,27 @@ console.log('m4=======',m4);
       var normalize = false; // don't normalize the data
       var stride = 0;        // 0 = move forward size * sizeof(type) each iteration to get the next position
       var offset = 0;        // start at the beginning of the buffer
-      gl.vertexAttribPointer(
-          positionLocation, size, type, normalize, stride, offset);
+      gl.vertexAttribPointer( positionLocation, size, type, normalize, stride, offset);
   
       // Compute the projection matrix
       var aspect = gl.canvas.clientWidth / gl.canvas.clientHeight;
-      var projectionMatrix =
-          m4.perspective(fieldOfViewRadians, aspect, 1, 2000);
+      // 透视投影
+      var projectionMatrix =   m4.perspective(fieldOfViewRadians, aspect, 1, 2000);
   
       var cameraPosition = [0, 0, 2];
       var up = [0, 1, 0];
       var target = [0, 0, 0];
   
       // Compute the camera's matrix using look at.
+      // 相机
       var cameraMatrix = m4.lookAt(cameraPosition, target, up);
   
       // Make a view matrix from the camera matrix.
+      // 视图矩阵
       var viewMatrix = m4.inverse(cameraMatrix);
   
       var viewProjectionMatrix = m4.multiply(projectionMatrix, viewMatrix);
-  
+     // 旋转矩阵
       var matrix = m4.xRotate(viewProjectionMatrix, modelXRotationRadians);
       matrix = m4.yRotate(matrix, modelYRotationRadians);
   
@@ -177,6 +205,7 @@ console.log('m4=======',m4);
     }
   }
   
+  // 画布
   function generateFace(ctx, faceColor, textColor, text) {
     const {width, height} = ctx.canvas;
     ctx.fillStyle = faceColor;
@@ -189,6 +218,7 @@ console.log('m4=======',m4);
   }
   
   // Fill the buffer with the values that define a cube.
+//   用定义多维数据集的值填充缓冲区
   function setGeometry(gl) {
     var positions = new Float32Array(
       [
