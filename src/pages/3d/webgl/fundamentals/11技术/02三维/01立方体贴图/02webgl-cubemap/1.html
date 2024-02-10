@@ -1,0 +1,594 @@
+<html><head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>WebGL - Textures - Cubemap</title>
+    <link type="text/css" href="resources/webgl-tutorials.css" rel="stylesheet">
+    <style data-id="immersive-translate-input-injected-css">.immersive-translate-input {
+      position: absolute;
+      top: 0;
+      right: 0;
+      left: 0;
+      bottom: 0;
+      z-index: 2147483647;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+    
+    .immersive-translate-loading-spinner {
+      vertical-align: middle !important;
+      width: 10px !important;
+      height: 10px !important;
+      display: inline-block !important;
+      margin: 0 4px !important;
+      border: 2px rgba(221, 244, 255, 0.6) solid !important;
+      border-top: 2px rgba(0, 0, 0, 0.375) solid !important;
+      border-left: 2px rgba(0, 0, 0, 0.375) solid !important;
+      border-radius: 50% !important;
+      padding: 0 !important;
+      -webkit-animation: immersive-translate-loading-animation 0.6s infinite linear !important;
+      animation: immersive-translate-loading-animation 0.6s infinite linear !important;
+    }
+    
+    @-webkit-keyframes immersive-translate-loading-animation {
+      from {
+        -webkit-transform: rotate(0deg);
+      }
+    
+      to {
+        -webkit-transform: rotate(359deg);
+      }
+    }
+    
+    @keyframes immersive-translate-loading-animation {
+      from {
+        transform: rotate(0deg);
+      }
+    
+      to {
+        transform: rotate(359deg);
+      }
+    }
+    
+    
+    .immersive-translate-input-loading {
+      --loading-color: #f78fb6;
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      display: block;
+      margin: 12px auto;
+      position: relative;
+      color: white;
+      left: -100px;
+      box-sizing: border-box;
+      animation: immersiveTranslateShadowRolling 1.5s linear infinite;
+    }
+    
+    @keyframes immersiveTranslateShadowRolling {
+      0% {
+        box-shadow: 0px 0 rgba(255, 255, 255, 0), 0px 0 rgba(255, 255, 255, 0), 0px 0 rgba(255, 255, 255, 0), 0px 0 rgba(255, 255, 255, 0);
+      }
+    
+      12% {
+        box-shadow: 100px 0 var(--loading-color), 0px 0 rgba(255, 255, 255, 0), 0px 0 rgba(255, 255, 255, 0), 0px 0 rgba(255, 255, 255, 0);
+      }
+    
+      25% {
+        box-shadow: 110px 0 var(--loading-color), 100px 0 var(--loading-color), 0px 0 rgba(255, 255, 255, 0), 0px 0 rgba(255, 255, 255, 0);
+      }
+    
+      36% {
+        box-shadow: 120px 0 var(--loading-color), 110px 0 var(--loading-color), 100px 0 var(--loading-color), 0px 0 rgba(255, 255, 255, 0);
+      }
+    
+      50% {
+        box-shadow: 130px 0 var(--loading-color), 120px 0 var(--loading-color), 110px 0 var(--loading-color), 100px 0 var(--loading-color);
+      }
+    
+      62% {
+        box-shadow: 200px 0 rgba(255, 255, 255, 0), 130px 0 var(--loading-color), 120px 0 var(--loading-color), 110px 0 var(--loading-color);
+      }
+    
+      75% {
+        box-shadow: 200px 0 rgba(255, 255, 255, 0), 200px 0 rgba(255, 255, 255, 0), 130px 0 var(--loading-color), 120px 0 var(--loading-color);
+      }
+    
+      87% {
+        box-shadow: 200px 0 rgba(255, 255, 255, 0), 200px 0 rgba(255, 255, 255, 0), 200px 0 rgba(255, 255, 255, 0), 130px 0 var(--loading-color);
+      }
+    
+      100% {
+        box-shadow: 200px 0 rgba(255, 255, 255, 0), 200px 0 rgba(255, 255, 255, 0), 200px 0 rgba(255, 255, 255, 0), 200px 0 rgba(255, 255, 255, 0);
+      }
+    }
+    
+    
+    .immersive-translate-search-recomend {
+      border: 1px solid #dadce0;
+      border-radius: 8px;
+      padding: 16px;
+      margin-bottom: 16px;
+      position: relative;
+      font-size: 16px;
+    }
+    
+    .immersive-translate-search-enhancement-en-title {
+      color: #4d5156;
+    }
+    
+    /* dark */
+    @media (prefers-color-scheme: dark) {
+      .immersive-translate-search-recomend {
+        border: 1px solid #3c4043;
+      }
+    
+      .immersive-translate-close-action svg {
+        fill: #bdc1c6;
+      }
+    
+      .immersive-translate-search-enhancement-en-title {
+        color: #bdc1c6;
+      }
+    }
+    
+    
+    .immersive-translate-search-settings {
+      position: absolute;
+      top: 16px;
+      right: 16px;
+      cursor: pointer;
+    }
+    
+    .immersive-translate-search-recomend::before {
+      /* content: " "; */
+      /* width: 20px; */
+      /* height: 20px; */
+      /* top: 16px; */
+      /* position: absolute; */
+      /* background: center / contain url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAMAAABEpIrGAAAAxlBMVEUAAADpTInqTIjpSofnSIfqS4nfS4XqS4nqTIjsTYnrTInqTIroS4jvQIDqTIn////+/v7rSYjpTIn8/v7uaZzrTIr9/f3wfansWJL88/b85e73qc39+/v3xNnylrvrVI/98fb62Obva5/8+fr76vH4y9zpSIj74e353Oj1ocTzm77xhK/veKbtYpjsXJTqU47oTInxjrXyh7L99fj40eH2ttH1udD3sc31ssz1rMnykLXucqPtbqD85e/1xdn2u9DzqcXrUY6FaJb8AAAADnRSTlMA34BgIM8Q37/fz7+/EGOHcVQAAAGhSURBVDjLhZPncuowEEZFTW7bXVU7xsYYTO/p7bb3f6lICIOYJOT4h7/VnFmvrBFjrF3/CR/SajBHswafctG0Qg3O8O0Xa8BZ6uw7eLjqr30SofCDVSkemMinfL1ecy20r5ygR5zz3ArcAqJExPTPKhDENEmS30Q9+yo4lEQkqVTiIEAHCT10xWERRdH0Bq0aCOPZNDV3s0xaYce1lHEoDHU8wEh3qRJypNcTAeKUIjgKMeGLDoRCLVLTVf+Ownj8Kk6H9HM6QXPgYjQSB0F00EJEu10ILQrs/QeP77BSSr0MzLOyuJJQbnUoOOIUI/A8EeJk9E4YUHUWiRyTVKGgQUB8/3e/NpdGlfI+FMQyWsCBWyz4A/ZyHXyiiz0Ne5aGZssoxRmcChw8/EFKQ5JwwkUo3FRT5yXS7q+Y/rHDZmFktzpGMvO+5QofA4FPpEmGw+EWRCFvnaof7Zhe8NuYSLR0xErKLThUSs8gnODh87ssy6438yzbLzxl012HS19vfCf3CNhnbWOL1eEsDda+gDPUvri8tSZzNFrwIZf1NmNvqC1I/t8j7nYAAAAASUVORK5CYII='); */
+    }
+    
+    .immersive-translate-search-title {}
+    
+    .immersive-translate-search-title-wrapper {}
+    
+    .immersive-translate-search-time {
+      font-size: 12px;
+      margin: 4px 0 24px;
+      color: #70757a;
+    }
+    
+    .immersive-translate-expand-items {
+      display: none;
+    }
+    
+    .immersive-translate-search-more {
+      margin-top: 16px;
+      font-size: 14px;
+    }
+    
+    .immersive-translate-modal {
+      display: none;
+      position: fixed;
+      z-index: 2147483647;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      overflow: auto;
+      background-color: rgb(0, 0, 0);
+      background-color: rgba(0, 0, 0, 0.4);
+      font-size: 15px;
+    }
+    
+    .immersive-translate-modal-content {
+      background-color: #fefefe;
+      margin: 10% auto;
+      padding: 40px 24px 24px;
+      border: 1px solid #888;
+      border-radius: 10px;
+      width: 80%;
+      max-width: 270px;
+      font-family: system-ui, -apple-system, "Segoe UI", "Roboto", "Ubuntu",
+        "Cantarell", "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji",
+        "Segoe UI Symbol", "Noto Color Emoji";
+      position: relative
+    }
+    
+    .immersive-translate-modal .immersive-translate-modal-content-in-input {
+      max-width: 500px;
+    }
+    .immersive-translate-modal-content-in-input .immersive-translate-modal-body {
+      text-align: left;
+      max-height: unset;
+    }
+    
+    .immersive-translate-modal-title {
+      text-align: center;
+      font-size: 16px;
+      font-weight: 700;
+      color: #333333;
+    }
+    
+    .immersive-translate-modal-body {
+      text-align: center;
+      font-size: 14px;
+      font-weight: 400;
+      color: #333333;
+      word-break: break-all;
+      margin-top: 24px;
+    }
+    
+    @media screen and (max-width: 768px) {
+      .immersive-translate-modal-body {
+        max-height: 250px;
+        overflow-y: auto;
+      }
+    }
+    
+    .immersive-translate-close {
+      color: #666666;
+      position: absolute;
+      right: 16px;
+      top: 16px;
+      font-size: 20px;
+      font-weight: bold;
+    }
+    
+    .immersive-translate-close:hover,
+    .immersive-translate-close:focus {
+      color: black;
+      text-decoration: none;
+      cursor: pointer;
+    }
+    
+    .immersive-translate-modal-footer {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      margin-top: 24px;
+    }
+    
+    .immersive-translate-btn {
+      width: fit-content;
+      color: #fff;
+      background-color: #ea4c89;
+      border: none;
+      font-size: 16px;
+      margin: 0 8px;
+      padding: 9px 30px;
+      border-radius: 5px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+    
+    .immersive-translate-btn:hover {
+      background-color: #f082ac;
+    }
+    
+    .immersive-translate-cancel-btn {
+      /* gray color */
+      background-color: rgb(89, 107, 120);
+    }
+    
+    
+    .immersive-translate-cancel-btn:hover {
+      background-color: hsl(205, 20%, 32%);
+    }
+    
+    .immersive-translate-action-btn {
+      background-color: transparent;
+      color: #EA4C89;
+      border: 1px solid #EA4C89
+    }
+    
+    .immersive-translate-btn svg {
+      margin-right: 5px;
+    }
+    
+    .immersive-translate-link {
+      cursor: pointer;
+      user-select: none;
+      -webkit-user-drag: none;
+      text-decoration: none;
+      color: #007bff;
+      -webkit-tap-highlight-color: rgba(0, 0, 0, .1);
+    }
+    
+    .immersive-translate-primary-link {
+      cursor: pointer;
+      user-select: none;
+      -webkit-user-drag: none;
+      text-decoration: none;
+      color: #ea4c89;
+      -webkit-tap-highlight-color: rgba(0, 0, 0, .1);
+    }
+    
+    .immersive-translate-modal input[type="radio"] {
+      margin: 0 6px;
+      cursor: pointer;
+    }
+    
+    .immersive-translate-modal label {
+      cursor: pointer;
+    }
+    
+    .immersive-translate-close-action {
+      position: absolute;
+      top: 2px;
+      right: 0px;
+      cursor: pointer;
+    }</style></head>
+    <body>
+    <div class="description">
+    Textured Cube using a cubemap. <br>
+    </div>
+    <canvas id="canvas" width="398" height="298"></canvas>
+    
+    
+    <script id="vertex-shader-3d" type="x-shader/x-vertex">
+    attribute vec4 a_position;
+    
+    uniform mat4 u_matrix;
+    
+    varying vec3 v_normal;
+    
+    void main() {
+      // Multiply the position by the matrix.
+      gl_Position = u_matrix * a_position;
+    
+      // Pass a normal. Since the positions
+      // centered around the origin we can just 
+      // pass the position
+      v_normal = normalize(a_position.xyz);
+    }
+    </script>
+    <!-- fragment shader -->
+    <script id="fragment-shader-3d" type="x-shader/x-fragment">
+    precision mediump float;
+    
+    // Passed in from the vertex shader.
+    varying vec3 v_normal;
+    
+    // The texture.
+    uniform samplerCube u_texture;
+    
+    void main() {
+       gl_FragColor = textureCube(u_texture, normalize(v_normal));
+    }
+    </script>
+    <!--
+    for most samples webgl-utils only provides shader compiling/linking and
+    canvas resizing because why clutter the examples with code that's the same in every sample.
+    See https://webglfundamentals.org/webgl/lessons/webgl-boilerplate.html
+    and https://webglfundamentals.org/webgl/lessons/webgl-resizing-the-canvas.html
+    for webgl-utils, m3, m4, and webgl-lessons-ui.
+    -->
+    <script src="resources/webgl-utils.js"></script>
+    <script src="resources/m4.js"></script>
+    <script>
+    "use strict";
+    
+    function main() {
+      // Get A WebGL context
+      /** @type {HTMLCanvasElement} */
+      var canvas = document.querySelector("#canvas");
+      var gl = canvas.getContext("webgl");
+      if (!gl) {
+        return;
+      }
+    
+      // setup GLSL program
+      var program = webglUtils.createProgramFromScripts(gl, ["vertex-shader-3d", "fragment-shader-3d"]);
+    
+      // look up where the vertex data needs to go.
+      var positionLocation = gl.getAttribLocation(program, "a_position");
+    
+      // lookup uniforms
+      var matrixLocation = gl.getUniformLocation(program, "u_matrix");
+      var textureLocation = gl.getUniformLocation(program, "u_texture");
+    
+      // Create a buffer for positions
+      var positionBuffer = gl.createBuffer();
+      // Bind it to ARRAY_BUFFER (think of it as ARRAY_BUFFER = positionBuffer)
+      gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
+      // Put the positions in the buffer
+      setGeometry(gl);
+    
+      // Create a texture.
+      var texture = gl.createTexture();
+      gl.bindTexture(gl.TEXTURE_CUBE_MAP, texture);
+    
+      // Get A 2D context
+      /** @type {Canvas2DRenderingContext} */
+      const ctx = document.createElement("canvas").getContext("2d");
+    
+      ctx.canvas.width = 128;
+      ctx.canvas.height = 128;
+    
+      const faceInfos = [
+        { target: gl.TEXTURE_CUBE_MAP_POSITIVE_X, faceColor: '#F00', textColor: '#0FF', text: '+X' },
+        { target: gl.TEXTURE_CUBE_MAP_NEGATIVE_X, faceColor: '#FF0', textColor: '#00F', text: '-X' },
+        { target: gl.TEXTURE_CUBE_MAP_POSITIVE_Y, faceColor: '#0F0', textColor: '#F0F', text: '+Y' },
+        { target: gl.TEXTURE_CUBE_MAP_NEGATIVE_Y, faceColor: '#0FF', textColor: '#F00', text: '-Y' },
+        { target: gl.TEXTURE_CUBE_MAP_POSITIVE_Z, faceColor: '#00F', textColor: '#FF0', text: '+Z' },
+        { target: gl.TEXTURE_CUBE_MAP_NEGATIVE_Z, faceColor: '#F0F', textColor: '#0F0', text: '-Z' },
+      ];
+      faceInfos.forEach((faceInfo) => {
+        const {target, faceColor, textColor, text} = faceInfo;
+        generateFace(ctx, faceColor, textColor, text);
+    
+        // Upload the canvas to the cubemap face.
+        const level = 0;
+        const internalFormat = gl.RGBA;
+        const format = gl.RGBA;
+        const type = gl.UNSIGNED_BYTE;
+        gl.texImage2D(target, level, internalFormat, format, type, ctx.canvas);
+      });
+      gl.generateMipmap(gl.TEXTURE_CUBE_MAP);
+      gl.texParameteri(gl.TEXTURE_CUBE_MAP, gl.TEXTURE_MIN_FILTER, gl.LINEAR_MIPMAP_LINEAR);
+    
+      function radToDeg(r) {
+        return r * 180 / Math.PI;
+      }
+    
+      function degToRad(d) {
+        return d * Math.PI / 180;
+      }
+    
+      var fieldOfViewRadians = degToRad(60);
+      var modelXRotationRadians = degToRad(0);
+      var modelYRotationRadians = degToRad(0);
+    
+      // Get the starting time.
+      var then = 0;
+    
+      requestAnimationFrame(drawScene);
+    
+      // Draw the scene.
+      function drawScene(time) {
+        // convert to seconds
+        time *= 0.001;
+        // Subtract the previous time from the current time
+        var deltaTime = time - then;
+        // Remember the current time for the next frame.
+        then = time;
+    
+        webglUtils.resizeCanvasToDisplaySize(gl.canvas);
+    
+        // Tell WebGL how to convert from clip space to pixels
+        gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
+    
+        gl.enable(gl.CULL_FACE);
+        gl.enable(gl.DEPTH_TEST);
+    
+        // Animate the rotation
+        modelYRotationRadians += -0.7 * deltaTime;
+        modelXRotationRadians += -0.4 * deltaTime;
+    
+        // Clear the canvas AND the depth buffer.
+        gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+    
+        // Tell it to use our program (pair of shaders)
+        gl.useProgram(program);
+    
+        // Turn on the position attribute
+        gl.enableVertexAttribArray(positionLocation);
+    
+        // Bind the position buffer.
+        gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
+    
+        // Tell the position attribute how to get data out of positionBuffer (ARRAY_BUFFER)
+        var size = 3;          // 3 components per iteration
+        var type = gl.FLOAT;   // the data is 32bit floats
+        var normalize = false; // don't normalize the data
+        var stride = 0;        // 0 = move forward size * sizeof(type) each iteration to get the next position
+        var offset = 0;        // start at the beginning of the buffer
+        gl.vertexAttribPointer(
+            positionLocation, size, type, normalize, stride, offset);
+    
+        // Compute the projection matrix
+        var aspect = gl.canvas.clientWidth / gl.canvas.clientHeight;
+        var projectionMatrix =
+            m4.perspective(fieldOfViewRadians, aspect, 1, 2000);
+    
+        var cameraPosition = [0, 0, 2];
+        var up = [0, 1, 0];
+        var target = [0, 0, 0];
+    
+        // Compute the camera's matrix using look at.
+        var cameraMatrix = m4.lookAt(cameraPosition, target, up);
+    
+        // Make a view matrix from the camera matrix.
+        var viewMatrix = m4.inverse(cameraMatrix);
+    
+        var viewProjectionMatrix = m4.multiply(projectionMatrix, viewMatrix);
+    
+        var matrix = m4.xRotate(viewProjectionMatrix, modelXRotationRadians);
+        matrix = m4.yRotate(matrix, modelYRotationRadians);
+    
+        // Set the matrix.
+        gl.uniformMatrix4fv(matrixLocation, false, matrix);
+    
+        // Tell the shader to use texture unit 0 for u_texture
+        gl.uniform1i(textureLocation, 0);
+    
+        // Draw the geometry.
+        gl.drawArrays(gl.TRIANGLES, 0, 6 * 6);
+    
+        requestAnimationFrame(drawScene);
+      }
+    }
+    
+    function generateFace(ctx, faceColor, textColor, text) {
+      const {width, height} = ctx.canvas;
+      ctx.fillStyle = faceColor;
+      ctx.fillRect(0, 0, width, height);
+      ctx.font = `${width * 0.7}px sans-serif`;
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      ctx.fillStyle = textColor;
+      ctx.fillText(text, width / 2, height / 2);
+    }
+    
+    // Fill the buffer with the values that define a cube.
+    function setGeometry(gl) {
+      var positions = new Float32Array(
+        [
+        -0.5, -0.5,  -0.5,
+        -0.5,  0.5,  -0.5,
+         0.5, -0.5,  -0.5,
+        -0.5,  0.5,  -0.5,
+         0.5,  0.5,  -0.5,
+         0.5, -0.5,  -0.5,
+    
+        -0.5, -0.5,   0.5,
+         0.5, -0.5,   0.5,
+        -0.5,  0.5,   0.5,
+        -0.5,  0.5,   0.5,
+         0.5, -0.5,   0.5,
+         0.5,  0.5,   0.5,
+    
+        -0.5,   0.5, -0.5,
+        -0.5,   0.5,  0.5,
+         0.5,   0.5, -0.5,
+        -0.5,   0.5,  0.5,
+         0.5,   0.5,  0.5,
+         0.5,   0.5, -0.5,
+    
+        -0.5,  -0.5, -0.5,
+         0.5,  -0.5, -0.5,
+        -0.5,  -0.5,  0.5,
+        -0.5,  -0.5,  0.5,
+         0.5,  -0.5, -0.5,
+         0.5,  -0.5,  0.5,
+    
+        -0.5,  -0.5, -0.5,
+        -0.5,  -0.5,  0.5,
+        -0.5,   0.5, -0.5,
+        -0.5,  -0.5,  0.5,
+        -0.5,   0.5,  0.5,
+        -0.5,   0.5, -0.5,
+    
+         0.5,  -0.5, -0.5,
+         0.5,   0.5, -0.5,
+         0.5,  -0.5,  0.5,
+         0.5,  -0.5,  0.5,
+         0.5,   0.5, -0.5,
+         0.5,   0.5,  0.5,
+    
+        ]);
+      gl.bufferData(gl.ARRAY_BUFFER, positions, gl.STATIC_DRAW);
+    }
+    
+    main();
+    </script>
+    
+    
+    
+    
+    </body><!-- vertex shader --><div id="immersive-translate-popup" style="all: initial"></div></html>

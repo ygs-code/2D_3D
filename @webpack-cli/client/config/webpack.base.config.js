@@ -409,7 +409,7 @@ module.exports = {
             //处理图片
             //！默认处理不了html中的图片 <img src="./img/BM.jpg" alt=""> 打包后路径不会改变！
             {
-                test: /\.(jpg|png|gif|svg)$/,
+                test: /\.(jpg|jpeg|png|gif|svg)$/,
                 //只用一个loader  但要下载url-loader 和 file-loader
                 loader: 'url-loader', // 处理样式中的url
                 options: {

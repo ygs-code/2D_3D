@@ -46,7 +46,14 @@ window.onload = function () {
     }
   
     // Specify the color for clearing <canvas>
-    gl.clearColor(0.0, 0.0, 0.0, 1.0);
+    gl.clearColor(1.0, 0.0, 0.0, 1.0);
+
+        // Enable alpha blending
+    //启用alpha混合
+    gl.enable (gl.BLEND);
+    // Set blending function
+    // 设置混合功能
+    gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
   
     
    // Set texture
@@ -163,7 +170,27 @@ window.onload = function () {
        //设置纹理参数
        gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_MIN_FILTER,gl.LINEAR);
       //设置纹理图像
-      gl.texImage2D(gl.TEXTURE_2D,0,gl.RGB,gl.RGB,gl.UNSIGNED_BYTE,image);
+
+      // glTexImage2D(
+      //   GL_TEXTURE_2D,
+      //    0, 
+      //    GL_RGBA,
+      //     width,
+      //      height, 
+      //      0, 
+      //      GL_RGBA, 
+      //      GL_UNSIGNED_BYTE,
+      //       data);
+
+
+      gl.texImage2D(
+        gl.TEXTURE_2D,
+        0,
+        gl.RGBA,
+        gl.RGBA,
+        gl.UNSIGNED_BYTE,
+        image
+        );
 
 
 

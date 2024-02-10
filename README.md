@@ -70,6 +70,14 @@ webgl 教程学习网站 ： https://www.learnopengles.com/android-lesson-three-
 
 webgl 帖子 https://www.cnblogs.com/hammerc?page=1
 
+Webgl 帖子 ： https://blog.csdn.net/lufy_Legend?type=blog
+
+webgl 帖子 ：https://hammerc.github.io/dou3d-ts/
+
+webgl 例子： https://wow.techbrood.com/fiddle/26436
+
+webgl 例子：https://www.jb51.net/article/234799.htm
+
 
 
 webgl  mdn web doc 操作api ：https://developer.mozilla.org/en-US/docs/Web/API/WebGLRenderingContext/getActiveUniform
