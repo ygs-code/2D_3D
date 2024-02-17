@@ -118,12 +118,29 @@ window.onload = function () {
     // Coordinates
     // 物体顶点
     var vertices = new Float32Array([
-       2.0, 2.0, 2.0,  -2.0, 2.0, 2.0,  -2.0,-2.0, 2.0,   2.0,-2.0, 2.0, // v0-v1-v2-v3 front
-       2.0, 2.0, 2.0,   2.0,-2.0, 2.0,   2.0,-2.0,-2.0,   2.0, 2.0,-2.0, // v0-v3-v4-v5 right
-       2.0, 2.0, 2.0,   2.0, 2.0,-2.0,  -2.0, 2.0,-2.0,  -2.0, 2.0, 2.0, // v0-v5-v6-v1 up
-      -2.0, 2.0, 2.0,  -2.0, 2.0,-2.0,  -2.0,-2.0,-2.0,  -2.0,-2.0, 2.0, // v1-v6-v7-v2 left
-      -2.0,-2.0,-2.0,   2.0,-2.0,-2.0,   2.0,-2.0, 2.0,  -2.0,-2.0, 2.0, // v7-v4-v3-v2 down
-       2.0,-2.0,-2.0,  -2.0,-2.0,-2.0,  -2.0, 2.0,-2.0,   2.0, 2.0,-2.0  // v4-v7-v6-v5 back
+      // v0-v1-v2-v3 front
+      2.0, 2.0, 2.0,  -2.0, 2.0, 2.0,  
+      -2.0,-2.0, 2.0,  
+       2.0,-2.0, 2.0,
+      // v0-v3-v4-v5 right
+      2.0, 2.0, 2.0,   2.0,-2.0, 2.0,  
+      2.0,-2.0,-2.0,   2.0, 2.0,-2.0, 
+
+      // v0-v5-v6-v1 up
+      2.0, 2.0, 2.0,   2.0, 2.0,-2.0,  
+      -2.0, 2.0,-2.0,  -2.0, 2.0, 2.0, 
+
+      // v1-v6-v7-v2 left
+      -2.0, 2.0, 2.0,  -2.0, 2.0,-2.0,  
+      -2.0,-2.0,-2.0,  -2.0,-2.0, 2.0, 
+
+      // v7-v4-v3-v2 down
+      -2.0,-2.0,-2.0,   2.0,-2.0,-2.0,  
+      2.0,-2.0, 2.0,  -2.0,-2.0, 2.0,
+
+      // v4-v7-v6-v5 back
+      2.0,-2.0,-2.0,  -2.0,-2.0,-2.0,  
+      -2.0, 2.0,-2.0,   2.0, 2.0,-2.0  
     ]);
   
     // Colors 物体颜色
@@ -165,6 +182,7 @@ window.onload = function () {
     gl.bindBuffer(gl.ARRAY_BUFFER, null);
   
     // Write the indices to the buffer object
+    //将索引写入buffer对象
     var indexBuffer = gl.createBuffer();
     if (!indexBuffer) {
       console.log('Failed to create the buffer object');
@@ -173,7 +191,7 @@ window.onload = function () {
     gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, indexBuffer);
     gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, indices, gl.STATIC_DRAW);
   
-    return indices.length;
+    return  24; // indices.length;
   }
   
   function initArrayBuffer(gl, attribute, data, num, type) {
