@@ -28,7 +28,8 @@ import {
   makeYRotation,
   makeTranslation,
   matrixMultiply,
-  makePerspective
+  makePerspective,
+  
 } from "@/pages/3d/utils/webgl-3d-math.js";
 import controller from "@/pages/3d/utils/controller.js";
 import fTexture from "static/image/f-texture.png";
@@ -37,259 +38,67 @@ import example from "static/image/mip-low-res-example.png";
 import keyboard from "static/image/keyboard.jpg";
 import noodles from "static/image/noodles.jpg";
 import {fabric} from 'fabric'; // browser
-import panda from 'static/image/panda.png'; // node
-import material_kraft from 'static/image/material_kraft.jpeg'; // node
+import panda from 'static/image/panda.png'; //  
+import material_kraft from 'static/image/material_kraft.jpeg'; //  
+import back from 'static/image/back.png'; //  
+import back1 from 'static/image/back1.png'; //  
+import back2 from 'static/image/back2.png'; //  
+import back3 from 'static/image/back3.png'; //  
+import mm from 'static/image/112.png'; //  
 import * as dat from "dat.gui";
+import  {
+  texcoords,
+  geometry
+}  from "./data";
+import  {stabilization} from 'utils'; //  
  
 import "./index.less";
 import "@/pages/index.less";
+import * as SPECTOR from 'spectorjs'; // browser
+// var SPECTOR = require("spectorjs");
+// var spector = new SPECTOR.Spector();
+// spector.displayUI();
 
 window.onload = function () {
-  // Get A WebGL context
-    /*
-  var canvas = document.createElement("canvas", {antialias: false});
-  var dpr = window.devicePixelRatio || 1;
-  canvas.style.width = 400 + "px";
-  canvas.style.height = 300 + "px";
-  canvas.width = Math.floor(canvas.width * dpr);
-  canvas.height = Math.floor(canvas.height * dpr);
-
-  document.body.appendChild(canvas);
-  if (!canvas.getContext) return;
-  let gl = canvas.getContext("webgl");
-
-  function main() {
-    gl.enable(gl.CULL_FACE);
-    gl.enable(gl.DEPTH_TEST);
-
-    // setup GLSL program
-    var program = initShaders(gl, VSHADER_SOURCE, FSHADER_SOURCE);
-    gl.useProgram(program);
-
-    // look up where the vertex data needs to go.
-    // 模型定点的 shander 地址
-    var positionLocation = gl.getAttribLocation(program, "a_position");
-    var texcoordLocation = gl.getAttribLocation(program, "a_texcoord");
-
-    // lookup uniforms
-    var matrixLocation = gl.getUniformLocation(program, "u_matrix");
-
-    // Create a buffer.
-    var buffer = gl.createBuffer();
-    gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
-    gl.enableVertexAttribArray(positionLocation);
-    gl.vertexAttribPointer(positionLocation, 3, gl.FLOAT, false, 0, 0);
-
-    // Set Geometry.
-    // 设置定点
-    setGeometry(gl);
-
-    // Create a buffer for texcoords.
-    var buffer1 = gl.createBuffer();
-    gl.bindBuffer(gl.ARRAY_BUFFER, buffer1);
-    gl.enableVertexAttribArray(texcoordLocation);
-
-    // We'll supply texcoords as floats.
-    gl.vertexAttribPointer(texcoordLocation, 2, gl.FLOAT, false, 0, 0);
-
-    // Set Texcoords.
-    // 设置纹理顶点
-    setTexcoords(gl);
-
-    // Create a texture.
-    // 创建纹理
-    var texture = gl.createTexture();
-    gl.bindTexture(gl.TEXTURE_2D, texture);
-    // Fill the texture with a 1x1 blue pixel.
-    // 用1x1的蓝色像素填充纹理。 可以设置不同的贴图方式
-    gl.texImage2D(
-      gl.TEXTURE_2D,
-      0,
-      gl.RGBA,
-      1,
-      1,
-      0,
-      gl.RGBA,
-      gl.UNSIGNED_BYTE,
-      new Uint8Array([0, 0, 255, 255])
-    );
-    // Asynchronously load an image
-    //异步加载图像
-    var image = new Image();
-    image.src = noodles;
-    image.addEventListener("load", function () {
-      // Now that the image has loaded make copy it to the texture.
-      gl.bindTexture(gl.TEXTURE_2D, texture);
-      gl.texImage2D(
-        gl.TEXTURE_2D,
-        0,
-        gl.RGBA,
-        gl.RGBA,
-        gl.UNSIGNED_BYTE,
-        image
-      );
-
-      // Check if the image is a power of 2 in both dimensions.
-      if (isPowerOf2(image.width) && isPowerOf2(image.height)) {
-        // Yes, it's a power of 2. Generate mips.
-        gl.generateMipmap(gl.TEXTURE_2D);
-      } else {
-        // No, it's not a power of 2. Turn of mips and set wrapping to clamp to edge
-        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
-        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
-        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
-      }
-    });
-
-    function isPowerOf2(value) {
-      return (value & (value - 1)) == 0;
-    }
-
-    function radToDeg(r) {
-      return (r * 180) / Math.PI;
-    }
-
-    function degToRad(d) {
-      return (d * Math.PI) / 180;
-    }
-
-    var fieldOfViewRadians = degToRad(60);
-    var modelXRotationRadians = degToRad(0);
-    var modelYRotationRadians = degToRad(0);
-
-    // Get the starting time.
-    var then = 0;
-
-    requestAnimationFrame(drawScene);
-
-    // Draw the scene.
-    function drawScene(time) {
-      // convert to seconds
-      time *= 0.001;
-      // Subtract the previous time from the current time
-      var deltaTime = time - then;
-      // Remember the current time for the next frame.
-      then = time;
-
-      // Animate the rotation
-      modelYRotationRadians += -0.7 * deltaTime;
-      modelXRotationRadians += -0.4 * deltaTime;
-
-      // Clear the canvas AND the depth buffer.
-      gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
-
-      // Compute the projection matrix
-      var aspect = canvas.clientWidth / canvas.clientHeight;
-      var zNear = 1;
-      var zFar = 2000;
-      var projectionMatrix = makePerspective(
-        fieldOfViewRadians,
-        aspect,
-        zNear,
-        zFar
-      );
-
-      var cameraPosition = [0, 0, 2];
-      var up = [0, 1, 0];
-      var target = [0, 0, 0];
-
-      // Compute the camera's matrix using look at.
-      var cameraMatrix = makeLookAt(cameraPosition, target, up);
-
-      // Make a view matrix from the camera matrix.
-      var viewMatrix = makeInverse(cameraMatrix);
-
-      var translationMatrix = makeTranslation(0, 0, 0);
-      var xRotationMatrix = makeXRotation(modelXRotationRadians);
-      var yRotationMatrix = makeYRotation(modelYRotationRadians);
-
-      // Multiply the matrices.
-      var matrix = yRotationMatrix;
-      matrix = matrixMultiply(matrix, xRotationMatrix);
-      matrix = matrixMultiply(matrix, translationMatrix);
-      matrix = matrixMultiply(matrix, viewMatrix);
-      matrix = matrixMultiply(matrix, projectionMatrix);
-
-      // Set the matrix.
-      gl.uniformMatrix4fv(matrixLocation, false, matrix);
-
-      // Draw the geometry.
-      gl.drawArrays(gl.TRIANGLES, 0, 6 * 6);
-
-      requestAnimationFrame(drawScene);
-    }
-  }
-
-  // Fill the buffer with the values that define a cube.
-  function setGeometry(gl) {
-    var positions = new Float32Array([
-      -0.5, -0.5, -0.5, -0.5, 0.5, -0.5, 0.5, -0.5, -0.5,
-
-      -0.5, 0.5, -0.5, 0.5, 0.5, -0.5, 0.5, -0.5, -0.5,
-
-      -0.5, -0.5, 0.5, 0.5, -0.5, 0.5, -0.5, 0.5, 0.5,
-
-      -0.5, 0.5, 0.5, 0.5, -0.5, 0.5, 0.5, 0.5, 0.5,
-
-      -0.5, 0.5, -0.5, -0.5, 0.5, 0.5, 0.5, 0.5, -0.5,
-
-      -0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, -0.5,
-
-      -0.5, -0.5, -0.5, 0.5, -0.5, -0.5, -0.5, -0.5, 0.5,
-
-      -0.5, -0.5, 0.5, 0.5, -0.5, -0.5, 0.5, -0.5, 0.5,
-
-      -0.5, -0.5, -0.5, -0.5, -0.5, 0.5, -0.5, 0.5, -0.5,
-
-      -0.5, -0.5, 0.5, -0.5, 0.5, 0.5, -0.5, 0.5, -0.5,
-
-      0.5, -0.5, -0.5, 0.5, 0.5, -0.5, 0.5, -0.5, 0.5,
-
-      0.5, -0.5, 0.5, 0.5, 0.5, -0.5, 0.5, 0.5, 0.5
-    ]);
-    gl.bufferData(gl.ARRAY_BUFFER, positions, gl.STATIC_DRAW);
-  }
-
-  // Fill the buffer with texture coordinates the cube.
-  function setTexcoords(gl) {
-    gl.bufferData(
-      gl.ARRAY_BUFFER,
-      new Float32Array([
-        // 底面
-        // select the bottom left image
-        0, 0, 0, 0.5, 0.25, 0, 0, 0.5, 0.25, 0.5, 0.25, 0,
-
-        // select the bottom middle image
-        0.25, 0, 0.5, 0, 0.25, 0.5, 0.25, 0.5, 0.5, 0, 0.5, 0.5,
-        // select to bottom right image
-        0.5, 0, 0.5, 0.5, 0.75, 0, 0.5, 0.5, 0.75, 0.5, 0.75, 0,
-        // select the top left image
-        0, 0.5, 0.25, 0.5, 0, 1, 0, 1, 0.25, 0.5, 0.25, 1,
-        // select the top middle image
-        0.25, 0.5, 0.25, 1, 0.5, 0.5, 0.25, 1, 0.5, 1, 0.5, 0.5,
-        // select the top right image
-        0.5, 0.5, 0.75, 0.5, 0.5, 1, 0.5, 1, 0.75, 0.5, 0.75, 1
-      ]),
-      gl.STATIC_DRAW
-    );
-  }
-
-  main();
-
-
-  */
+  
 
   class ThreeDimensions {
     constructor(options) {
       this.options = options;
-      this.init();
+      this.angle=0;
+      this.parmas={
+        color:'#333333',
+        brush:false,
+        font:false,
+        translation:{
+          x:0,
+          y:0,
+          z:0,
+        },
+        scale:{
+          x:-1,
+          y:1,
+          z:1,
+        },
+        rotation:{
+          angleX:0,
+          angleY:0,
+          angleZ:0,
+        },
+        eye:{
+          z:-2
+        },
+        lineWidth:5,
+        fontSize:12
+      };
+      // this.init();
     }
-    init(){
+   async  init(main){
+      this.main=main;
       this.createCanvas();
       this.createProgram();
       this.attribUniformVaring();
-     
-
+ 
       // 定点
       this.positions = this.getGeometry();
       
@@ -307,13 +116,249 @@ window.onload = function () {
         FSIZE: this.texcoords.BYTES_PER_ELEMENT
       });
       this.setBufferData(this.texcoords);
-      
-      this.setTexture(()=>{
+
+    
+    // await this.setTexure0();
+    // await this.setTexure1();
+
+
+
+    //  setInterval(()=>{
+    //   this.angle+=1;
+    //   this.drawScene(new Date().getTime());
+    //  },1000);
+
+
+
+     // 控制 参数改变
+   const  {
+    gui,
+    folder
+  } = controller({
+      onChange: () => {
         this.drawScene(new Date().getTime());
-      });
-      this.drawScene(new Date().getTime());
+        // drawScene(parmas);
+        // render(settings);
+
+      },
+      parmas: this.parmas,
+      options: [
+        {
+          min: 0,
+          max: 1,
+          step: 0.001,
+          key: "translation.x",
+          name: "位移X",
+          // onChange: (value) => {},
+          onFinishChange: (value) => {
+            // 完全修改停下来的时候触发这个事件
+
+          }
+        },
+        {
+          min: -1,
+          max: 1,
+          step: 0.01,
+          key: "translation.y",
+          name: "位移Y",
+          onChange: (value) => {},
+          onFinishChange: (value) => {
+            // 完全修改停下来的时候触发这个事件
+        
+          }
+        },
+        {
+          min: -1,
+          max: 1,
+          step: 0.01,
+          key: "translation.z",
+          name: "位移Z",
+          onChange: (value) => {},
+          onFinishChange: (value) => {
+            // 完全修改停下来的时候触发这个事件
+            
+          }
+        },
+
+        {
+          min: -1,
+          max: 1,
+          step: 0.001,
+          key: "scale.x",
+          name: "放大X",
+          // onChange: (value) => {},
+          onFinishChange: (value) => {
+            // 完全修改停下来的时候触发这个事件
+          
+          }
+        },
+        {
+          min: -1,
+          max: 1,
+          step: 0.01,
+          key: "scale.y",
+          name: "放大Y",
+          onChange: (value) => {},
+          onFinishChange: (value) => {
+            // 完全修改停下来的时候触发这个事件
+            
+          }
+        },
+        {
+          min: -1,
+          max: 1,
+          step: 0.01,
+          key: "scale.z",
+          name: "放大Z",
+          onChange: (value) => {},
+          onFinishChange: (value) => {
+            // 完全修改停下来的时候触发这个事件
+            
+          }
+        },
+
+        {
+          min: 0,
+          max: 360,
+          step: 0.0001,
+          key: "rotation.angleX",
+          name: "旋转X",
+          // onChange: (value) => {},
+          onFinishChange: (value) => {
+            // 完全修改停下来的时候触发这个事件
+            
+          }
+        },
+        {
+          min: 0,
+          max: 360,
+          step: 0.0001,
+          key: "rotation.angleY",
+          name: "旋转Y",
+          onChange: (value) => {},
+          onFinishChange: (value) => {
+            // 完全修改停下来的时候触发这个事件
+            
+          }
+        },
+        {
+          min: 0,
+          max: 360,
+          step: 0.0001,
+          key: "rotation.angleZ",
+          name: "旋转Z",
+          onChange: (value) => {},
+          onFinishChange: (value) => {
+            // 完全修改停下来的时候触发这个事件
+            
+          }
+        },
+        {
+          min: -10,
+          max: -2,
+          step: 0.0001,
+          key: "eye.z",
+          name: "相机eye.z",
+          onChange: (value) => {},
+          onFinishChange: (value) => {
+            // 完全修改停下来的时候触发这个事件
+            
+          }
+        },
+        {
+          min: 1,
+          max: 20,
+          step: 0.0001,
+          key: "lineWidth",
+          name: "画笔线宽",
+          onChange: (value) => {
+            // console.log('value==',value);
+            // debugger;
+            // console.log(this);
+            // debugger;
+            this.main.twoDimension.setLineWidth(value);
+          },
+          onFinishChange: (value) => {
+            // 完全修改停下来的时候触发这个事件
+            
+          }
+        },
+        {
+          min: 12,
+          max: 100,
+          step: 0.0001,
+          key: "fontSize",
+          name: "字体大小",
+          onChange: (value) => {
+            // console.log('value==',value);
+            // debugger;
+            // console.log(this);
+            // debugger;
+            this.main.twoDimension.setFontSize(value);
+          },
+          onFinishChange: (value) => {
+            // 完全修改停下来的时候触发这个事件
+            
+          }
+        }
+      ]
+  });
+
+  
+    folder.addColor(this.parmas, "color").name('颜色值')   .onChange((value) => {
+      // 回调函数
+      this.main.twoDimension.setColor(value);
+    });
+    folder.add(this.parmas, "brush").name('选择画笔').listen().onChange((value) => {
+      // setBrush(flag){
+      //   this.editFabricCanvas.set({
+      //     isDrawingMode: flag // 开启绘画模式
+      //   });
+      // }
+      this.parmas.font=false;
+      // 回调函数
+      this.main.twoDimension.setBrush(value);
+      // brush:false,
+      // font:false,
+    });
+
+
+
+    folder.add(this.parmas, "font").name('字体').listen().onChange((value) => {
+      // setBrush(flag){
+      //   this.editFabricCanvas.set({
+      //     isDrawingMode: flag // 开启绘画模式
+      //   });
+      // }
+      // 回调函数
+      this.parmas.brush=false;
+      this.main.twoDimension.setBrush(false);
+      this.main.twoDimension.setFont(value);
+    });
     }
 
+
+  async setTexure0(src){
+    await  this.setTexture(
+      {
+        src,
+        index:0,
+        activeTextureIndex:this.gl.TEXTURE0,
+        uniformLocation:this.u_Sampler0,
+        // img:this.main.twoDimension.editCtx.canvas
+      }
+    );
+   }
+   async setTexure1(src){
+    await  this.setTexture(
+      {
+        src,
+        index:1,
+        activeTextureIndex:this.gl.TEXTURE1,
+        uniformLocation:this.u_Sampler1
+      }
+    ); 
+   }
    isPowerOf2(value) {
       return (value & (value - 1)) == 0;
     }
@@ -321,8 +366,43 @@ window.onload = function () {
     degToRad(d) {
       return (d * Math.PI) / 180;
     }
+    loadImage(src){
+      return  new Promise((reslove,reject)=>{
+          const img = new Image();
+          img.src=src;
+          img.onload= function (){
+            reslove(this);
+        };
+        img.onerror=function (error){
+          reject(error);
+        };
+      });
+  }
      // Draw the scene.
     drawScene(time) {
+
+     const {
+        translation={
+          // x:0,
+          // y:0,
+          // z:0,
+        },
+        scale={
+          // x:0,
+          // y:0,
+          // z:0,
+        },
+        rotation:{
+          angleX,
+          angleY,
+          angleZ,
+        }={
+     
+        },
+        eye={}
+
+      }= this.parmas;
+
     const gl=this.gl;
     var fieldOfViewRadians = this.degToRad(60);
     var modelXRotationRadians =  this.degToRad(0);
@@ -346,8 +426,19 @@ window.onload = function () {
       // Compute the projection matrix
       var aspect = this.canvas.clientWidth / this.canvas.clientHeight;
       var zNear = 1;
-      var zFar = 2000;
-      // 透视投影
+      var zFar = 1000;
+
+      // perspective: perspective,
+
+      // out, fovy, aspect, near, far
+      // var projectionMatrix =  glMatrix.mat4.perspective([
+      //   1,0,0,0,
+      //   0,1,0,0,
+      //   0,0,1,0,
+      //   0,0,0,1,
+      // ], fieldOfViewRadians,aspect,zNear,zFar);
+
+      // 透视投影  有问题 明天换一个
       var projectionMatrix = makePerspective(
         fieldOfViewRadians,
         aspect,
@@ -355,9 +446,18 @@ window.onload = function () {
         zFar
       );
 
-      var cameraPosition = [0, 0, 2];
+      // glMatrix.mat4.ortho(projMatrix, -1, 1, -1, 1, 1, 100);
+      // var cameraPosition = [0, 0, 2];
+      // var target = [0, 0, 0];
+      // var up = [0, 1, 0];
+     
+
+   
+
+      var cameraPosition = [0, 0, eye.z];
+      var target = [0, 0, -1];
       var up = [0, 1, 0];
-      var target = [0, 0, 0];
+
 
       // Compute the camera's matrix using look at.
       // 相机
@@ -370,13 +470,32 @@ window.onload = function () {
       //偏移
       var translationMatrix = makeTranslation(0, 0, 0);
 
+      /*
+      
+      
+      弧度
+      */ 
       // 旋转
-      var xRotationMatrix = makeXRotation(modelXRotationRadians);
-      var yRotationMatrix = makeYRotation(modelYRotationRadians);
+
+      var scaleMatrix =  makeScale(scale.x,scale.y,scale.z);
+      // var scaleMatrix =  makeScale(scale.x,scale.y,)
+
+      var xRotationMatrix = makeXRotation(this.degToRad(angleX));
+      var yRotationMatrix = makeYRotation(this.degToRad(angleY));
+      var zRotationMatrix = makeZRotation(this.degToRad(angleZ));
+
+
+
+      /*
+         s r t
+      */
 
       // Multiply the matrices.
       // 矩阵相乘
-      var matrix = yRotationMatrix;
+      var matrix = scaleMatrix;
+      // var matrix = yRotationMatrix;
+      matrix = matrixMultiply(matrix, zRotationMatrix);
+      matrix = matrixMultiply(matrix, yRotationMatrix);
       matrix = matrixMultiply(matrix, xRotationMatrix);
       matrix = matrixMultiply(matrix, translationMatrix);
       matrix = matrixMultiply(matrix, viewMatrix);
@@ -386,44 +505,64 @@ window.onload = function () {
       gl.uniformMatrix4fv(this.matrixLocation, false, matrix);
 
       // Draw the geometry. 定点坐标渲染
-      gl.drawArrays(gl.TRIANGLES, 0, 6 * 6);
+      gl.drawArrays(
+            gl.TRIANGLES, 0, 6 * 6
+        );
       // requestAnimationFrame((...ags)=>{
       //   this.drawScene(...ags);
       // });
     
       // requestAnimationFrame(this.drawScene);
     }
-    setTexture(callback=()=>{}){
+    async setTexture({
+      src,
+      index,
+      activeTextureIndex,
+      uniformLocation,
+      img
+    }){
+
+      if(!img){
+        img = await this.loadImage(src);
+      }
+
+  
+
       const gl=this.gl;
          // Create a texture.
     // 创建纹理
     var texture = gl.createTexture();
    //翻转图像的y轴
    gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL,1);
-      //启用纹理unit0
-   gl.activeTexture(gl.TEXTURE0);
+  // 翻转图像的y轴
+  // gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, 1);// Flip the image's y-axis
+  gl.pixelStorei(gl.UNPACK_PREMULTIPLY_ALPHA_WEBGL, true);
+      //激活 启用纹理unit0
+   gl.activeTexture(activeTextureIndex);
 
     // gl.bindTexture(gl.TEXTURE_2D, texture);
     // Fill the texture with a 1x1 blue pixel.
     // 用1x1的蓝色像素填充纹理。 可以设置不同的贴图方式
-    gl.texImage2D(
-      gl.TEXTURE_2D,
-      0,
-      gl.RGBA,
-      1,
-      1,
-      0,
-      gl.RGBA,
-      gl.UNSIGNED_BYTE,
-      new Uint8Array([0, 0, 255, 255])
-    );
+    // gl.texImage2D(
+    //   gl.TEXTURE_2D,
+    //   0,
+    //   gl.RGBA,
+    //   1,
+    //   1,
+    //   0,
+    //   gl.RGBA,
+    //   gl.UNSIGNED_BYTE,
+    //   new Uint8Array([0, 0, 255, 255])
+    // );
 
-  
+   
+
+    
     // Asynchronously load an image
     //异步加载图像
-    var image = new Image();
-    image.src = material_kraft;
-    image.addEventListener("load",   () =>{
+    // var image = new Image();
+    // image.src = material_kraft;
+    // image.addEventListener("load",   () =>{
       // Now that the image has loaded make copy it to the texture.
       gl.bindTexture(gl.TEXTURE_2D, texture);
       gl.texImage2D(
@@ -432,11 +571,12 @@ window.onload = function () {
         gl.RGBA,
         gl.RGBA,
         gl.UNSIGNED_BYTE,
-        image
+        img
       );
 
+  
       // Check if the image is a power of 2 in both dimensions.
-      if (this.isPowerOf2(image.width) && this.isPowerOf2(image.height)) {
+      if (this.isPowerOf2(img.width) && this.isPowerOf2(img.height)) {
         // Yes, it's a power of 2. Generate mips.
         gl.generateMipmap(gl.TEXTURE_2D);
       } else {
@@ -445,65 +585,25 @@ window.onload = function () {
         gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
         gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
       }
-      gl.uniform1i(this.u_Sampler, 0);   // 将纹理单元传递给采样器 Pass the texure unit to u_Sampler
-      callback();
-    });
+ 
+
+      // this.u_Sampler1 = gl.getUniformLocation
+
+      gl.uniform1i(uniformLocation, index);   // 将纹理单元传递给采样器 Pass the texure unit to u_Sampler
+      
+      
+    // });
     }
 
       // Fill the buffer with texture coordinates the cube.
-    getTexcoords( ) {
-    // gl.bufferData(
-    //   gl.ARRAY_BUFFER,
-   return   new Float32Array([
-        // 底面
-        // select the bottom left image
-        0, 0, 0, 0.5, 0.25, 0, 0, 0.5, 0.25, 0.5, 0.25, 0,
-        // select the bottom middle image
-        0.25, 0, 0.5, 0, 0.25, 0.5, 0.25, 0.5, 0.5, 0, 0.5, 0.5,
-        // select to bottom right image
-        0.5, 0, 0.5, 0.5, 0.75, 0, 0.5, 0.5, 0.75, 0.5, 0.75, 0,
-        // select the top left image
-        0, 0.5, 0.25, 0.5, 0, 1, 0, 1, 0.25, 0.5, 0.25, 1,
-        // select the top middle image
-        0.25, 0.5, 0.25, 1, 0.5, 0.5, 0.25, 1, 0.5, 1, 0.5, 0.5,
-        // select the top right image
-        0.5, 0.5, 0.75, 0.5, 0.5, 1, 0.5, 1, 0.75, 0.5, 0.75, 1
-      ]);  //,
-    //   gl.STATIC_DRAW
-    // );
-  }
+    getTexcoords() {
+         return   new Float32Array(texcoords); 
+    }
 
   // Fill the buffer with the values that define a cube.
-    getGeometry( ) {
-    return   new Float32Array([
-      -0.5, -0.5, -0.5, 
-      -0.5, 0.5, -0.5, 
-      0.5, -0.5, -0.5,
-
-      -0.5, 0.5, -0.5, 0.5, 0.5, -0.5, 0.5, -0.5, -0.5,
-
-      -0.5, -0.5, 0.5, 0.5, -0.5, 0.5, -0.5, 0.5, 0.5,
-
-      -0.5, 0.5, 0.5, 0.5, -0.5, 0.5, 0.5, 0.5, 0.5,
-
-      -0.5, 0.5, -0.5, -0.5, 0.5, 0.5, 0.5, 0.5, -0.5,
-
-      -0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, -0.5,
-
-      -0.5, -0.5, -0.5, 0.5, -0.5, -0.5, -0.5, -0.5, 0.5,
-
-      -0.5, -0.5, 0.5, 0.5, -0.5, -0.5, 0.5, -0.5, 0.5,
-
-      -0.5, -0.5, -0.5, -0.5, -0.5, 0.5, -0.5, 0.5, -0.5,
-
-      -0.5, -0.5, 0.5, -0.5, 0.5, 0.5, -0.5, 0.5, -0.5,
-
-      0.5, -0.5, -0.5, 0.5, 0.5, -0.5, 0.5, -0.5, 0.5,
-
-      0.5, -0.5, 0.5, 0.5, 0.5, -0.5, 0.5, 0.5, 0.5
-    ]);
-    // gl.bufferData(gl.ARRAY_BUFFER, positions, gl.STATIC_DRAW);
-  }
+      getGeometry( ) {
+          return   new Float32Array(geometry);
+      }
     setBufferData(positions){
       const gl=this.gl;
       this.gl.bufferData(gl.ARRAY_BUFFER, positions, gl.STATIC_DRAW);
@@ -558,8 +658,14 @@ window.onload = function () {
       this.canvas=canvas;
     }
     createProgram(){
-      this.gl.enable(this.gl.CULL_FACE);
-      this.gl.enable(this.gl.DEPTH_TEST);
+   
+      // //将被剔除。
+      // this.gl.enable(this.gl.CULL_FACE);
+      // // // 1.开启隐藏面消除功能
+      this.gl.enable(this.gl.DEPTH_TEST); // gl.DEPTH_TEST、gl.BLEND(混合)、gl.POLYGON_OFFSET_FILL(多边形位移)
+      // this.gl.enable(this.gl.SCISSOR_TEST); // 启用剪裁测试
+      // this.gl.enable(this.gl.POLYGON_OFFSET_FILL);
+
       // setup GLSL program
       this. program = initShaders(this.gl, VSHADER_SOURCE, FSHADER_SOURCE);
       this.gl.useProgram( this. program);
@@ -572,6 +678,7 @@ window.onload = function () {
     this.positionLocation = gl.getAttribLocation(this.program, "a_position");
     this.texcoordLocation = gl.getAttribLocation(this.program, "a_texcoord");
     this.u_Sampler0 = gl.getUniformLocation(this.program, 'u_Sampler0');
+    this.u_Sampler1 = gl.getUniformLocation(this.program, 'u_Sampler1');
     // lookup uniforms
     this. matrixLocation = gl.getUniformLocation(this.program, "u_matrix");
     }
@@ -579,147 +686,129 @@ window.onload = function () {
 
 
 
-  /*
- 
-
-  window.onload = function () {
-    let canvas1 = document.createElement("canvas");
-    canvas1 .id='canvas';
-    canvas1.width = 500;
-    canvas1.height = 500;
-    // getWebGLContext(canvas);
-    document.body.appendChild(canvas1);
-    let ctx = canvas1.getContext('2d');
-
-    let  canvas = new fabric.Canvas('canvas');
-    console.log('canvas==',canvas);
-   // create a rectangle object
-var rect = new fabric.Rect({
-    left: 100,
-    top: 100,
-    fill: 'red',
-    width: 20,
-    height: 20
-  });
-
- 
-
-const img = new Image();
-img.src=panda;
-
-img.onload=function(){
-    var imgInstance = new fabric.Image(this,{  //设置图片位置和样子
-        // left:100,
-        // top:100,
-        // width:200,
-        // height:100,
-        // angle:30//设置图形顺时针旋转角度
-      });
-      canvas.add(imgInstance);//加入到canvas中
-
-
-    //   setTimeout(()=>{
-    //    // show the result
-    //    ctx.canvas.toBlob((blob) => {
-    //     const img = new Image();
-    //     img.src = URL.createObjectURL(blob);
-    //     document.body.appendChild(img);
-    // });
-
-    //    const img1 = new Image();
-    // let url =   canvas.toDataURL('png');
-    // img1.src = url;
-    // document.body.appendChild(img1);
-
-    //   },100);
-
-    // const img1 = new Image();
-    // let url =   canvas.toDataURL('png');
-    // img1.src = url;
-    // document.body.appendChild(img1);
-};
-
-
-
-
-canvas.on('mouse:over', function (e) {
-    console.log('Mouse over object:', e.target);
-  });
-
-
   
-
-  canvas.on('object:modified', function (e) {
-    console.log('object:modified');
-    let img1=document.getElementById('img');
-    //    const img1 = new Image();
-    let url =   canvas.toDataURL('png');
-    img1.src = url;
-    document.body.appendChild(img1);
-  });
-
-
-  canvas.on('object:rotating', function (e) {
-    console.log('object:rotating');
-    let img1=document.getElementById('img');
-    //    const img1 = new Image();
-    let url =   canvas.toDataURL('png');
-    img1.src = url;
-    document.body.appendChild(img1);
-  });
-
-
-  canvas.on('object:skewing', function (e) {
-    console.log('object:scaling');
-    let img1=document.getElementById('img');
-    //    const img1 = new Image();
-    let url =   canvas.toDataURL('png');
-    img1.src = url;
-    document.body.appendChild(img1);
-  });
-
-  canvas.on('object:scaling', function (e) {
-    console.log('object:scaling');
-    let img1=document.getElementById('img');
-    //    const img1 = new Image();
-    let url =   canvas.toDataURL('png');
-    img1.src = url;
-    document.body.appendChild(img1);
-  });
-
-
-  canvas.on('object:moving', function (e) {
-    console.log('object:moving');
-    let img1=document.getElementById('img');
-    //    const img1 = new Image();
-    let url =   canvas.toDataURL('png');
-    img1.src = url;
-    document.body.appendChild(img1);
-  });
-
-  // 事件触发
-  canvas.on('after:render', function (e) {
-   
-    // const img1 = new Image();
-    // let url =   canvas.toDataURL('png');
-    // img1.src = url;
-    // document.body.appendChild(img1);
-  });
-
-   
-  // "add" rectangle onto canvas
-  canvas.add(rect);
-   
-   };
-
- */
 
   class TwoDimension {
     constructor() {
-      this.init();
+      // this.init();
+      this.color='#333333';
+      this.font=false;
+      this.fontSize=12;
+      // this.fontsProps=[];
     }
-    init(){
+  
+    setColor(color){
+      this.color=color;
+      this.setLineColor(color);
+    }
+    addFile(callback=()=>{}){
+
+    var elInput = document.getElementById('file');
+      elInput.onchange=(event)=>{
+        const {
+          target
+        }= event;
+        const reader = new FileReader();
+        reader.onload = (e) => {
+           callback( e.target.result);
+           
+        };
+        reader.readAsDataURL(target .files[0]);
+      };
+    }
+    setFont(flag){
+      this.font=flag;
+    }
+    setFontSize(v){
+      this.fontSize=v;
+      try{
+        this.text.set({
+          fontSize:v
+        });
+      }catch(e){
+       console.log(e);
+      }
+
+    }
+    addText({
+      left,
+      top
+    }){
+      if(!this.font){
+        return; 
+      }
+      const text = new fabric.IText("", {
+        fill: this.color,
+        left,
+        top,
+        fontSize:this.fontSize
+      });
+      text.setControlsVisibility({ // 控制文本的手柄
+        mt: false,
+        mr: false,
+        mb: false,
+        ml: false,
+      });
+      this.editFabricCanvas.add(text);
+      // this.editFabricCanvas.viewportCenterObject(text); // 画布中间
+      this.editFabricCanvas.setActiveObject(text); // 活跃状态
+      text.enterEditing(); // 进入编辑状态
+      text.set({
+        fontSize:this.fontSize
+      });
+      // text.selectAll(); // 选中所有文本
+
+      this.text=text;
+     
+    }
+    setBrush(flag){
+      this.editFabricCanvas.set({
+        isDrawingMode: flag // 开启绘画模式
+      });
+    }
+   async  init(main){
+      this.main=main;
       this.createCanvas();
+      this.addFile(async(src)=>{
+          this.editFabricCanvas.add(await this.addImage({
+              src,
+          }));//加入到canvas中
+      });
+
+      console.log('this.editCanvas=',this.editCanvas);
+
+      this.editFabricCanvas.onClick=(event)=>{
+        console.log('event==',event);
+      };
+
+
+      this.editFabricCanvas.on('mouse:down',  async (ev) =>{
+        console.log('ev.target===',ev.target);
+        const {
+          pointer:{
+            x,y
+          }
+        }=ev;
+
+          // // 鼠标的x y 轴
+          // var x = ev.clientX,
+          // y = ev.clientY+100;
+
+          console.log('ev===',ev);
+          // Start dragging if a moue is in <canvas>
+          // var rect = ev.target.getBoundingClientRect();
+          // x = x-rect.left;
+          // y= x-rect.top;
+          this.addText({
+            left:x,
+            top:y
+          });
+        
+      });
+
+
+      
+
       // var rect = new fabric.Rect({
       //   left: 100,
       //   top: 100,
@@ -729,19 +818,44 @@ canvas.on('mouse:over', function (e) {
       // });
       // this.canvas.add(rect);
       // this. loadImage();
-      this.addImage({
-         src:panda,
-      });
-      this.evnets((eventKey)=>{
+     
 
-        let img1=document.getElementById('img');
+    //   this.editFabricCanvas.add(await  this.addImage({
+    //       src:panda,
+    //  }));//加入到canvas中
+
+
+
+     this.backFabricCanvas.add(await this.addImage({
+        src:back3,
+        // src:material_kraft,
+        left: 100,
+        top: 50,
+        selectable: false 
+     }));
+   //加入到canvas中
+
+ 
+   setTimeout( async ()=>{
+    await  this.main.threeDimensions.setTexure0(this.editFabricCanvas.toDataURL('png'));
+    await  this.main.threeDimensions.setTexure1(this.backFabricCanvas.toDataURL('png'));
+    this.main.threeDimensions.drawScene(new Date().getTime());
+   },30);
+    
+ 
+
+   
+
+      this.evnets(async (eventKey)=>{
+
+        // let img1=document.getElementById('img');
    
           //    const img1 = new Image();
           let url =  this.editFabricCanvas.toDataURL('png');
-          console.log('url==',url);
-          console.log('img1==',img1);
-          img1.src = url;
-          // document.body.appendChild(img1);
+
+        await  this.main.threeDimensions.setTexure0(url);
+        // await  this.main.threeDimensions.setTexure1();
+          this.main.threeDimensions.drawScene(new Date().getTime());
 
       });
     }
@@ -750,6 +864,8 @@ canvas.on('mouse:over', function (e) {
             const img = new Image();
             img.src=src;
             img.onload= function (){
+              // this.style.width="100px";
+              // this.style.height="100px";
               reslove(this);
           };
           img.onerror=function (error){
@@ -760,55 +876,88 @@ canvas.on('mouse:over', function (e) {
     async addImage(options={}){
         const {src, ...more}=options;
         const img =  await this.loadImage(src);
-        console.log('img===',img);
-            var imgInstance = new fabric.Image(img,{  //设置图片位置和样子
-              ...more
-              });
-          this.editFabricCanvas.add(imgInstance);//加入到canvas中
+        return new fabric.Image(img,{  //设置图片位置和样子
+                ...more
+          });
+  
     }
     evnets(callback=()=>{}){
       let evnetKeys=[
         'object:modified', 
-        'object:rotating', 
-        'object:skewing',
-        'object:scaling',
-        'object:moving'
+        // 'object:rotating', 
+        // 'object:skewing',
+        // 'object:scaling',
+        // 'object:moving',
+        'path:created'
       ];
 
       for(let key of evnetKeys){
-        this.editFabricCanvas.on(key,  (e) =>{
-          console.log('eventKey=',key);
+        this.editFabricCanvas.on(key,  async (e) =>{
+          if(key== 'path:created'){
+           await  stabilization(50);
+          }
+          // stabilization
           callback(key);
-          // let img1=document.getElementById('img');
-          // //    const img1 = new Image();
-          // let url =   canvas.toDataURL('png');
-          // img1.src = url;
-          // document.body.appendChild(img1);
+
         });
       
       }
     }
+    setLineWidth(width){
+      this.editFabricCanvas.freeDrawingBrush.width = width; // 画笔宽度
+    }
+
+    setLineColor(color){
+      this.editFabricCanvas.freeDrawingBrush.color = color; // 画笔颜色
+    }
+
     createCanvas(){
-  
+      // back
+
     this.editCanvas = document.getElementById('eidt', {antialias: false});
     this.editCtx =   this.editCanvas.getContext('2d');
     this.editCanvas.width = 500;
     this.editCanvas.height =  500;
-    this.editFabricCanvas = new fabric.Canvas('eidt');
+    this.editFabricCanvas = new fabric.Canvas('eidt',{
+      // isDrawingMode: true // 开启绘画模式
+    });
+   
+
+    // this.editFabricCanvas.freeDrawingBrush.width = 10; // 画笔宽度
+    this. setLineWidth(5);
+
+    this.backCanvas = document.getElementById('back', {antialias: false});
+    this.backCtx = this.editCanvas.getContext('2d');
+    this.backCanvas.width = 500;
+    this.backCanvas.height =  500;
+    this.backFabricCanvas = new fabric.Canvas('back');
   
 
     }
   }
 
   class Main {
-    constructor() {}
+    constructor() {
+      this. init();
+    }
+    init(){
+        this.threeDimensions=new ThreeDimensions({
+            elId:'view',
+     
+          });
+        this.twoDimension= new TwoDimension();
+        this.twoDimension.init(this);
+        this.threeDimensions.init(this);
+      
+
+    }
   }
 
 
-  new ThreeDimensions({
-    elId:'view',
-  });
-  new TwoDimension();
+
+
+  new Main();
+
 };
 
 

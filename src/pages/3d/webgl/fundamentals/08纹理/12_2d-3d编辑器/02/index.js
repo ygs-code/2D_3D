@@ -685,7 +685,7 @@ window.onload = function () {
           // console.log(this.main);
 
         await  this.main.threeDimensions.setTexure0(url);
-        await  this.main.threeDimensions.setTexure1();
+        // await  this.main.threeDimensions.setTexure1();
           this.main.threeDimensions.drawScene(new Date().getTime());
 
       });

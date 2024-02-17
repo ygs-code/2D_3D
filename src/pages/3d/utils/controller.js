@@ -50,6 +50,11 @@ const controller = ({
         onFinishChange(value);
       });
   }
+
+  return {
+    gui,
+    folder
+  };
 };
 
 export default controller;

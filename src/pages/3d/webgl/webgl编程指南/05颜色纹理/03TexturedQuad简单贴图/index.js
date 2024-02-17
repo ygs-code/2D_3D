@@ -11,6 +11,7 @@ import * as glMatrix from "gl-matrix";
 import {Matrix4}  from "@/pages/3d/utils/lib/cuon-matrix";
 // import sky  from "@/assets/image/sky.jpg";
 import sky  from "static/image/panda.png";
+import back  from "static/image/back.png";
  
 
  
