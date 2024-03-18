@@ -18,6 +18,9 @@ https://blog.csdn.net/cj9551/article/details/114592113
 
 https://zhuanlan.zhihu.com/p/554093703?utm_id=0
 
+
+https://juejin.cn/post/7083314540376490020
+
 如果将观察者视为一个模型，那么视图矩阵就是观察者的 模型矩阵 的 逆矩阵。
 
 相关主题:OpenGL变换，OpenGL矩阵
