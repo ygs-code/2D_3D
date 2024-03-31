@@ -1,4 +1,5 @@
 import * as THREE from 'three';
+import earth from './earth.jpg';
 
 const geometry = new THREE.BufferGeometry(); //创建一个几何体对象
 //类型数组创建顶点数据
@@ -16,7 +17,7 @@ geometry.attributes.position = attribue;
 // Uint16Array类型数组创建顶点索引数据
 const indexes = new Uint16Array([
     0, 1, 2, 0, 2, 3,
-])
+]);
 // 索引数据赋值给几何体的index属性
 geometry.index = new THREE.BufferAttribute(indexes, 1); //1个为一组
 
@@ -40,7 +41,7 @@ geometry.attributes.uv = new THREE.BufferAttribute(uvs, 2); //2个为一组,表�
 
 //纹理贴图加载器TextureLoader
 const texLoader = new THREE.TextureLoader();
-const texture = texLoader.load('./earth.jpg');
+const texture = texLoader.load(earth);
 const material = new THREE.MeshBasicMaterial({
     map: texture, //map表示材质的颜色贴图属性
 });
