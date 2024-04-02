@@ -6,7 +6,7 @@ import {
 //引入性能监视器stats.js,显示帧率
 import Stats from 'three/addons/libs/stats.module.js';
 import "./index.less";
-import  model  from './model.js';
+import  {mesh,texture}  from './model.js';
 
 
 window.onload = () => {
