@@ -1,5 +1,5 @@
 import * as THREE from 'three';
-import texture3 from './纹理3.jpg'
+import texture3 from './纹理3.jpg';
 
 
 // 一个矩形平面几何体用来表示传送带

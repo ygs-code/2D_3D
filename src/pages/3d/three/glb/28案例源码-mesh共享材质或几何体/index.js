@@ -8,7 +8,9 @@ import Stats from 'three/addons/libs/stats.module.js';
 import "./index.less";
 
 //模型对象
-import  model  from './model.js';
+import  {
+    mesh,mesh2
+}  from './model.js';
 window.onload = () => {
  
 //场景

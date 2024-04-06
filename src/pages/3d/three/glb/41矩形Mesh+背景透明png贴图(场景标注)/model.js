@@ -1,5 +1,5 @@
 import * as THREE from 'three';
-import wheel  from  './转弯.png'
+import wheel  from  './转弯.png';
 
 
 
