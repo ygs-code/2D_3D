@@ -13,6 +13,8 @@
     "webpack-cli-util": "./bin/index.js"
   },
   "dependencies": {
+    "@antv/g6": "4.8.21",
+    "@antv/g6-react-node": "^1.4.8",
     "@babel/cli": "^7.17.6",
     "@babel/core": "^7.17.10",
     "@babel/eslint-parser": "^7.18.2",
