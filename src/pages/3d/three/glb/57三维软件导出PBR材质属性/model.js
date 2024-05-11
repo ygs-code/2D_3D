@@ -3,7 +3,9 @@ import * as THREE from "three";
 // 引入gltf模型加载库GLTFLoader.js
 import { GLTFLoader } from "three/addons/loaders/GLTFLoader.js";
 
-import gui from "gui.js";
+import * as dat from "dat.gui";
+
+const gui = new dat.GUI();
 
 // 创建材质子菜单
 const matFolder = gui.addFolder("玻璃材质");

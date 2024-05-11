@@ -7,7 +7,9 @@ import {
 import Stats from 'three/addons/libs/stats.module.js';
 import "./index.less";
 import  model  from './model.js';
-import gui from 'gui.js'; 
+import * as dat from "dat.gui";
+
+const gui = new dat.GUI();
 
 window.onload = () => {
      
