@@ -13,12 +13,17 @@ class App {
         const container = document.createElement('div');
         document.body.appendChild(container);
 
+         //透视投影
         this.camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 100);
+        // 设置相机位置
         this.camera.position.set(0, 0, 5);
 
+        // 设置场景
         this.scene = new THREE.Scene();
+        // 设置背景颜色
         this.scene.background = new THREE.Color(0xaaaaaa);
 
+         // 
         const ambient = new THREE.HemisphereLight(0xffffff, 0xbbbbff, 0.5);
         this.scene.add(ambient);
 
