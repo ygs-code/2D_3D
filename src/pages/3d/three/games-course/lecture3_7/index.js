@@ -11,15 +11,15 @@ class App{
 		document.body.appendChild( container );
         
 		this.camera = new THREE.PerspectiveCamera( 60, window.innerWidth / window.innerHeight, 0.1, 100 );
-		this.camera.position.set( 0, 0, 5 );
+		this.camera.position.set( 0, 0, 4 );
         
 		this.scene = new THREE.Scene();
         this.scene.background = new THREE.Color( 0xaaaaaa );
-        
-		const ambient = new THREE.HemisphereLight(0xffffff, 0xbbbbff, 0.5);
+
+		const ambient = new THREE.HemisphereLight(0xffffff, 0xbbbbff, 0.3);
 		this.scene.add(ambient);
         
-        const light = new THREE.DirectionalLight( 0xFFFFFF, 1.5 );
+        const light = new THREE.DirectionalLight();
         light.position.set( 0.2, 1, 1);
         this.scene.add(light);
 			
@@ -27,38 +27,23 @@ class App{
 		this.renderer.setPixelRatio( window.devicePixelRatio );
 		this.renderer.setSize( window.innerWidth, window.innerHeight );
         this.renderer.outputEncoding = THREE.sRGBEncoding;
-        container.appendChild( this.renderer.domElement );
-		this.setEnvironment();
+		container.appendChild( this.renderer.domElement );
 		
-        //Add code here to code-along with the video
-
-        this.controls = new OrbitControls( this.camera, this.renderer.domElement );
+        //Replace Box with Circle, Cone, Cylinder, Dodecahedron, Icosahedron, Octahedron, Plane, Sphere, Tetrahedron, Torus or TorusKnot
+        const geometry = new THREE.TorusKnotBufferGeometry(); 
         
+        const material = new THREE.MeshBasicMaterial( { color: 0xFF0000 });
+
+        this.mesh = new THREE.Mesh( geometry, material );
+        
+        this.scene.add(this.mesh);
+        
+        const controls = new OrbitControls( this.camera, this.renderer.domElement );
+        
+        this.renderer.setAnimationLoop(this.render.bind(this));
+    
         window.addEventListener('resize', this.resize.bind(this) );
 	}	
-    
-    setEnvironment(){
-        const loader = new RGBELoader();
-        const pmremGenerator = new THREE.PMREMGenerator( this.renderer );
-        pmremGenerator.compileEquirectangularShader();
-        
-        const self = this;
-        
-      
-        loader.load( '../../assets/hdr/venice_sunset_1k.hdr', ( texture ) => {
-          const envMap = pmremGenerator.fromEquirectangular( texture ).texture;
-          pmremGenerator.dispose();
-
-          self.scene.environment = envMap;
-
-        }, undefined, (err)=>{
-            console.error( 'An error occurred setting the environment');
-        } );
-    }
-    
-    loadGLTF(){
-        
-    }
     
     resize(){
         this.camera.aspect = window.innerWidth / window.innerHeight;
@@ -67,7 +52,8 @@ class App{
     }
     
 	render( ) {   
-        this.plane.rotateY( 0.01 );
+        this.mesh.rotateY( 0.01 );
+        this.mesh.rotateX( 0.005 );
         this.renderer.render( this.scene, this.camera );
     }
 }
