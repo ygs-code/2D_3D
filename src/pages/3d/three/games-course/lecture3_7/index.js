@@ -3,6 +3,11 @@
 import * as THREE from 'three';
 import { OrbitControls } from "three/addons/controls/OrbitControls.js";
 import { RGBELoader } from "three/examples/jsm/loaders/RGBELoader";
+import { LoadingBar } from "@/pages/3d/utils/LoadingBar.js";
+
+
+
+ 
 
 import Stats from "three/addons/libs/stats.module.js";
 class App{

@@ -291,7 +291,7 @@ module.exports = {
         //   热刷新
         // new BrowserReloadPlugin(),
         // 热刷新和错误日志
-        new WebpackHotPlugin(),
+        // new WebpackHotPlugin(),
         // 有跨域问题
         // new ErrorOverlayPlugin(),
     ],

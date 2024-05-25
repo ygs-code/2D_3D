@@ -271,17 +271,18 @@ module.exports = {
             minRatio: 0.8, //压缩比例
         }),
 
-        // 复制
-        new CopyPlugin({
-            patterns: [
-                {
-                    from: path
-                        .join(process.cwd(), '/static/**/*')
-                        .replace(/\\/gi, '/'),
-                    to: path.join(process.cwd(), 'dist').replace(/\\/gi, '/'),
-                },
-            ],
-        }),
+        // // 复制
+        // new CopyPlugin({
+        //     patterns: [
+        //         {
+        //             from: path
+        //                 .join(process.cwd(), '/static/**/*')
+        //                 .replace(/\\/gi, '/'),
+        //             to: path.join(process.cwd(), 'dist').replace(/\\/gi, '/'),
+        //         },
+        //     ],
+        // }),
+        
         //清理编译目录
         new CleanWebpackPlugin({
             cleanStaleWebpackAssets: false,
