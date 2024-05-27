@@ -19,11 +19,11 @@ let actions, settings;
 let singleStepMode = false;
 let sizeOfNextStep = 0;
 
-init();
+
 
 function init() {
 
-  const container = document.getElementById('container');
+  const container = document.body;
 
   camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 1, 100);
   camera.position.set(1, 2, - 3);
@@ -104,6 +104,11 @@ function init() {
   renderer.setPixelRatio(window.devicePixelRatio);
   renderer.setSize(window.innerWidth, window.innerHeight);
   renderer.shadowMap.enabled = true;
+
+
+
+
+
   container.appendChild(renderer.domElement);
 
   stats = new Stats();
@@ -475,3 +480,8 @@ function animate() {
 
 }
 
+
+
+window.onload = () => {
+  init();
+}
