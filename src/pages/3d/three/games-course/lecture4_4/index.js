@@ -8,7 +8,6 @@ import { LoadingBar } from "@/pages/3d/utils/LoadingBar.js";
 
 import { DRACOLoader } from "three/addons/loaders/DRACOLoader.js";
 
-
 // 模型动画文档 http://cw.hubwiz.com/card/c/three.js-api/1/1/1/
 class Game {
   constructor() {
@@ -198,13 +197,11 @@ class Game {
     const clip = this.animations[name.toLowerCase()];
 
     if (clip !== undefined) {
-
-         // 切换动画效果
+      // 切换动画效果
       const action = this.mixer.clipAction(clip);
 
-      // 
+      //
       if (name == "shot") {
-
         /*
         如果 clampWhenFinished 值设为true, 那么动画将在最后一帧之后自动暂停（paused）
             如果 clampWhenFinished 值为false, enabled 属性值将在动作的最后一次循环完成之后自动改为false, 那么这个动作以后就不会再执行。
@@ -217,9 +214,17 @@ class Game {
         # .setLoop ( loopMode : Number, repetitions : Number ) : AnimationAction
             设置循环（loop mode）及循环重复次数（repetitions）。改方法可被链式调用。
         */
+        // THREE.LoopOnce - 只执行一次
         action.setLoop(THREE.LoopOnce);
       }
 
+      /*
+        重置动作。此方法可链式调用。
+            该方法会将暂停值 paused 设为false, 启用值enabled 设为true,时间值 time设为0, 
+            中断任何预定的淡入淡出和变形, 以及移除内部循环次数以及延迟启动。
+            说明: 停止方法stop内调用了重置方法（reset）, 但是 .reset不会调用 .stop。 
+            这就表示: 如果你想要这两者, 重置并且停止, 不要调用reset; 而应该调用stop。
+      */
       action.reset();
 
       const nofade = this.actionName == "shot";
@@ -229,10 +234,10 @@ class Game {
       action.play();
       if (this.curAction) {
         if (nofade) {
-            // 暂停
+          // 暂停
           this.curAction.enabled = false;
         } else {
-            /*
+          /*
             # .crossFadeTo ( fadeInAction : AnimationAction, durationInSeconds : Number, warpBoolean : Boolean ) : AnimationAction
                     在传入的时间段内, 让此动作淡出（fade out），同时让另一个动作淡入。此方法可链式调用。
                     如果warpBoolean值是true, 额外的 warping (时间比例的渐变)将会被应用。
@@ -248,7 +253,9 @@ class Game {
   render() {
     const dt = this.clock.getDelta();
 
-    if (this.mixer !== undefined) this.mixer.update(dt);
+    if (this.mixer !== undefined) {
+      this.mixer.update(dt);
+    }
 
     this.renderer.render(this.scene, this.camera);
   }
