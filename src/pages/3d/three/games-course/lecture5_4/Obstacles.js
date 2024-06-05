@@ -21,12 +21,13 @@ class Obstacles {
   }
 
   loadStar() {
-    const loader = new GLTFLoader().setPath(`${this.assetsPath}plane/`);
+    const loader = new GLTFLoader()  //.setPath(`${this.assetsPath}plane/`);
     this.ready = false;
 
     // Load a glTF resource
     loader.load(
       // resource URL
+      // 星星模型
       "/static/file/plane/star.glb",
       // called when the resource is loaded
       (gltf) => {
@@ -34,10 +35,13 @@ class Obstacles {
 
         this.star.name = "star";
 
-        if (this.bomb !== undefined) this.initialize();
+        if (this.bomb !== undefined) {
+          this.initialize();
+        }
       },
       // called while loading is progressing
       (xhr) => {
+        // 加载进度条
         this.loadingBar.update("star", xhr.loaded, xhr.total);
       },
       // called when loading has errors
@@ -53,12 +57,15 @@ class Obstacles {
     // Load a glTF resource
     loader.load(
       // resource URL
+      // 炮弹模型
       "/static/file/plane/bomb.glb",
       // called when the resource is loaded
       (gltf) => {
         this.bomb = gltf.scene.children[0];
 
-        if (this.star !== undefined) this.initialize();
+        if (this.star !== undefined) {
+          this.initialize();
+        }
       },
       // called while loading is progressing
       (xhr) => {

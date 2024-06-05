@@ -37,18 +37,26 @@ class Game {
     this.camera.position.set(-4.37, 0, -4.75);
     // 设置眼镜的位置
     this.camera.lookAt(0, 0, 6);
-
+    // 相机控制器
     this.cameraController = new THREE.Object3D();
     this.cameraController.add(this.camera);
     this.cameraTarget = new THREE.Vector3(0, 0, 6);
 
+    // 创建场景
     this.scene = new THREE.Scene();
     this.scene.add(this.cameraController);
 
+   
+  /*
+  半球光（HemisphereLight）
+    光源直接放置于场景之上，光照颜色从天空光线颜色渐变到地面光线颜色。
+    半球光不能投射阴影。
+  */
     const ambient = new THREE.HemisphereLight(0xffffff, 0xbbbbff, 1);
     ambient.position.set(0.5, 1, 0.25);
     this.scene.add(ambient);
 
+    // 渲染器 
     this.renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
     this.renderer.setPixelRatio(window.devicePixelRatio);
     this.renderer.setSize(window.innerWidth, window.innerHeight);
@@ -152,20 +160,24 @@ class Game {
   }
 
   load() {
+    // 加载天空盒子
     this.loadSkybox();
     this.loading = true;
     this.loadingBar.visible = true;
 
+    // 飞机类
     this.plane = new Plane(this);
     this.obstacles = new Obstacles(this);
   }
 
   loadSkybox() {
+    // 加载天空盒子
     this.scene.background = new THREE.CubeTextureLoader()
       .setPath("/static/file/plane/paintedsky/")
       .load(
         ["px.jpg", "nx.jpg", "py.jpg", "ny.jpg", "pz.jpg", "nz.jpg"],
         () => {
+          // 不断的回调渲染
           this.renderer.setAnimationLoop(this.render.bind(this));
         }
       );

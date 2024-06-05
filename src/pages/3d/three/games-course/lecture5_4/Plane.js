@@ -31,6 +31,7 @@ class Plane {
     this.ready = false;
 
     // Load a glTF resource
+    // 飞机模型
     loader.load(
       // resource URL
       "/static/file/plane/microplane.glb",
@@ -46,6 +47,7 @@ class Plane {
       },
       // called while loading is progressing
       (xhr) => {
+        // 进度条
         this.loadingBar.update("plane", xhr.loaded, xhr.total);
       },
       // called when loading has errors
@@ -56,13 +58,17 @@ class Plane {
   }
 
   reset() {
+    // 设置模型到中心点
     this.plane.position.set(0, 0, 0);
     this.velocity.set(0, 0, 0.1);
   }
 
   update(time) {
-    if (this.propeller !== undefined) this.propeller.rotateZ(1);
+    if (this.propeller !== undefined) {
+      this.propeller.rotateZ(1);
+    }
 
+    // 如果被激活啦
     if (this.game.active) {
       if (!this.game.spaceKey) {
         this.velocity.y -= 0.001;
