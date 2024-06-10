@@ -41,6 +41,7 @@ class Plane {
         this.plane = gltf.scene;
         this.velocity = new THREE.Vector3(0, 0, 0.1);
 
+        // 获取到飞机叶片
         this.propeller = this.plane.getObjectByName("propeller");
 
         this.ready = true;
@@ -65,6 +66,12 @@ class Plane {
 
   update(time) {
     if (this.propeller !== undefined) {
+      /*
+       orbit2.rotateZ(1) 等同于 orbit2.rotation.z += 1
+       rotation和rotateX(rotateY/rotateZ)的区别
+       orbit2.rotateY(0.01); orbit2.rotation.y += 0.01;
+      */
+      // 控制飞机叶片旋转
       this.propeller.rotateZ(1);
     }
 
