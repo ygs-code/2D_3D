@@ -168,10 +168,12 @@ class Game {
   }
 
   load() {
+    // 天空盒子
     this.loadSkybox();
     this.loading = true;
     this.loadingBar.visible = true;
 
+    // 飞机模型
     this.plane = new Plane(this);
     this.obstacles = new Obstacles(this);
   }

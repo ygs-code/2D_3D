@@ -66,7 +66,9 @@ class Game {
   }
 
   resize() {
+    // 
     this.camera.aspect = window.innerWidth / window.innerHeight;
+    // 更新矩阵
     this.camera.updateProjectionMatrix();
     this.renderer.setSize(window.innerWidth, window.innerHeight);
   }
@@ -99,6 +101,7 @@ class Game {
     this.plane = new Plane(this);
   }
 
+  // 天空盒子
   loadSkybox() {
     // 加载模型
 
@@ -114,11 +117,13 @@ class Game {
       );
   }
 
+  // 更新相机
   updateCamera() {
     this.cameraController.position.copy(this.plane.position);
     this.cameraController.position.y = 0;
     this.cameraTarget.copy(this.plane.position);
     this.cameraTarget.z += 6;
+    // 相机
     this.camera.lookAt(this.cameraTarget);
   }
 

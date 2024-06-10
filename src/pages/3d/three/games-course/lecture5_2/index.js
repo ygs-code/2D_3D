@@ -17,6 +17,7 @@ class Game {
     const container = document.createElement("div");
     document.body.appendChild(container);
 
+    // 进度条
     this.loadingBar = new LoadingBar();
     this.loadingBar.visible = false;
 
@@ -24,6 +25,7 @@ class Game {
 
     // this.assetsPath = '../../assets/';
 
+    // 透视投影
     this.camera = new THREE.PerspectiveCamera(
       70,
       window.innerWidth / window.innerHeight,
@@ -31,19 +33,24 @@ class Game {
       100
     );
     this.camera.position.set(-4.37, 0, -4.75);
+    // 眼睛
     this.camera.lookAt(0, 0, 6);
 
+    // 相机控制器
     this.cameraController = new THREE.Object3D();
     this.cameraController.add(this.camera);
     this.cameraTarget = new THREE.Vector3(0, 0, 6);
 
+    // 场景
     this.scene = new THREE.Scene();
     this.scene.add(this.cameraController);
 
+    // 半球光
     const ambient = new THREE.HemisphereLight(0xffffff, 0xbbbbff, 1);
     ambient.position.set(0.5, 1, 0.25);
     this.scene.add(ambient);
 
+    // 渲染器
     this.renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
     this.renderer.setPixelRatio(window.devicePixelRatio);
     this.renderer.setSize(window.innerWidth, window.innerHeight);
@@ -53,6 +60,7 @@ class Game {
 
     this.load();
 
+    // 事件
     window.addEventListener("resize", this.resize.bind(this));
 
     document.addEventListener("keydown", this.keyDown.bind(this));
@@ -140,6 +148,7 @@ class Game {
     this.plane = new Plane(this);
   }
 
+  // 天空盒子
   loadSkybox() {
     this.scene.background = new THREE.CubeTextureLoader()
       .setPath("/static/file/plane/paintedsky/")
@@ -151,6 +160,7 @@ class Game {
       );
   }
 
+  // 更新相机
   updateCamera() {
     this.cameraController.position.copy(this.plane.position);
     this.cameraController.position.y = 0;

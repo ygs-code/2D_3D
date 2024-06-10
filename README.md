@@ -91,7 +91,25 @@ shader 网站：https://www.vertexshaderart.com/art/PHWvovEcpp6R6yT8K
 
 shader 网站：https://ogldev.org/
 
+shader 网站：https://glslsandbox.com/
+
+3d炫酷效果 网站：https://www.instagram.com/dailycssdesign/
+
+ 3d炫酷效果 网站：  https://wangyasai.github.io/Work/
+
+ 3d炫酷效果 网站：https://dailycssdesign.com/
+
 shader 书网站：https://www.realtimerendering.com/resources/shaderx/
+
+shader 帖子： https://juejin.cn/column/7222305161368469541?share_token=d0c9cc7c-7242-44bf-8b67-3a9838936206
+
+shader 帖子：https://mp.weixin.qq.com/s/0E95yb35glAOvpMgyzul-g
+
+ 
+
+
+
+
 
 
 
