@@ -221,3 +221,7 @@ webgl 教程学习网站 ：https://learnwebgl.brown37.net/index.html
 
 
 desmos
+
+
+
+天空盒 框架 https://pannellum.org/
