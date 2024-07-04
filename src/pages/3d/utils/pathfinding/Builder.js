@@ -31,6 +31,9 @@ class Builder {
     // TODO: This block represents a large portion of navigation mesh construction time
     // and could probably be optimized. For example, construct portals while
     // determining the neighbor graph.
+    // TODO:此块表示导航网格构建时间的很大一部分
+    //可以进行优化。例如，在
+    //确定邻居图。
     zone.groups = new Array(groups.length);
     groups.forEach((group, groupIndex) => {
 
@@ -75,7 +78,13 @@ class Builder {
    * Constructs a navigation mesh from the given geometry.
    * @param {BufferGeometry} geometry
    * @return {Object}
+   * 
+    *从给定的几何构造一个导航网格。
+    * @param {BufferGeometry} geometry
+    * @return {Object}
+   * 
    */
+
   static _buildNavigationMesh (geometry, tolerance) {
     geometry = Utils.prepGeometry(geometry, tolerance);
     return this._buildPolygonsFromGeometry(geometry);

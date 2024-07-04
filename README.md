@@ -80,7 +80,7 @@ webgl 例子：https://www.jb51.net/article/234799.htm
 
 
 
-webgl  mdn web doc 操作api ：https://developer.mozilla.org/en-US/docs/Web/API/WebGLRenderingContext/getActiveUniform
+webgl  mdn web doc 操作api ：https://developer.mozilla.org/en-US/docs/Web/API/WebGLRenderingContext/getActiveUniformc
 
 https://developer.mozilla.org/zh-CN/docs/Web/API/WebGL_API
 
