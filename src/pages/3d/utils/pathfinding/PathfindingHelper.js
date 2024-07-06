@@ -1,3 +1,16 @@
+// import {
+//   BoxBufferGeometry,
+//   BufferAttribute,
+//   BufferGeometry,
+//   Color,
+//   Line,
+//   LineBasicMaterial,
+//   Mesh,
+//   MeshBasicMaterial,
+//   Object3D,
+//   SphereBufferGeometry,
+//   Vector3,
+// } from '../three137/three.module.js';
 import {
   BoxBufferGeometry,
   BufferAttribute,
@@ -10,8 +23,11 @@ import {
   Object3D,
   SphereBufferGeometry,
   Vector3,
-} from '../three137/three.module.js';
+}   from "three";
 
+
+
+// 颜色
 const colors = {
   PLAYER: new Color( 0xee836f ).convertGammaToLinear( 2.2 ).getHex(),
   TARGET: new Color( 0xdccb18 ).convertGammaToLinear( 2.2 ).getHex(),
@@ -26,6 +42,8 @@ const OFFSET = 0.2;
 /**
  * Helper for debugging pathfinding behavior.
  */
+
+// 调试寻路行为的帮助器。
 class PathfindingHelper extends Object3D {
   constructor () {
     super();

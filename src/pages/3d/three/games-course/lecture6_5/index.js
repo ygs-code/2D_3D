@@ -78,7 +78,9 @@ class Game {
   initPathfinding(navmesh) {
     this.pathfinder = new Pathfinding();
     this.pathfinder.setZoneData('factory', Pathfinding.createZone(navmesh.geometry, 0.02));
-    if (this.npcHandler.gltf !== undefined) this.npcHandler.initNPCs();
+    if (this.npcHandler.gltf !== undefined) {
+      this.npcHandler.initNPCs();
+    }
   }
 
   resize() {
@@ -92,7 +94,8 @@ class Game {
     const pmremGenerator = new THREE.PMREMGenerator(this.renderer);
     pmremGenerator.compileEquirectangularShader();
 
-    loader.load('/static/file/hdr/factory.hdr',
+    loader.load(
+      '/static/file/hdr/factory.hdr',
       texture => {
         const envMap = pmremGenerator.fromEquirectangular(texture).texture;
         pmremGenerator.dispose();
