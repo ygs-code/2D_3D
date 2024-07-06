@@ -83,10 +83,6 @@ class Game {
     if (this.npcHandler.gltf !== undefined) {
       this.npcHandler.initNPCs();
     }
-
-
-   
-
   }
 
   resize() {
