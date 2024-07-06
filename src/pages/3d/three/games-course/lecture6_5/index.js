@@ -76,11 +76,17 @@ class Game {
   }
 
   initPathfinding(navmesh) {
+    // 寻路
     this.pathfinder = new Pathfinding();
     this.pathfinder.setZoneData('factory', Pathfinding.createZone(navmesh.geometry, 0.02));
+
     if (this.npcHandler.gltf !== undefined) {
       this.npcHandler.initNPCs();
     }
+
+
+   
+
   }
 
   resize() {
@@ -94,8 +100,9 @@ class Game {
     const pmremGenerator = new THREE.PMREMGenerator(this.renderer);
     pmremGenerator.compileEquirectangularShader();
 
-    loader.load(
-      '/static/file/hdr/factory.hdr',
+
+    // 加载模型
+    loader.load('/static/file/hdr/factory.hdr',
       texture => {
         const envMap = pmremGenerator.fromEquirectangular(texture).texture;
         pmremGenerator.dispose();
@@ -122,6 +129,7 @@ class Game {
 
     this.loadingBar.visible = true;
 
+    // 加载模型
     // Load a glTF resource
     loader.load(
       // resource URL
@@ -145,22 +153,30 @@ class Game {
               child.material.transparent = true;
               child.material.opacity = 0.5;
             } else if (child.name.includes('fan')) {
+              // 风扇模型
               this.fans.push(child);
             } else if (child.material.name.includes('elements2')) {
+
               mergeObjects.elements2.push(child);
               child.castShadow = true;
             } else if (child.material.name.includes('elements5')) {
+
               mergeObjects.elements5.push(child);
               child.castShadow = true;
+
             } else if (child.material.name.includes('terrain')) {
+
               mergeObjects.terrain.push(child);
               child.castShadow = true;
             } else if (child.material.name.includes('sand')) {
               child.receiveShadow = true;
+
             } else if (child.material.name.includes('elements1')) {
+
               child.castShadow = true;
               child.receiveShadow = true;
             } else if (child.parent.name.includes('main')) {
+
               child.castShadow = true;
             }
           }

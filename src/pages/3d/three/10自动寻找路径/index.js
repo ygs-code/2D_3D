@@ -269,6 +269,7 @@ window.onload = () => {
     let intersects = ray.intersectPlane(groundplane);
     let x = intersects.x;
     let z = intersects.z;
+    
 
     if (Math.abs(x) > length / 2 || Math.abs(z) > (length / 2)) {
       return;

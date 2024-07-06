@@ -20,6 +20,7 @@ import { Channel } from './Channel.js';
 
 /**
  * Defines an instance of the pathfinding module, with one or more zones.
+ * 定义寻路模块的实例，包含一个或多个区域。
  */
 class Pathfinding {
 	constructor () {
@@ -31,6 +32,7 @@ class Pathfinding {
 	 * @param  {BufferGeometry} geometry
 	 * @return {Zone}
 	 */
+	// (静态)从导航网格几何构造一个区域/节点集。
 	static createZone (geometry, tolerance = 1e-4) {
 		return Builder.buildZone(geometry, tolerance);
 	}
