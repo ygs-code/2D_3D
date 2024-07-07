@@ -104,6 +104,8 @@ window.onload = function () {
       /*
           模型 矩阵 逆矩阵
           转置矩阵  这样做法是为啦 让 模型变动的时候  法向量 得到纠正
+
+          法线矩阵 = 转置矩阵 * (逆矩阵 * 模型矩阵)  这样做的目的为了矫正法向量 不正确问题
       */ 
       normalMatrix.setInverseOf(modelMatrix);
       normalMatrix.transpose();

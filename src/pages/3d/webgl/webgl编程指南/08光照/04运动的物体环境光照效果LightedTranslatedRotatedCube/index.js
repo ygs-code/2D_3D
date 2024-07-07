@@ -119,6 +119,9 @@ window.onload = function () {
     逆矩阵的转置
     若矩阵为方阵且其 逆矩阵 存在时，
     矩阵的逆的转置 等于 矩阵的转置的逆；
+
+    法线矩阵 = 转置矩阵 * (逆矩阵 * 模型矩阵)
+
     */
     // 逆矩阵
     normalMatrix.setInverseOf(modelMatrix);

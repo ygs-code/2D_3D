@@ -81,8 +81,7 @@ window.onload = () => {
     // 初始化光
     var ambientLight = new THREE.AmbientLight(0x111111);
     scene.add(ambientLight);
-    var ambientLight = new THREE.AmbientLight(0x111111);
-    scene.add(ambientLight);
+    
   }
   //播放动画请去掉注释
   //var isMoved;
@@ -225,6 +224,7 @@ window.onload = () => {
 
     var material = new THREE.MeshBasicMaterial({ color: 0xC0C0C0 });
 
+    // 设置障碍物
     for (var i = 0; i < length / 10; i++) {
       var nodeRow = [];
 
@@ -313,14 +313,14 @@ window.onload = () => {
     var material = new THREE.MeshBasicMaterial({ color: 0xffff00 });
 
     if (resultArray.length == 0) {
-      var sphere = new THREE.Mesh(geometry, material);
+      let sphere = new THREE.Mesh(geometry, material);
       sphere.position.x = x;
       sphere.position.y = 5;
       sphere.position.z = z;
       resultArray.push(sphere);
       scene.add(sphere);
     } else if (resultArray[0].position.x != x && resultArray[0].position.z != z) {
-      var sphere = new THREE.Mesh(geometry, material);
+      let sphere = new THREE.Mesh(geometry, material);
       sphere.position.x = x;
       sphere.position.y = 5;
       sphere.position.z = z;

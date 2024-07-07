@@ -363,6 +363,14 @@ window.onload = function () {
       // 转置矩阵
       g_normalMatrix.transpose();
 
+        /*
+          模型 矩阵 逆矩阵
+          转置矩阵  这样做法是为啦 让 模型变动的时候  法向量 得到纠正
+
+          法线矩阵 = 转置矩阵 * (逆矩阵 * 模型矩阵)  这样做的目的为了矫正法向量 不正确问题
+      */ 
+
+
       gl.uniformMatrix4fv(u_NormalMatrix, false, g_normalMatrix.elements);
       // Draw 绘制
       gl.drawElements(gl.TRIANGLES, n, gl.UNSIGNED_BYTE, 0);

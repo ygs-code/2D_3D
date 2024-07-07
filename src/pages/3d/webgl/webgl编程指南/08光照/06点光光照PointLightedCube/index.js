@@ -96,6 +96,11 @@ window.onload = function () {
     // 模型矩阵的逆矩阵
     normalMatrix.setInverseOf(modelMatrix);
     // 转置矩阵。 这样做的目的为了矫正法向量 不正确问题
+
+    /*
+        法线矩阵 = 转置矩阵 * (逆矩阵 * 模型矩阵)  这样做的目的为了矫正法向量 不正确问题
+    */
+
     normalMatrix.transpose();
     gl.uniformMatrix4fv(u_NormalMatrix, false, normalMatrix.elements);
   
