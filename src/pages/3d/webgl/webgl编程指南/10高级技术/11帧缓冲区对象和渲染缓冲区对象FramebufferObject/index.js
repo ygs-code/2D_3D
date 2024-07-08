@@ -76,6 +76,7 @@ function main() {
   // Initialize framebuffer object (FBO)
   //  初始化Framebuffer对象
   var fbo = initFramebufferObject(gl);
+  
   if (!fbo) {
     console.log('Failed to intialize the framebuffer object (FBO)');
     return;
@@ -346,6 +347,7 @@ function initFramebufferObject(gl) {
   // Create a frame buffer object (FBO) 
   //   创建一个帧缓冲对象(FBO)
   framebuffer = gl.createFramebuffer();
+
   if (!framebuffer) {
     console.log('Failed to create frame buffer object');
     return error();
@@ -398,6 +400,7 @@ function initFramebufferObject(gl) {
   // 将纹理和renderbuffer对象附加到FBO上
   // 绑定渲染缓冲区对象并设置其尺寸
   gl.bindFramebuffer(gl.FRAMEBUFFER, framebuffer);
+
   // 将帧缓冲区的颜色关联对象指定为一个纹理对象
   gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.TEXTURE_2D, texture, 0);
   // 将帧缓冲区的深度关联对象指定为一个渲染缓冲区对象
@@ -414,7 +417,9 @@ function initFramebufferObject(gl) {
   // Unbind the buffer object
   // 解除缓冲区对象的绑定
   gl.bindFramebuffer(gl.FRAMEBUFFER, null);
+
   gl.bindTexture(gl.TEXTURE_2D, null);
+// 将对象绑定到目标
   gl.bindRenderbuffer(gl.RENDERBUFFER, null);
 
 
@@ -465,7 +470,7 @@ function draw(
     );  
 
     // Change the drawing destination to color buffer
-    //将绘制目标更改为颜色缓冲区
+    //将绘制目标更改为颜色缓冲区 重点这里
   gl.bindFramebuffer(gl.FRAMEBUFFER, null);      
    // Set the size of viewport back to that of <canvas>
  //设置viewport的大小为<canvas>
