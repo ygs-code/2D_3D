@@ -54,17 +54,20 @@ function main() {
   }
 
   // Set the vertex information
-  //正方体定点位置
+  //正方六面体 定点位置
   var cube = initVertexBuffersForCube(gl);
-  // // 正方形定点位置
+
+  //  正方形 矩形 定点位置
   var plane = initVertexBuffersForPlane(gl);
+
   if (!cube || !plane) {
     console.log('Failed to set the vertex information');
     return;
   }
 
-  // Set texture //初始化纹理
+  // Set texture //初始化图片纹理 
   var texture = initTextures(gl);
+
   if (!texture) {
     console.log('Failed to intialize the texture.');
     return;
@@ -103,17 +106,19 @@ function main() {
     // Update current rotation angle
     // 更新当前旋转角度
     currentAngle = animate(currentAngle);  
+
     draw(
         gl,  // gl对象
         canvas, // canvas 画布
         fbo,  // fob 缓存对象
-        plane, // 正方形定点位置信息
-        cube, // 正方体定点位置信息
+        plane, // 正方形矩形定点位置信息
+        cube, // 正方六面体体定点位置信息
         currentAngle, // 当前角度
-        texture,  // 纹理对象
+        texture,  // 图像纹理对象 
         viewProjMatrix,  // 视图投影矩阵
         viewProjMatrixFBO // 视图投影 fbo矩阵
        );
+
     window.requestAnimationFrame(tick, canvas);
   };
   tick();
@@ -185,6 +190,7 @@ function initVertexBuffersForCube(gl) {
 
 // 正方形定点位置
 function initVertexBuffersForPlane(gl) {
+   // 创建一个平面
   // Create face
   //  v1------v0
   //  |        | 
@@ -355,7 +361,7 @@ function initFramebufferObject(gl) {
   }
   // Bind the object to target
   // 将对象绑定到目标
-  gl.bindTexture(gl.TEXTURE_2D, texture); 
+   gl.bindTexture(gl.TEXTURE_2D, texture); 
     //设置纹理图像
     gl.texImage2D(
         gl.TEXTURE_2D, 
@@ -415,21 +421,27 @@ function initFramebufferObject(gl) {
   return framebuffer;
 }
 
+
+
+
+ 
 // 绘制
 function draw(
           gl,   // gl 对象
           canvas, // canvas
           fbo,   // fbo 对象
-          plane, // 正方形定点位置信息
-          cube,  // 正方体定点位置信息
+          plane, // 正方形 矩形定点位置信息
+          cube,  // 正方体 六面体定点位置信息
           angle, // 当前角度
-          texture,  // 纹理对象
+          texture,  // 图片纹理对象
           viewProjMatrix,  // 视图投影
           viewProjMatrixFBO // fob视图投影
         ) {
   // Change the drawing destination to FBO
-  //将绘图目标更改为FBO
-  gl.bindFramebuffer(gl.FRAMEBUFFER, fbo);             
+
+  // 将绘图目标更改为FBO 重点这里
+  gl.bindFramebuffer(gl.FRAMEBUFFER, fbo);      
+
    // Set a viewport for FBO
     // 为FBO设置一个视口
   gl.viewport(0, 0, OFFSCREEN_WIDTH, OFFSCREEN_HEIGHT);
@@ -438,9 +450,11 @@ function draw(
  //  设置清色(颜色略有变化)
   gl.clearColor(0.2, 0.2, 0.4, 1.0); 
    // Clear FBO
+   // 清除帧缓冲区中的颜色关联对象和深度关联对象（类似清除颜色缓冲区和深度缓冲区）
   gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT); 
 
    // Draw the cube
+  //  绘制立方体
   drawTexturedCube(
           gl,   // gl对象
           program,  // program对象
@@ -477,11 +491,22 @@ function draw(
 var g_modelMatrix = new Matrix4();
 var g_mvpMatrix = new Matrix4();
 
-// 绘制贴图
+// Draw the cube
+//  绘制立方体
+
+
+
+// gl,   // gl对象
+// program,  // program对象
+// cube,  // cube 正方体
+// angle,  // 角度
+// texture, // 纹理对象
+// viewProjMatrixFBO // 纹理缓存视图投影
+
 function drawTexturedCube(
           gl,   // gl 对象
           program, // program对象
-          o,    // 正方形纹理对象
+          o,    // cube 正方体
           angle,  // 角度
           texture, // 纹理对象
           viewProjMatrix  // 视图透视投影
@@ -505,6 +530,9 @@ function drawTexturedCube(
       );
 }
 
+
+  // Draw the plane
+  // 渲染正方形
 function drawTexturedPlane(gl, program, o, angle, texture, viewProjMatrix) {
   // Calculate a model matrix
   // 偏移 
@@ -555,19 +583,19 @@ function initAttributeVariable(gl, a_attribute, buffer) {
   gl.enableVertexAttribArray(a_attribute);
 }
 
-function drawTexturedCube2(gl, o, angle, texture, viewpProjMatrix, u_MvpMatrix) {
-  // Calculate a model matrix
-  g_modelMatrix.rotate(20.0, 1.0, 0.0, 0.0);
-  g_modelMatrix.rotate(angle, 0.0, 1.0, 0.0);
-  g_modelMatrix.scale(1, 1, 1);
+// function drawTexturedCube2(gl, o, angle, texture, viewpProjMatrix, u_MvpMatrix) {
+//   // Calculate a model matrix
+//   g_modelMatrix.rotate(20.0, 1.0, 0.0, 0.0);
+//   g_modelMatrix.rotate(angle, 0.0, 1.0, 0.0);
+//   g_modelMatrix.scale(1, 1, 1);
 
-  // Calculate the model view project matrix and pass it to u_MvpMatrix
-  // g_mvpMatrix.set(vpMatrix);
-  g_mvpMatrix.multiply(g_modelMatrix);
-  gl.uniformMatrix4fv(u_MvpMatrix, false, g_mvpMatrix.elements);
+//   // Calculate the model view project matrix and pass it to u_MvpMatrix
+//   // g_mvpMatrix.set(vpMatrix);
+//   g_mvpMatrix.multiply(g_modelMatrix);
+//   gl.uniformMatrix4fv(u_MvpMatrix, false, g_mvpMatrix.elements);
 
-  drawTexturedObject(gl, o, texture);
-}
+//   drawTexturedObject(gl, o, texture);
+// }
 
 var ANGLE_STEP = 30;   // The increments of rotation angle (degrees)
 
