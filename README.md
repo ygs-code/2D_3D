@@ -130,6 +130,12 @@ https://baijiahao.baidu.com/s?id=1729786016813908622&wfr=spider&for=pc
 webgl 教程
 https://www.w3cschool.cn/webgl/glnw1ohq.html
 
+
+
+https://madebyevan.com/webgl-water/
+
+
+
 three.js 开源项目
 https://mp.weixin.qq.com/s/Z1Lpcj4LU_jgpuMKB5444Q
 
