@@ -112,7 +112,7 @@ function init() {
     if (params.sharedSkeleton === true) {
 
       setupSharedSkeletonScene();
-      debugger
+      
 
     } else {
 

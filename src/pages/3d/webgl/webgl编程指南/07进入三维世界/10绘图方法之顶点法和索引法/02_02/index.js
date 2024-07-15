@@ -34,29 +34,29 @@ window.onload = function () {
  
  
 
- // 创建着色器源码
- const VERTEX_SHADER_SOURCE = `
- attribute vec4 aPosition;
- attribute vec4 aColor;
- varying vec4 vColor;
+//  // 创建着色器源码
+//  const VSHADER_SOURCE = `
+//  attribute vec4 aPosition;
+//  attribute vec4 aColor;
+//  varying vec4 vColor;
 
- uniform mat4 mat;
- void main() {
-   gl_Position = mat * aPosition;
-   vColor = aPosition;
- }
-`; // 顶点着色器
+//  uniform mat4 mat;
+//  void main() {
+//    gl_Position = mat * aPosition;
+//    vColor = aPosition;
+//  }
+// `; // 顶点着色器
 
-const FRAGMENT_SHADER_SOURCE = `
- precision lowp float;
- varying vec4 vColor;
+// const FSHADER_SOURCE = `
+//  precision lowp float;
+//  varying vec4 vColor;
 
- void main() {
-   gl_FragColor = vColor;
- }
-`; // 片元着色器
+//  void main() {
+//    gl_FragColor = vColor;
+//  }
+// `; // 片元着色器
 
-const program = initShader(gl, VERTEX_SHADER_SOURCE, FRAGMENT_SHADER_SOURCE);
+const program = initShader(gl, VSHADER_SOURCE, FSHADER_SOURCE);
 
 const aPosition = gl.getAttribLocation(program, 'aPosition');
 const aColor = gl.getAttribLocation(program, 'aColor');

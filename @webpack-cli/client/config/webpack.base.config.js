@@ -392,6 +392,19 @@ module.exports = {
 
   module: {
     rules: [
+
+      {
+        test: /\.(vert|frag|glsl)$/,
+        exclude: /node_modules/,
+        use: {
+          loader:"webpack-glsl-shader-loader",
+          options: {
+            // checkError:false
+          }
+        },
+      },
+
+
       //处理图片
       //！默认处理不了html中的图片 <img src="./img/BM.jpg" alt=""> 打包后路径不会改变！
       {
@@ -493,7 +506,7 @@ module.exports = {
       },
 
       {
-        test: /\.(graphql|gql|sql|vert|frag|glsl|json|gltf|hdr|glb)$/,
+        test: /\.(graphql|gql|sql|json|gltf|hdr|glb)$/,
         // 排除文件,因为这些包已经编译过，无需再次编译
         exclude: /(node_modules|bower_components)/,
         use: [].concat(cacheLoader("rawLoader"))
