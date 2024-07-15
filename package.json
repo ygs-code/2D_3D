@@ -13,8 +13,6 @@
     "webpack-cli-util": "./bin/index.js"
   },
   "dependencies": {
-    "@antv/g6": "4.8.21",
-    "@antv/g6-react-node": "^1.4.8",
     "@babel/cli": "^7.17.6",
     "@babel/core": "^7.17.10",
     "@babel/eslint-parser": "^7.18.2",
@@ -69,7 +67,6 @@
     "assert": "^2.0.0",
     "autoprefixer": "^10.4.7",
     "awesome-typescript-loader": "^5.2.1",
-
     "browser-reload-error-overlay-wepback-plugin": "^0.0.9",
     "cache-loader": "^4.1.0",
     "case-sensitive-paths-webpack-plugin": "^2.3.0",
@@ -210,8 +207,7 @@
     "webpack-hot-server-middleware": "^0.6.1",
     "webpack-merge": "^5.8.0",
     "webpack-node-externals": "^2.5.2",
-    "webpackbar": "^5.0.2",
-    "headless-gl": "^3.0.7"
+    "webpackbar": "^5.0.2"
   },
   "setupFiles": [
     "react-app-polyfill/jsdom"
