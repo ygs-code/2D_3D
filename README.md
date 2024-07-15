@@ -202,3 +202,5 @@ webgl 教程学习网站 ：https://learnwebgl.brown37.net/index.html
 desmos
 
 天空盒 框架 https://pannellum.org/
+
+透视投影 推导 ：https://blog.csdn.net/qq_33913063/article/details/115105999
