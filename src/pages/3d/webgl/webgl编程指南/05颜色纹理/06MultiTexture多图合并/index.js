@@ -105,8 +105,8 @@ function initTextures(gl, n) {
     console.log('Failed to create the texture object');
     return false;
   }
-
-  // Get the storage location of u_Sampler0 and u_Sampler1
+   
+   // Get the storage location of u_Sampler0 and u_Sampler1
   var u_Sampler0 = gl.getUniformLocation(program, 'u_Sampler0');
   var u_Sampler1 = gl.getUniformLocation(program, 'u_Sampler1');
   if (!u_Sampler0 || !u_Sampler1) {

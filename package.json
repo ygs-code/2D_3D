@@ -201,7 +201,7 @@
     "webpack-bundle-analyzer": "^4.3.0",
     "webpack-cli": "^4.2.0",
     "webpack-dev-middleware": "^4.0.2",
-    "webpack-glsl-shader-loader": "^0.1.4",
+    "webpack-glsl-shader-loader": "^0.1.7",
     "webpack-hot-middleware": "^2.25.0",
     "webpack-hot-plugin": "0.0.3",
     "webpack-hot-server-middleware": "^0.6.1",

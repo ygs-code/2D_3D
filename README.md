@@ -204,3 +204,7 @@ desmos
 天空盒 框架 https://pannellum.org/
 
 透视投影 推导 ：https://blog.csdn.net/qq_33913063/article/details/115105999
+
+
+
+webgl api 文档 https://registry.khronos.org/OpenGL-Refpages/gl4/html/

@@ -22,6 +22,6 @@ void main() {
    // pass the texCoord to the fragment shader
    // The GPU will interpolate this value between points.
    //将texCoord传递给片段着色器
-// GPU将在点之间插入这个值。
+  // GPU将在点之间插入这个值。
    v_texCoord = a_texCoord;
 }
