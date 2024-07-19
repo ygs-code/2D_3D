@@ -6,6 +6,7 @@ uniform vec3 u_FogColor;// Color of Fog
 uniform vec2 u_FogDist;// Distance of Fog (starting point, end point)
 varying vec4 v_Color;
 varying float v_Dist;
+ 
 void main(){
   // Calculation of fog factor (factor becomes smaller as it goes further away from eye point)
   float fogFactor=clamp((u_FogDist.y-v_Dist)/(u_FogDist.y-u_FogDist.x),0.,1.);

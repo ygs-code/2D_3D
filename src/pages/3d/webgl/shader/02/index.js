@@ -1,4 +1,5 @@
-import {getWebGLContext, initShaders} from "@/pages/3d/utils/lib/cuon-utils";
+import {getWebGLContext, } from "@/pages/3d/utils/lib/cuon-utils";
+import initShader from "@/pages/3d/utils/initShader";
 import VSHADER_SOURCE from "./index.vert";
 import FSHADER_SOURCE from "./index.frag";
 import "./index.less";
@@ -16,29 +17,28 @@ window.onload = function () {
   let gl = canvas.getContext("webgl");
   // vertexShader, fragmentShader
 
-  console.log("VSHADER_SOURCE=====", VSHADER_SOURCE);
-  console.log("FSHADER_SOURCE=====", FSHADER_SOURCE);
-  if (!initShaders(gl, VSHADER_SOURCE, FSHADER_SOURCE)) {
+  // console.log("VSHADER_SOURCE=====", VSHADER_SOURCE);
+  // console.log("FSHADER_SOURCE=====", FSHADER_SOURCE);
+  const program = initShader(gl, VSHADER_SOURCE, FSHADER_SOURCE)
+  if (!program) {
     console.log("failed to initialize shaders");
     return;
   }
 
-  // let u_w = gl.getUniformLocation(gl.program, "u_w");
-  // let u_h = gl.getUniformLocation(gl.program, "u_h");
-  // gl.uniform1f(u_w, canvas_w);
-  // gl.uniform1f(u_h, canvas_h);
+
 
   //三角形顶点位置
 
   // 4个点的坐标信息
-  let vertices = new Float32Array([ 
+  let vertices = new Float32Array([
      -1, 1,
-    -1,-1, 
-     1, -1,
+     -1,-1, 
+      1, -1,
 
-     1, -1,
-     1,  1,
-     -1, 1,]);
+      1, -1,
+      1,  1,
+      -1, 1,
+    ]);
 
   let FSIZE = vertices.BYTES_PER_ELEMENT; // Float32 Size = 4
 
@@ -81,10 +81,30 @@ window.onload = function () {
   // 连接a_Position变量与分配给他的缓冲区对象
   gl.enableVertexAttribArray(a_Position);
 
+
+  let u_time = gl.getUniformLocation(program, "u_time");
+  // let timePrev = performance.now();
+  let time = 0
+  const render = ()=>{
+    //  var now = performance.now();
+    //  const time = (now - timePrev) / 50.0
+    //  timePrev = now
+
+     time+=10
   // 清空画布
   gl.clearColor(0.0, 0.0, 0.0, 1.0);
   gl.clear(gl.COLOR_BUFFER_BIT);
+
+  gl.uniform1f(u_time, time/360);
   // 画图
   gl.drawArrays(gl.TRIANGLE_FAN, 0, 6);
   // gl.drawArrays(gl.POINTS, 0, 4);
+
+      requestAnimationFrame(()=>{
+        render()
+      })
+
+  }
+
+  render()
 };

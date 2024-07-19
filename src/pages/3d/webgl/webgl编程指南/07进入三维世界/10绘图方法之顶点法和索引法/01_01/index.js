@@ -10,8 +10,8 @@ window.onload = function () {
   let canvas_w = 400,
     canvas_h = 400;
   const canvas = document.createElement("canvas");
-  canvas.width = 500;
-  canvas.height = 500;
+  canvas.width = canvas_w;
+  canvas.height = canvas_h;
   // getWebGLContext(canvas);
   document.body.appendChild(canvas);
 
@@ -36,21 +36,21 @@ window.onload = function () {
     // 4个点的坐标信息和颜色信息
     // vertex = position + color
     let vertices = new Float32Array([
-       -0.5,  0.5, 0.0, 1.0, 0.0, 0.0,
-       -0.5, -0.5, 0.0, 1.0, 0.0, 0.0,
-        0.5, -0.5, 0.0, 1.0, 0.0, 0.0, 
+       -1,  1, 0.0, 1.0, 0.0, 0.0,
+       -1, -1, 0.0, 1.0, 0.0, 0.0,
+        1, -1, 0.0, 1.0, 0.0, 0.0, 
 
-        0.5, -0.5, 0.0, 1.0, 0.0, 0.0, 
-        0.5,  0.5, 0.0, 1.0, 0.0, 0.0, 
-       -0.5, 0.5,  0.0, 1.0, 0.0, 0.0,
+        1, -1, 0.0, 1.0, 0.0, 0.0, 
+        1,  1, 0.0, 1.0, 0.0, 0.0, 
+       -1, 1,  0.0, 1.0, 0.0, 0.0,
     ]);
 
     // 4个点的坐标信息
     //        let positions = new Float32Array([
-    //       -0.5, 0.5, 0.0,
-    //     -0.5, -0.5, 0.0,
-    //   0.5, -0.5, 0.0,
-    //  0.5, 0.5, 0.0,
+    //       -1, 1, 0.0,
+    //     -1, -1, 0.0,
+    //   1, -1, 0.0,
+    //  1, 1, 0.0,
     //    ])
 
     // 4个点的颜色信息
@@ -99,6 +99,6 @@ window.onload = function () {
     gl.clear(gl.COLOR_BUFFER_BIT);
 
     gl.drawArrays(gl.TRIANGLE_FAN, 0, 6);
-    gl.drawArrays(gl.POINTS, 0, 6);
+    // gl.drawArrays(gl.POINTS, 0, 6);
   }
 };
