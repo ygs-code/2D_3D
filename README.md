@@ -70,6 +70,8 @@ webgl 帖子 ：https://hammerc.github.io/dou3d-ts/
 
 webgl 例子： https://wow.techbrood.com/fiddle/26436
 
+webgl教程：https://google.github.io/filament/Filament.html
+
 webgl 例子：https://www.jb51.net/article/234799.htm
 
 webgl  mdn web doc 操作api ：https://developer.mozilla.org/en-US/docs/Web/API/WebGLRenderingContext/getActiveUniformc
@@ -204,3 +206,5 @@ desmos
 天空盒 框架 https://pannellum.org/
 
 透视投影 推导 ：https://blog.csdn.net/qq_33913063/article/details/115105999
+
+webgl api 文档 https://registry.khronos.org/OpenGL-Refpages/gl4/html/

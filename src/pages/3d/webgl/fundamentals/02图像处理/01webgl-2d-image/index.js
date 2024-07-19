@@ -30,7 +30,10 @@ console.log('m4=======',m4);
   if (!canvas.getContext) return;
   let gl = canvas.getContext("webgl");
 
+  // 加载图片
   function main() {
+
+
     var image = new Image();
     image.src = leaves;  // MUST BE SAME DOMAIN!!!
     image.onload = function() {
@@ -48,24 +51,36 @@ console.log('m4=======',m4);
  
   
     // setup GLSL program
+    // 添加shader
     var program = initShaders(gl, VSHADER_SOURCE, FSHADER_SOURCE);
     // gl.useProgram(program);
   
     // look up where the vertex data needs to go.
+    // 获取shader 顶点位置地址
     var positionLocation = gl.getAttribLocation(program, "a_position");
+
+
+
+    
+    // 获取shader 贴图 地址
     var texCoordLocation = gl.getAttribLocation(program, "a_texCoord");
   
     // provide texture coordinates for the rectangle.
+    // 创建buffer
     var texCoordBuffer = gl.createBuffer();
     gl.bindBuffer(gl.ARRAY_BUFFER, texCoordBuffer);
     gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([
         0.0,  0.0,
         1.0,  0.0,
         0.0,  1.0,
+
         0.0,  1.0,
         1.0,  0.0,
-        1.0,  1.0]), gl.STATIC_DRAW);
+        1.0,  1.0
+
+      ]), gl.STATIC_DRAW);
     gl.enableVertexAttribArray(texCoordLocation);
+    // 2 数据为一组
     gl.vertexAttribPointer(texCoordLocation, 2, gl.FLOAT, false, 0, 0);
   
     // Create a texture.
@@ -74,24 +89,29 @@ console.log('m4=======',m4);
     gl.bindTexture(gl.TEXTURE_2D, texture);
   
     // Set the parameters so we can render any size image.
-2
+    // 设置纹理参数 
     gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
     gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
     gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST);
     gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST);
   
     // Upload the image into the texture.
+    // 加载更新纹理
     gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, image);
   
     // lookup uniforms
+    // 获取shader uninform 地址
     var resolutionLocation = gl.getUniformLocation(program, "u_resolution");
   
     // set the resolution
+    // 设置 resolution 值
     gl.uniform2f(resolutionLocation, canvas.width, canvas.height);
   
     // Create a buffer for the position of the rectangle corners.
+    // 为矩形角的位置创建一个缓冲区。
     var buffer = gl.createBuffer();
     gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
+    // 把顶点位置参数设置到显卡
     gl.enableVertexAttribArray(positionLocation);
     gl.vertexAttribPointer(positionLocation, 2, gl.FLOAT, false, 0, 0);
   
@@ -107,11 +127,14 @@ console.log('m4=======',m4);
     return Math.floor(Math.random() * range);
   }
   
+  // 设置一个顶点位置 与 照片大小一样的图形
   function setRectangle(gl, x, y, width, height) {
     var x1 = x;
+
     var x2 = x + width;
 
     var y1 = y;
+
     var y2 = y + height;
 
     // console.log('width==',width);
@@ -128,9 +151,11 @@ console.log('m4=======',m4);
        x1, y1,
        x2, y1,
        x1, y2,
+
        x1, y2,
        x2, y1,
        x2, y2
+
       ]), gl.STATIC_DRAW);
   }
   

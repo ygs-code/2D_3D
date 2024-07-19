@@ -8,6 +8,6 @@ uniform sampler2D u_image;
 varying vec2 v_texCoord;
 
 void main() {
-  // 2d 贴图
+  // 2d 贴图   贴图 赋值给 v_texCoord
    gl_FragColor = texture2D(u_image, v_texCoord);
 }

@@ -1,4 +1,4 @@
-import {getWebGLContext, initShaders} from "@/pages/3d/utils/lib/cuon-utils";
+import initShaders from "@/pages/3d/utils/initShader.js";
 import VSHADER_SOURCE from "./index.vert";
 import FSHADER_SOURCE from "./index.frag";
 import "./index.less";
@@ -7,38 +7,44 @@ window.onload = function () {
   let canvas_w = 400,
     canvas_h = 400;
   const canvas = document.createElement("canvas");
-  canvas.width = 500;
-  canvas.height = 500;
+  canvas.width = canvas_w;
+  canvas.height = canvas_h;
   // getWebGLContext(canvas);
   document.body.appendChild(canvas);
 
   if (!canvas.getContext) return;
   let gl = canvas.getContext("webgl");
+
+  let time = 0.0;
   // vertexShader, fragmentShader
 
   console.log("VSHADER_SOURCE=====", VSHADER_SOURCE);
   console.log("FSHADER_SOURCE=====", FSHADER_SOURCE);
-  if (!initShaders(gl, VSHADER_SOURCE, FSHADER_SOURCE)) {
+
+  const program = initShaders(gl, VSHADER_SOURCE, FSHADER_SOURCE);
+
+  console.log("program==", program);
+
+  if (!program) {
     console.log("failed to initialize shaders");
     return;
   }
 
-  // let u_w = gl.getUniformLocation(gl.program, "u_w");
-  // let u_h = gl.getUniformLocation(gl.program, "u_h");
-  // gl.uniform1f(u_w, canvas_w);
-  // gl.uniform1f(u_h, canvas_h);
+  let uResolution = gl.getUniformLocation(program, "u_resolution");
+  gl.uniform2f(uResolution, canvas_w, canvas_h);
 
   //三角形顶点位置
 
   // 4个点的坐标信息
-  let vertices = new Float32Array([ 
+  let vertices = new Float32Array([
      -1, 1,
-    -1,-1, 
-     1, -1,
+     -1, -1,
+      1, -1,
 
-     1, -1,
-     1,  1,
-     -1, 1,]);
+       1, -1,
+       1, 1,
+       -1, 1,
+      ]);
 
   let FSIZE = vertices.BYTES_PER_ELEMENT; // Float32 Size = 4
 
@@ -60,7 +66,6 @@ window.onload = function () {
   // 将缓冲区对象分配给a_Position变量
   let a_Position = gl.getContextAttributes(gl.isProgram, "a_Position"); // 获得变量位置
 
- 
   /*
      
      告诉显卡从当前绑定的缓 冲区（bindBuffer() 指定的缓冲区）中读取顶点数据。
@@ -81,10 +86,20 @@ window.onload = function () {
   // 连接a_Position变量与分配给他的缓冲区对象
   gl.enableVertexAttribArray(a_Position);
 
-  // 清空画布
-  gl.clearColor(0.0, 0.0, 0.0, 1.0);
-  gl.clear(gl.COLOR_BUFFER_BIT);
-  // 画图
-  gl.drawArrays(gl.TRIANGLE_FAN, 0, 6);
-  // gl.drawArrays(gl.POINTS, 0, 4);
+  const render = (time) => {
+    gl.uniform2f(uResolution, canvas_w, canvas_h);
+    // 清空画布
+    gl.clearColor(0.0, 0.0, 0.0, 1.0);
+    gl.clear(gl.COLOR_BUFFER_BIT);
+    // 画图
+    gl.drawArrays(gl.TRIANGLE_FAN, 0, 5);
+    // gl.drawArrays(gl.POINTS, 0, 4);
+
+    requestAnimationFrame(() => {
+      time += 10;
+      render(time);
+    });
+  };
+
+  render(time);
 };
