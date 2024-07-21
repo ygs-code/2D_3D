@@ -44,13 +44,13 @@ window.onload = function () {
 
   // 4个点的坐标信息
   let vertices = new Float32Array([
-        -0.5, 0.5,
-        -0.5, -0.5,
-        0.5, -0.5,
+        -1, 1,
+        -1, -1,
+         1, -1,
 
-          0.5, -0.5,
-          0.5, 0.5,
-          -0.5, 0.5,
+          1, -1,
+          1, 1,
+          -1, 1,
       ]);
 
   let FSIZE = vertices.BYTES_PER_ELEMENT; // Float32 Size = 4
@@ -99,8 +99,8 @@ window.onload = function () {
     gl.clearColor(0.0, 0.0, 0.0, 1.0);
     gl.clear(gl.COLOR_BUFFER_BIT);
     // 画图
-    gl.drawArrays(gl.TRIANGLE_FAN, 0, 4);
-    gl.drawArrays(gl.POINTS, 0, 4);
+    gl.drawArrays(gl.TRIANGLE_FAN, 0, 6);
+    // gl.drawArrays(gl.POINTS, 0, 4);
 
 
     requestAnimationFrame(() => {

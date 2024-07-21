@@ -39,11 +39,11 @@ window.onload = function () {
   let vertices = new Float32Array([
         -1, 1,
         -1, -1,
-          1, -1,
+         1, -1,
 
-          1, -1,
-          1, 1,
-          -1, 1,
+         1, -1,
+         1, 1,
+        -1, 1,
       ]);
 
   let FSIZE = vertices.BYTES_PER_ELEMENT; // Float32 Size = 4

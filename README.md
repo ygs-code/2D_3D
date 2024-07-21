@@ -208,3 +208,10 @@ desmos
 透视投影 推导 ：https://blog.csdn.net/qq_33913063/article/details/115105999
 
 webgl api 文档 https://registry.khronos.org/OpenGL-Refpages/gl4/html/
+
+
+数学可视化 线性图形工具 ： 
+
+https://www.desmos.com/calculator?lang=zh-CN
+
+https://graphtoy.com/

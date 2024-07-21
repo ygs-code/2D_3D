@@ -31,6 +31,7 @@ window.onload = function () {
   }
 
   let uResolution = gl.getUniformLocation(program, "u_resolution");
+  // 将这样做是为了使所有的值落在 0.0 到 1.0 之间，这样就可以轻松把 X 或 Y 的值映射到红色或者绿色通道。
   gl.uniform2f(uResolution, canvas_w, canvas_h);
 
   //三角形顶点位置
@@ -92,7 +93,7 @@ window.onload = function () {
     gl.clearColor(0.0, 0.0, 0.0, 1.0);
     gl.clear(gl.COLOR_BUFFER_BIT);
     // 画图
-    gl.drawArrays(gl.TRIANGLE_FAN, 0, 5);
+    gl.drawArrays(gl.TRIANGLE_FAN, 0, 6);
     // gl.drawArrays(gl.POINTS, 0, 4);
 
     requestAnimationFrame(() => {
